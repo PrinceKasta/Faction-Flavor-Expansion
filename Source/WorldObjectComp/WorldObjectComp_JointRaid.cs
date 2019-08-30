@@ -16,15 +16,17 @@ namespace Flavor_Expansion
 {
     class WorldComp_JointRaid : WorldObjectComp
     {
-        bool active = false;
-        int timer = 0;
-        Faction ally;
-        List<Thing> rewards;
+        private bool active = false;
+        private int timer = 0;
+        private Faction ally;
+        private List<Thing> rewards;
+        private Thing Bonus;
 
-        public void StartComp(int stopTime, Faction ally,List<Thing> rewards)
+        public void StartComp(int stopTime, Faction ally,List<Thing> rewards, Thing silver)
         {
+            this.Bonus = silver;
             this.rewards = rewards;
-            this.timer = 600;//stopTime;
+            this.timer = 600;
             this.active = true;
             this.ally = ally;
         }
@@ -55,8 +57,7 @@ namespace Flavor_Expansion
             {
                 if(FriendliesDefeated())
                 {
-                    active = false;
-                    return;
+                    Bonus.stackCount = 0;
                 }
                 List<Pawn> pawnList = map.Map.mapPawns.SpawnedPawnsInFaction(parent.Faction);
                 for (int index = 0; index < pawnList.Count; ++index)
@@ -67,14 +68,15 @@ namespace Flavor_Expansion
                 }
                 Map target = Find.AnyPlayerHomeMap;
                 IntVec3 intVec3 = DropCellFinder.TradeDropSpot(target);
+                if(Bonus.stackCount>0)
+                    DropPodUtility.DropThingsNear(intVec3, target, new List<Thing>() { Bonus }, 110, false, false, true);
                 DropPodUtility.DropThingsNear(intVec3, target, (IEnumerable<Thing>)rewards, 110, false, true, true);
                 string reward="";
                 foreach(Thing t in rewards)
                 {
                     reward += t.Label + "\n";   
                 }
-                reward.Remove(reward.Count()-2,2);
-                Find.LetterStack.ReceiveLetter("LetterLabelJointRaidSuccess".Translate(), TranslatorFormattedStringExtensions.Translate("JointRaidSuccess", ally.leader) + reward
+                Find.LetterStack.ReceiveLetter("LetterLabelJointRaidSuccess".Translate(), TranslatorFormattedStringExtensions.Translate("JointRaidSuccess", ally.leader) + reward + (Bonus.stackCount >0 ? TranslatorFormattedStringExtensions.Translate("JointRaidSuccessBonus", ally.leader, Bonus.stackCount) : "")
                     , LetterDefOf.PositiveEvent, null, ally, (string)null);
                 active = false;
             }
@@ -118,6 +120,7 @@ namespace Flavor_Expansion
             Scribe_Values.Look(ref active, "jointraid_active", defaultValue: false);
             Scribe_Values.Look(ref timer, "jointraid_timer", defaultValue : 0);
             Scribe_References.Look(ref ally, "jointraid_ally");
+            Scribe_References.Look(ref Bonus, "jointraid_Bonus");
             Scribe_Collections.Look(ref rewards, "jointraid_rewards",LookMode.Reference);
         }
     }

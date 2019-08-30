@@ -48,7 +48,8 @@
   
   <!-- Joint Raid-->
   <LetterLabelJointRaidSuccess>Raid Success</LetterLabelJointRaidSuccess>
-  <JointRaidSuccess>All hostiles are dead, {0_nameFull} has thanked you and sent your reward of:\n\n</JointRaidSuccess>
+  <JointRaidSuccess>All hostiles are dead, {0_nameFull} has thanked you and has sent your reward of:\n\n</JointRaidSuccess>
+  <JointRaidSuccessBonus>As the raid party survived with at least one member alive {0_nameFull} also sent the promised bonus reward of %{1} in silver.</JointRaidSuccessBonus>
   <LetterLabelJointRaidFail>Joint Raid Passed</LetterLabelJointRaidFail>
   <JointRaidFail>{0_factionName}'s leader, {0_nameFull}, informed you that {1} of {2}'s weakness was reinforced and that {0_pronoun} is no longer interested in a the joint raid offer.</JointRaidFail>
   <ExtraCompString_JointRaid>The target of a joint raid offer.</ExtraCompString_JointRaid>

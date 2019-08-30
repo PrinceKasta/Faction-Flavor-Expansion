@@ -16,6 +16,21 @@ namespace Flavor_Expansion
 {
     class FE_IncidentWorker_Jointraid : IncidentWorker
     {
+        public static readonly SimpleCurve SilverBonusRewardCurve = new SimpleCurve()
+        {
+            {
+                new CurvePoint(75f, 500f),
+                true
+            },
+            {
+                new CurvePoint(87f, 1000f),
+                true
+            },
+            {
+                new CurvePoint(100f, 1500f),
+                true
+            }
+        };
 
         protected override bool CanFireNowSub(IncidentParms parms)
         {
@@ -46,9 +61,12 @@ namespace Flavor_Expansion
                 reward += t.Label + "\n";
             }
             reward.Remove(reward.Count() - 2, 2);
+            Thing silver = ThingMaker.MakeThing(ThingDefOf.Silver);
+            silver.stackCount = (int)SilverBonusRewardCurve.Evaluate(ally.PlayerGoodwill);
+            
             int random = new IntRange(Global.DayInTicks * 5, Global.DayInTicks * 7).RandomInRange;
-            Set.GetComponent<WorldComp_JointRaid>().StartComp(random, ally ,rewards);
-            string text = this.def.letterText.Formatted((NamedArgument)ally.leader.LabelShort, (NamedArgument)ally.def.leaderTitle, (NamedArgument)ally.Name, (NamedArgument)GenLabel.ThingsLabel(rewards, string.Empty), (NamedArgument)(random/Global.DayInTicks).ToString(), (NamedArgument)GenThing.GetMarketValue((IList<Thing>)rewards).ToStringMoney((string)null)).CapitalizeFirst();
+            Set.GetComponent<WorldComp_JointRaid>().StartComp(random, ally ,rewards ,silver);
+            string text = this.def.letterText.Formatted((NamedArgument)ally.leader.LabelShort, (NamedArgument)ally.def.leaderTitle, (NamedArgument)ally.Name, (NamedArgument)GenLabel.ThingsLabel(rewards, string.Empty), (NamedArgument)(random/Global.DayInTicks).ToString(), (NamedArgument)GenThing.GetMarketValue((IList<Thing>)rewards).ToStringMoney((string)null), silver.stackCount.ToString()).CapitalizeFirst();
             GenThing.TryAppendSingleRewardInfo(ref text, (IList<Thing>)rewards);
             Find.LetterStack.ReceiveLetter(this.def.letterLabel, text, this.def.letterDef, (LookTargets)((WorldObject)Set), ally, (string)null);
             return true;

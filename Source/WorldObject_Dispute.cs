@@ -193,10 +193,12 @@ namespace Flavor_Expansion
                 {
                     totalMarketValueRange = new FloatRange?(SiteTuning.BanditCampQuestRewardMarketValueRange * SiteTuning.QuestRewardMarketValueThreatPointsFactor.Evaluate(StorytellerUtility.DefaultSiteThreatPointsNow()))
                 });
-                turncoat.GetComponent<WorldComp_JointRaid>().StartComp(600,set1.Faction, rewards);
+                Thing silver = ThingMaker.MakeThing(ThingDefOf.Silver);
+                silver.stackCount = (int)FE_IncidentWorker_Jointraid.SilverBonusRewardCurve.Evaluate(set1.Faction.PlayerGoodwill);
+                turncoat.GetComponent<WorldComp_JointRaid>().StartComp(600,set1.Faction, rewards, silver);
                 Find.WorldObjects.Remove(set2);
                 Find.WorldObjects.Add(turncoat);
-               friendly = set1;
+                friendly = set1;
             }
             else
             {
@@ -216,7 +218,9 @@ namespace Flavor_Expansion
                 {
                     totalMarketValueRange = new FloatRange?(SiteTuning.BanditCampQuestRewardMarketValueRange * SiteTuning.QuestRewardMarketValueThreatPointsFactor.Evaluate(StorytellerUtility.DefaultSiteThreatPointsNow()))
                 });
-                turncoat.GetComponent<WorldComp_JointRaid>().StartComp(600, set1.Faction,rewards);
+                Thing silver = ThingMaker.MakeThing(ThingDefOf.Silver);
+                silver.stackCount = (int)FE_IncidentWorker_Jointraid.SilverBonusRewardCurve.Evaluate(set2.Faction.PlayerGoodwill);
+                turncoat.GetComponent<WorldComp_JointRaid>().StartComp(600, set1.Faction,rewards, silver);
                 Find.WorldObjects.Remove(set1);
                 Find.WorldObjects.Add(turncoat);
                 friendly = set2;

@@ -32,8 +32,8 @@
 	<FactionPacifistic>Pacifistic</FactionPacifistic>
 	
 	<!-- War Status-->
-	<FactionWarInfo>{0} and {1} are currently at war, {2} is the attacker: {3} is on the offensive with {4}% more resources at their disposal\n\n</FactionWarInfo>
-	<FactionWarInfoSettlemate>{0} and {1} are currently in war, {2} is the attacker: Currently neither of the factions are ahead of each other\n\n</FactionWarInfoSettlemate>
+	<FactionWarInfo>{0} and {1} are currently at war, {2} is the aggressor: {3} is on the offensive with {4}% more resources at their disposal\n\n</FactionWarInfo>
+	<FactionWarInfoSettlemate>{0} and {1} are currently in war, {2} is the aggressor: Currently neither of the factions are ahead of each other\n\n</FactionWarInfoSettlemate>
 	<FactionAtPeace>{0} is currently, at least officially, at peace</FactionAtPeace>
 	<FactionHistory>Faction History</FactionHistory>
 	<FactionWar>War With {0}</FactionWar>
