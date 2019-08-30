@@ -33,14 +33,13 @@ namespace Flavor_Expansion
         {
             if (!active)
                 return;
-            base.CompTick();
+            
             if (threat && HostileDefeated())
                 parent.GetComponent<TimedForcedExit>().StartForceExitAndRemoveMapCountdown(Global.DayInTicks);
 
         }
         public override void PostMyMapRemoved()
         {
-            base.PostMyMapRemoved();
             Ressurect();
         }
         public override void PostPostRemove()
@@ -49,16 +48,20 @@ namespace Flavor_Expansion
             if (active && this.parent.GetComponent<TimeoutComp>().Passed && !map.HasMap && !wasEntered)
             {
                 ally.TryAffectGoodwillWith(Faction.OfPlayer, -30);
-                Find.LetterStack.ReceiveLetter("LetterLabelSettlementRescueIgnored".Translate(), TranslatorFormattedStringExtensions.Translate("SettlementRescueIgnored", this.parent, ally.leader), LetterDefOf.NegativeEvent, null, ally);
+                Find.LetterStack.ReceiveLetter("LetterLabelSettlementRescueIgnored".Translate(), TranslatorFormattedStringExtensions.Translate("SettlementRescueIgnored", this.parent, ally.leader, ally.def.leaderTitle), LetterDefOf.NegativeEvent, null, ally);
+
+            } else if(active && wasEntered && threat)
+            {
+                ally.TryAffectGoodwillWith(Faction.OfPlayer, -20, false, true, TranslatorFormattedStringExtensions.Translate("SettlementRescueAbandoned", this.parent, ally.leader, ally.def.leaderTitle));
+                Find.LetterStack.ReceiveLetter("LetterLabelSettlementRescueIgnored".Translate(), TranslatorFormattedStringExtensions.Translate("SettlementRescueAbandoned", this.parent, ally.leader, ally.def.leaderTitle, (-20).ToString()), LetterDefOf.NegativeEvent, null, ally);
 
             }
-            base.PostPostRemove();
         }
         private void Ressurect()
         {
             MapParent map = (MapParent)this.parent;
             
-            if ((this.parent.GetComponent<TimeoutComp>().Passed || resurrectSet) && !map.HasMap)
+            if ((this.parent.GetComponent<TimeoutComp>().Passed || resurrectSet) && !ally.defeated && !map.HasMap)
             {
                 Settlement resurrect = (Settlement)WorldObjectMaker.MakeWorldObject(WorldObjectDefOf.Settlement);
                 Faction faction = ally;
@@ -67,6 +70,7 @@ namespace Flavor_Expansion
                 resurrect.creationGameTicks = parent.creationGameTicks;
                 resurrect.Name = SettlementNameGenerator.GenerateSettlementName(resurrect);
                 Find.WorldObjects.AllWorldObjects.Add(resurrect);
+                Utilities.FactionsWar().GetByFaction(resurrect.Faction).resources += FE_WorldComp_FactionsWar.SETTLEMENT_RESOURCE_VALUE;
             }
 
         }
@@ -102,13 +106,15 @@ namespace Flavor_Expansion
             for (int i = 0; i <  prisoner.ToList().Count; i++)
             {
                 prisoner[i].SetFaction(ally);
+                prisoner[i].guest.SetGuestStatus(map.ParentFaction, true);
+                prisoner[i].mindState.WillJoinColonyIfRescued = true;
                 Pawn pawn = component == null || !component.pawn.Any ? PrisonerWillingToJoinQuestUtility.GeneratePrisoner(map.Tile, map.ParentFaction) : component.pawn.Take((Thing)component.pawn[0]);
                 pawn.mindState.WillJoinColonyIfRescued = true;
 
                 pawn.SetFaction(ally);
                 
                 IntVec3 result;
-                result = CellFinder.RandomSpawnCellForPawnNear(prisoner[i % prisoner.ToList().Count].CellsAdjacent8WayAndInside().Where(x=>x.Standable(map)).RandomElement(), map);
+                result = CellFinder.RandomSpawnCellForPawnNear(prisoner[i % prisoner.ToList().Count].CellsAdjacent8WayAndInside().Where(x=>x.Standable(map) && x.Walkable(map)).RandomElement(), map);
                 if (result == null)
                     Log.Warning("spawn pawn cell null");
                 pawn.guest.SetGuestStatus(map.ParentFaction, true);
@@ -124,10 +130,12 @@ namespace Flavor_Expansion
             Predicate<IntVec3> baseValidator = (Predicate<IntVec3>)(x =>
             {
                 TraverseParms traverseParms = TraverseParms.For(TraverseMode.PassAllDestroyableThings, Danger.Deadly, false);
+                
+                x.Walkable(map);
                 return map.reachability.CanReachMapEdge(x, traverseParms);
             });
             int corpseAmount = CorpseAmountRange.RandomInRange;
-            DamageInfo info = (Find.FactionManager.OfPlayer.def.defName == "PlayerColony") ? new DamageInfo(DamageDefOf.Bullet, 40) : new DamageInfo(DamageDefOf.Cut, 25);
+            DamageInfo info = (this.parent.Faction.def.techLevel.IsNeolithicOrWorse()) ? new DamageInfo(DamageDefOf.Cut, 25) : new DamageInfo(DamageDefOf.Bullet, 40);
             for (int i = 0; i < corpseAmount; i++)
             {
                 Pawn corpse = PawnGenerator.GeneratePawn(PawnKindDefOf.Villager, ally);
@@ -147,7 +155,7 @@ namespace Flavor_Expansion
                 int pawnSaved = 0;
                 threat = false;
                List<Pawn> prisoner= map.Map.mapPawns.AllPawns.Where(x => (!x.Dead && !x.Downed) && (x.IsPrisoner || x.kindDef == PawnKindDefOf.Slave)).ToList();
-                if(prisoner.Where(x => !x.Dead && x.Downed).Count() == 0)
+                if(prisoner.Where(x => !x.Dead || x.Downed).Count() == 0)
                 {
                     Find.LetterStack.ReceiveLetter("LetterLabelSettlementRescueFail".Translate(), TranslatorFormattedStringExtensions.Translate("SettlementRescueFail",this.parent, (NamedArgument)TimedForcedExit.GetForceExitAndRemoveMapCountdownTimeLeftString(Global.DayInTicks),
                     this.parent.Faction.leader), LetterDefOf.NegativeEvent, (LookTargets)((WorldObject)this.parent), (Faction)null, (string)null);
@@ -176,13 +184,9 @@ namespace Flavor_Expansion
                 Map target = Find.AnyPlayerHomeMap;
                 IntVec3 intVec3 = DropCellFinder.TradeDropSpot(target);
                 DropPodUtility.DropThingsNear(intVec3, target, (IEnumerable<Thing>)list, 110, false, true, true);
-                string itemList = "";
-                for (int i = 0; i < list.Count(); i++)
-                {
-                    itemList += list[i].Label + "\n\n";
-                }
-                Find.LetterStack.ReceiveLetter("LetterLabelSettlementRescue".Translate(), TranslatorFormattedStringExtensions.Translate("SettlementRescueWin", this.parent, (NamedArgument)TimedForcedExit.GetForceExitAndRemoveMapCountdownTimeLeftString(Global.DayInTicks),
-                    this.parent.Faction.leader) + itemList, LetterDefOf.PositiveEvent, (LookTargets)((WorldObject)this.parent), (Faction)null, (string)null);
+                string text = TranslatorFormattedStringExtensions.Translate("SettlementRescueWin", this.parent, (NamedArgument)TimedForcedExit.GetForceExitAndRemoveMapCountdownTimeLeftString(Global.DayInTicks),this.parent.Faction.leader ,this.parent.Faction.def.leaderTitle) + GenLabel.ThingsLabel(list);
+                
+                Find.LetterStack.ReceiveLetter("LetterLabelSettlementRescue".Translate(), text , LetterDefOf.PositiveEvent, (LookTargets)((WorldObject)this.parent), (Faction)null, (string)null);
                 return true;
             }
             return false;

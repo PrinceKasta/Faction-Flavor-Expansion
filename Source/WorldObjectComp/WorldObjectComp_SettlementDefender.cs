@@ -40,6 +40,8 @@ namespace Flavor_Expansion
                     int tile = parent.Tile;
                     int ID = parent.ID;
                     Find.WorldObjects.Remove(parent);
+                    Utilities.FactionsWar().GetByFaction(ally).resources -= FE_WorldComp_FactionsWar.SETTLEMENT_RESOURCE_VALUE;
+
                     if (!(from f in Find.WorldObjects.Settlements
                           where f.Faction == parent.Faction
                           select f).Any())
@@ -50,12 +52,12 @@ namespace Flavor_Expansion
                     }
 
                     Site resuce = SiteMaker.MakeSite(SiteCoreDefOf.Nothing, EndGameDefOf.Outpost_SiteResuce, tile, enemy, true, StorytellerUtility.DefaultSiteThreatPointsNow());
-
+                    
                     resuce.GetComponent<WorldComp_SettlementResuce>().StartComp(ID, ally);
                     resuce.GetComponent<TimeoutComp>().StartTimeout(6000);
                     Find.WorldObjects.Add(resuce);
                     Find.LetterStack.ReceiveLetter("LetterLabelSettlementDefenderIgnored".Translate(), TranslatorFormattedStringExtensions.Translate("SettlementDefenderIgnored", this.parent, this.parent.Faction.leader),
-                            LetterDefOf.NegativeEvent, new LookTargets(parent.Tile), (Faction)null, (string)null);
+                            LetterDefOf.ThreatBig, new LookTargets(parent.Tile), (Faction)null, (string)null);
                     return;
                 }
                 timeOut--;
@@ -81,7 +83,7 @@ namespace Flavor_Expansion
         public void StartComp(Faction enemy, Faction ally, int timeout, List<Thing> rewards)
         {
             this.rewards = rewards;
-            this.timeOut = 600;//timeout;
+            this.timeOut = timeout;
             this.active = true;
             this.enemy = enemy;
             this.ally = ally;
@@ -94,7 +96,6 @@ namespace Flavor_Expansion
 
         public override void PostMyMapRemoved()
         {
-            base.PostMyMapRemoved();
             if (parent.GetComponent<TimedForcedExit>().ForceExitAndRemoveMapCountdownActive)
                 active = false;
         }
@@ -183,7 +184,7 @@ namespace Flavor_Expansion
         public override string CompInspectStringExtra()
         {
             if(active)
-                return base.CompInspectStringExtra() + "ExtraCompString_SettlementDefense".Translate(timeOut/60000 +1);
+                return base.CompInspectStringExtra() + "ExtraCompString_SettlementDefense".Translate(timeOut/60000 + 1);
             return base.CompInspectStringExtra();
         }
         public override void PostExposeData()

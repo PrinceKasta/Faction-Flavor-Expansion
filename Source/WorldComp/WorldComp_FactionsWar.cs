@@ -474,6 +474,7 @@ namespace Flavor_Expansion
             }
 
         }
+
         private void WarEnd()
         {
             //foreach (KeyValuePair<Faction, Faction> f in warringFactions.ToList())

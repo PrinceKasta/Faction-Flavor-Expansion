@@ -61,19 +61,19 @@
   <LetterLabelSettlementDefenderWon>Settlement defended</LetterLabelSettlementDefenderWon>
   <SettlementDefenderWon>The raid on {0} was successfully repealed, you have {1} until you have to leave.\n\n{2_factionName}'s leader {2_nameFull} is thankful\n\n{0_pronoun} rewarded you with:\n\n</SettlementDefenderWon>
   <LetterLabelSettlementDefenderLost>Settlement destroyed</LetterLabelSettlementDefenderLost>
-  <SettlementDefenderLost>{0} has been destroyed.\n\nIn {1}, the caravan will automatically be reformed. You can reform the caravan now in the World screen by selecting the destroyed base and choosing the "Reform caravan" option.\n\n{2_factionName}'s leader {2_nameFull} has sent us a message, {2_pronoun} sounds mournful for the lose of life.</SettlementDefenderLost>
+  <SettlementDefenderLost>{0} has been destroyed.\n\nIn {1}, the caravan will automatically be reformed. You can reform the caravan now in the World screen by selecting the destroyed base and choosing the "Reform caravan" option.\n\n{2_factionName}'s leader {2_nameFull} has sent us a message, {2_pronoun} sounds mournful for the lose of life but doesn't blame us.</SettlementDefenderLost>
   <LetterLabelSettlementDefenderIgnored>Settlement sacked</LetterLabelSettlementDefenderIgnored>
   <SettlementDefenderIgnored>The raid on {0} has successfully destroyed the settlement.\n\n{1_factionName}'s leader {1_nameFull} implored you to still travel there to try and save anyone who still might be alive.</SettlementDefenderIgnored>
   <ExtraCompString_SettlementDefense>The target of a settlement defense quest. Time left until the settlement is destroyed: less than {0} days.</ExtraCompString_SettlementDefense>
   
   <!-- Settlement Rescue-->
   <LetterLabelSettlementRescue>Capturers Routed</LetterLabelSettlementRescue>
-  <SettlementRescueWin>{0}'s capturers were successfully routed, you have {1} until you have to go.\n\n{2_factionName}'s leader {2_nameFull} is thankful\n\nHe rewarded you with:</SettlementRescueWin>
+  <SettlementRescueWin>{0}'s capturers were routed\n\nIn {1}, the caravan will automatically be reformed. You can reform the caravan now in the World screen by selecting the destroyed base and choosing the "Reform caravan" option.\n\n{2_nameFull}, {3} of {2_factionName} has  sent us a message where he expressed {2_objective} gratitude.\n\n{2_objective} rewarded you with:\n\n</SettlementRescueWin>
   <LetterLabelSettlementRescueFail>Failed Rescue</LetterLabelSettlementRescueFail>
-  <SettlementRescueFail>{0}'s capturers were successfully routed but all prisoner are dead\nWe have {1} until you have to go.\n\n{2_factionName}'s leader {2_nameFull} sounds mournful for the lost of life.</SettlementRescueFail>
+  <SettlementRescueFail>{0}'s capturers were successfully routed but all prisoner are dead\nWe have {1} until you have to go.\n\n{2_factionName}'s leader {2_nameFull} sounds mournful for the lose of life.</SettlementRescueFail>
   <LetterLabelSettlementRescueIgnored>Ally settlement looted</LetterLabelSettlementRescueIgnored>
-  <SettlementRescueIgnored>The raiders in {0} have departed from the destroyed settlement with their prisoners.\n\n{1_factionName}'s leader {1_nameFull} is livid that you repeatedly ignored {1_possessive} requested for help.</SettlementRescueIgnored>
-  
+  <SettlementRescueIgnored>The raiders in {0} have departed from the destroyed settlement with their prisoners.\n\n{1_nameFull}, {2} of {1_factionName} is livid that you repeatedly ignored {1_possessive} requested for help.</SettlementRescueIgnored>
+  <SettlementRescueAbandoned>The raiders in {0} have left in a hurry after stopping our caravan, preferring to not risk a fight while having prisoner.\n\n{1_nameFull}, {2} of {1_factionName} has sent us a message cursing us for retreating while in arm's reach of the prisoners.\n\nRelations with {1_factionName} have worsened.</SettlementRescueAbandoned>
   
   <!-- Dispute-->
   <LetterLabelDispute>Dispute Talks</LetterLabelDispute>
