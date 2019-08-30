@@ -54,12 +54,7 @@ namespace Flavor_Expansion
             {
                 totalMarketValueRange = new FloatRange?(SiteTuning.BanditCampQuestRewardMarketValueRange * SiteTuning.QuestRewardMarketValueThreatPointsFactor.Evaluate(StorytellerUtility.DefaultSiteThreatPointsNow()+500f))
             });
-            string reward = "";
-            foreach (Thing t in rewards)
-            {
-                reward += t.Label + "\n";
-            }
-            reward.Remove(reward.Count() - 2, 2);
+
             Thing silver = ThingMaker.MakeThing(ThingDefOf.Silver);
             silver.stackCount = (int)SilverBonusRewardCurve.Evaluate(ally.PlayerGoodwill);
             

@@ -78,7 +78,6 @@
     <Compile Include="WorldObjectComp\WorldObjectComp_DisputeFOB.cs" />
     <Compile Include="WorldObjectComp\WorldObjectComp_DisputeRoads.cs" />
     <Compile Include="WorldObjectComp\WorldObjectComp_opbase.cs" />
-    <Compile Include="SitePartWorker_Outpost.cs" />
     <Compile Include="GenStep.cs" />
     <Compile Include="RewardGeneratorBasedTMagic.cs" />
     <Compile Include="Incidents\FE_IncidentWorker_Gift.cs" />

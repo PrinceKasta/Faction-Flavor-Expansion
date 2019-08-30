@@ -26,19 +26,23 @@ namespace Flavor_Expansion
         {
             Faction ally, enemyFaction;
             int tile;
-            TryFindFactions(out ally, out enemyFaction);
-            if (ally == null || enemyFaction == null || !TryFindTile(out tile))
+            
+            if (!TryFindFactions(out ally, out enemyFaction) || !TryFindTile(out tile))
                 return false;
             Site site = SiteMaker.MakeSite(SiteCoreDefOf.Nothing, EndGameDefOf.Outpost_defense, tile, ally, true);
-            site.sitePartsKnown = true;
-            site.Tile = tile;
-            List<Thing> list = new List<Thing>();
+
+            List<Thing> rewards = ThingSetMakerDefOf.Reward_StandardByDropPod.root.Generate(new ThingSetMakerParams()
+            {
+                totalMarketValueRange = new FloatRange?(SiteTuning.BanditCampQuestRewardMarketValueRange * SiteTuning.QuestRewardMarketValueThreatPointsFactor.Evaluate(StorytellerUtility.DefaultSiteThreatPointsNow() - 500))
+            });
+
             int randomInRange = SiteTuning.QuestSiteTimeoutDaysRange.RandomInRange;
-            site.GetComponent<WorldComp_SiteDefense>().StartComp(randomInRange, parms,ally);
+            site.GetComponent<WorldComp_SiteDefense>().StartComp(randomInRange * Global.DayInTicks, parms, enemyFaction, rewards);
             
             Find.WorldObjects.Add(site);
-            Find.LetterStack.ReceiveLetter("LetterLabelOutpostdefense".Translate(), TranslatorFormattedStringExtensions.Translate("Outpostdefense", ally.leader)
-                    , LetterDefOf.NegativeEvent, site, ally, (string)null);
+            string text = this.def.letterText.Formatted((NamedArgument)ally.leader.LabelShort, (NamedArgument)ally.def.leaderTitle, (NamedArgument)ally.Name, (NamedArgument)GenLabel.ThingsLabel(rewards, string.Empty), (NamedArgument)(randomInRange / Global.DayInTicks).ToString(), (NamedArgument)GenThing.GetMarketValue((IList<Thing>)rewards).ToStringMoney((string)null)).CapitalizeFirst();
+            GenThing.TryAppendSingleRewardInfo(ref text, (IList<Thing>)rewards);
+            Find.LetterStack.ReceiveLetter(this.def.letterLabel, text, this.def.letterDef, (LookTargets)((WorldObject)site), ally, (string)null);
             return true;
 
         }
@@ -47,14 +51,14 @@ namespace Flavor_Expansion
         {
             Settlement sis;
             if (!(from f in Find.WorldObjects.Settlements
-                  where !f.Faction.IsPlayer && f.Faction.PlayerRelationKind == FactionRelationKind.Ally
+                  where !f.Faction.IsPlayer && f.Faction.PlayerRelationKind == FactionRelationKind.Ally && Utilities.Reachable(f.Tile,Find.AnyPlayerHomeMap.Tile,120) && Find.WorldReachability.CanReach(Find.AnyPlayerHomeMap.Tile, f.Tile)
                   select f).TryRandomElement(out sis))
             {
                 tile = -1;
                 return false;
             }
 
-            IntRange siteDistanceRange = SiteTuning.DownedRefugeeQuestSiteDistanceRange;
+            IntRange siteDistanceRange = SiteTuning.BanditCampQuestSiteDistanceRange;
             return TileFinder.TryFindNewSiteTile(out tile, siteDistanceRange.min, siteDistanceRange.max, false, true, sis.Tile);
         }
         private bool TryFindFactions(out Faction alliedFaction, out Faction enemyFaction)
@@ -68,7 +72,7 @@ namespace Flavor_Expansion
                 return false;
             }
             if ((from x in Find.FactionManager.AllFactions
-                 where !x.IsPlayer && !x.defeated && x.HostileTo(ally) && x.HostileTo(Faction.OfPlayer) && x.def.humanlikeFaction
+                 where !x.IsPlayer && !x.defeated && !x.def.hidden && x.HostileTo(ally) && x.HostileTo(Faction.OfPlayer) && x.def.humanlikeFaction
                  select x).TryRandomElement(out enemyFaction))
             {
                 alliedFaction = ally;

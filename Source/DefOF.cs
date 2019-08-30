@@ -25,7 +25,7 @@ namespace Flavor_Expansion
         public static IncidentDef FE_Gift;
         public static IncidentDef FE_Aid;
         public static IncidentDef FE_FactionAdvancment;
-        public static IncidentDef FE_SiteDefender;
+        public static IncidentDef FE_OutpostDefender;
         public static IncidentDef FE_SettlementDefender;
         public static IncidentDef FE_JointRaid;
         public static SitePartDef Outpost_defense;

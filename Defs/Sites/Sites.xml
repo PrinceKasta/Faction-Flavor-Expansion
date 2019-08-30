@@ -46,7 +46,7 @@
     <label>outpost</label>
     <description>A small, guarded outpost.</description>
 		<descriptionDialogue>There is an friendly outpost in this area, defend it from hostiles. guarded by {0} friendlies</descriptionDialogue>
-    <workerClass>Flavor_Expansion.SitePartWorker_Outpost_Defense</workerClass>
+    <workerClass>SitePartWorker_Outpost</workerClass>
 		<siteTexture>World/WorldObjects/Sites/Outpost</siteTexture>
     <expandingIconTexture>World/WorldObjects/Expanding/lookout-tower</expandingIconTexture>
     <applyFactionColorToSiteTexture>true</applyFactionColorToSiteTexture>
@@ -54,7 +54,7 @@
     <requiresFaction>true</requiresFaction>
     <approachOrderString>Attack {0}</approachOrderString>
     <approachingReportString>Attacking {0}</approachingReportString>
-    <arrivedLetter>There is an friedly outpost in this area, defend it from hostiles.</arrivedLetter>
+    <arrivedLetter>There is an friendly outpost in this area, defend it from hostiles.</arrivedLetter>
     <arrivedLetterDef>NegativeEvent</arrivedLetterDef>
     <wantsThreatPoints>true</wantsThreatPoints>
   </SitePartDef>

@@ -42,15 +42,16 @@
   <RoadsCampRequestBribe_Disabled>Already extorted</RoadsCampRequestBribe_Disabled>
   
   <!-- Outpost defense-->
-  <LetterLabelOutpostdefense>Outpost Defense</LetterLabelOutpostdefense>
-  <Outpostdefense>A vital Outpost of {0_factionName} is coming under attack and the leader, {0_nameFull}, is requesting that you send reinforcements.\nLetting the outpost be taken will strength enemy foothold in the region and will likely lead to an especially concentrated attack against you.</Outpostdefense>
   <LetterLabelOutpostdefensesuccess>Enemies defeated</LetterLabelOutpostdefensesuccess>
-  <Outpostdefensesuccess>All hostiles have been defeated</Outpostdefensesuccess>
+  <Outpostdefensesuccess>{0_nameFull}, {1} of {0_factionName}, has sent us a message.\n\nAll hostiles are dead, {0_nameFull} has thanked you and has sent your reward of: {6}\n\n</Outpostdefensesuccess>
+  <OutpostdefensesuccessJointRaid>{0_nameFull}, {1} of {0_factionName}, has sent us a message.\n\nAll hostiles are dead, {0_nameFull} has thanked you and has sent your reward of: {6}\n\nApparently they also found a weakness in a nearby enemy settlement's defenses as they exhausted their resources attacking the outpost. They've asked us to help them in their planned retaliation raid, which means eliminating all enemies and turrets together with their raid party.\n\nIf we succeed, their relations will improve, and they'll send us this reward worth {4}:\n\n{2}\n\nIf at least one fighters from the raid party survives they will add a bonus reward of ${5} in silver\n\nIf we don't destroy the settlement in {3} days, the target settlement's weakness will be reinforce and the opportunity will pass.</OutpostdefensesuccessJointRaid>
+  <LetterLabelOutpostdefenseFriendliesDead>Outpost captured</LetterLabelOutpostdefenseFriendliesDead>
+  <OutpostdefenseFriendliesDead>{0_nameFull}, {1} of {0_factionName}, has sent us a message.\n\nAll {0_possessive} faction members are dead and the enemy raid has overrun the outpost, {0_pronoun} bitterly advises you to be prepared for a raid launched from the captured outpost soon and then {0_pronoun} cut communications.</OutpostdefenseFriendliesDead>	
   
   <!-- Joint Raid-->
   <LetterLabelJointRaidSuccess>Raid Success</LetterLabelJointRaidSuccess>
   <JointRaidSuccess>All hostiles are dead, {0_nameFull} has thanked you and has sent your reward of:\n\n</JointRaidSuccess>
-  <JointRaidSuccessBonus>As the raid party survived with at least one member alive {0_nameFull} also sent the promised bonus reward of %{1} in silver.</JointRaidSuccessBonus>
+  <JointRaidSuccessBonus>As the raid party survived with at least one member alive {0_nameFull} also sent the promised bonus reward of ${1} in silver.</JointRaidSuccessBonus>
   <LetterLabelJointRaidAbandoned>Raid Abandoned</LetterLabelJointRaidAbandoned>
   <JointRaidSuccessAbandoned>{1_nameFull}, {0} of {1_factionName} did not appreciate your caravan abandoning {1_possessive} raid party after the fight started. You forfeited the rewards and relations with {1_factionName} worsened.</JointRaidSuccessAbandoned>
   <LetterLabelJointRaidFail>Joint Raid Passed</LetterLabelJointRaidFail>
@@ -73,7 +74,7 @@
   <SettlementRescueFail>{0}'s capturers were successfully routed but all prisoner are dead\nWe have {1} until you have to go.\n\n{2_factionName}'s leader {2_nameFull} sounds mournful for the lose of life.</SettlementRescueFail>
   <LetterLabelSettlementRescueIgnored>Ally settlement looted</LetterLabelSettlementRescueIgnored>
   <SettlementRescueIgnored>The raiders in {0} have departed from the destroyed settlement with their prisoners.\n\n{1_nameFull}, {2} of {1_factionName} is livid that you repeatedly ignored {1_possessive} requested for help.</SettlementRescueIgnored>
-  <SettlementRescueAbandoned>The raiders in {0} have left in a hurry after stopping our caravan, preferring to not risk a fight while having prisoner.\n\n{1_nameFull}, {2} of {1_factionName} has sent us a message cursing us for retreating while in arm's reach of the prisoners.\n\nRelations with {1_factionName} have worsened.</SettlementRescueAbandoned>
+  <SettlementRescueAbandoned>The raiders in {0} have left in a hurry after stopping our caravan, preferring to not risk a fight while having prisoner.\n\n{1_nameFull}, {2} of {1_factionName} has sent us a message cursing us for retreating while in arm's reach of the prisoners.\n\nRelations with {1_factionName} have worsened by {3}.</SettlementRescueAbandoned>
   
   <!-- Dispute-->
   <LetterLabelDispute>Dispute Talks</LetterLabelDispute>
