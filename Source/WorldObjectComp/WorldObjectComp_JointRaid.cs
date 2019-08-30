@@ -26,7 +26,7 @@ namespace Flavor_Expansion
         {
             this.Bonus = silver;
             this.rewards = rewards;
-            this.timer = 600;
+            this.timer = stopTime;
             this.active = true;
             this.ally = ally;
         }
@@ -55,6 +55,13 @@ namespace Flavor_Expansion
             }
             else
             {
+                if(this.parent.GetComponent<EnterCooldownComp>().Active)
+                {
+                    active = false;
+                    ally.TryAffectGoodwillWith(Faction.OfPlayer, -25);
+                    Find.LetterStack.ReceiveLetter("LetterLabelJointRaidAbandoned".Translate(), TranslatorFormattedStringExtensions.Translate("JointRaidSuccessAbandoned", ally.def.leaderTitle, ally.leader), LetterDefOf.NegativeEvent);
+                    return;
+                }
                 if(FriendliesDefeated())
                 {
                     Bonus.stackCount = 0;

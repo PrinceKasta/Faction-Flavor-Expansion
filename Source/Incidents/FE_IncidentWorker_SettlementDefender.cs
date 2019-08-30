@@ -27,11 +27,17 @@ namespace Flavor_Expansion
             Settlement sis;
             if (!TryFindFactions(out ally, out enemyFaction) || !TryFindTile(ally, out sis) )
                 return false;
-            if (sis.GetComponent<WorldComp_SettlementDefender>() == null)
-                Log.Warning("comp null");
-            sis.GetComponent<WorldComp_SettlementDefender>().StartComp(enemyFaction,ally);
-            Find.LetterStack.ReceiveLetter("LetterLabelSettlementDefense".Translate(), TranslatorFormattedStringExtensions.Translate("SettlementDefense",ally.leader)
-                    , LetterDefOf.PositiveEvent, sis, ally, (string)null);
+
+            int random = new IntRange(Global.DayInTicks * 5, Global.DayInTicks * 7).RandomInRange;
+            List<Thing> rewards = ThingSetMakerDefOf.Reward_StandardByDropPod.root.Generate(new ThingSetMakerParams()
+            {
+                totalMarketValueRange = new FloatRange?(SiteTuning.BanditCampQuestRewardMarketValueRange * SiteTuning.QuestRewardMarketValueThreatPointsFactor.Evaluate(StorytellerUtility.DefaultSiteThreatPointsNow() + 500f))
+            });
+            sis.GetComponent<WorldComp_SettlementDefender>().StartComp(enemyFaction,ally, random , rewards);
+            
+            string text = this.def.letterText.Formatted((NamedArgument)ally.leader.LabelShort, (NamedArgument)ally.def.leaderTitle, (NamedArgument)ally.Name, (NamedArgument)GenLabel.ThingsLabel(rewards, string.Empty), (NamedArgument)(random / Global.DayInTicks).ToString(), (NamedArgument)GenThing.GetMarketValue((IList<Thing>)rewards).ToStringMoney((string)null)).CapitalizeFirst();
+            GenThing.TryAppendSingleRewardInfo(ref text, (IList<Thing>)rewards);
+            Find.LetterStack.ReceiveLetter(this.def.letterLabel, text, this.def.letterDef, (LookTargets)((WorldObject)sis), ally, (string)null);
             return true;
 
         }

@@ -93,13 +93,11 @@ namespace Flavor_Expansion
                     })
                 };
 
-                if (Prefs.DevMode || faction.def.permanentEnemy || (Utilities.FactionsWar().GetResouceAmount(faction) < 2000 && Utilities.FactionsWar().GetResouceAmount(faction) >= Find.AnyPlayerHomeMap.wealthWatcher.WealthTotal || Utilities.FactionsWar().GetResouceAmount(faction) / Math.Min(Find.AnyPlayerHomeMap.wealthWatcher.WealthTotal, 10000) > 0.25f - Utilities.FactionsWar().GetByFaction(faction).disposition/100))
+                if (!Prefs.DevMode || faction.def.permanentEnemy || (Utilities.FactionsWar().GetResouceAmount(faction) < 2000 && Utilities.FactionsWar().GetResouceAmount(faction) >= Find.AnyPlayerHomeMap.wealthWatcher.WealthTotal || Utilities.FactionsWar().GetResouceAmount(faction) / Math.Min(Find.AnyPlayerHomeMap.wealthWatcher.WealthTotal, 10000) > 0.25f - Utilities.FactionsWar().GetByFaction(faction).disposition/100))
                 {
                     DiaOption vassalagediaOption = new DiaOption("FactionVassalage".Translate());
                     if (faction.def.permanentEnemy)
                         vassalagediaOption.Disable("FactionVassalageDisabledEnemy".Translate());
-                    else if (Prefs.DevMode)
-                        vassalagediaOption.Disable("DevMode");
                     else vassalagediaOption.Disable("FactionVassalageDisabled".Translate());
                     diaNode1.options.Add(vassalagediaOption);
                 }
@@ -119,13 +117,11 @@ namespace Flavor_Expansion
                     })
                 };
 
-                if (Prefs.DevMode || faction.def.permanentEnemy || (Utilities.FactionsWar().GetResouceAmount(faction) < 3000 && Utilities.FactionsWar().GetResouceAmount(faction) >= Find.AnyPlayerHomeMap.wealthWatcher.WealthTotal || Utilities.FactionsWar().GetResouceAmount(faction) / Math.Min(Find.AnyPlayerHomeMap.wealthWatcher.WealthTotal, 10000) > 0.5f - Utilities.FactionsWar().GetByFaction(faction).disposition / 100))
+                if (!Prefs.DevMode || faction.def.permanentEnemy || (Utilities.FactionsWar().GetResouceAmount(faction) < 3000 && Utilities.FactionsWar().GetResouceAmount(faction) >= Find.AnyPlayerHomeMap.wealthWatcher.WealthTotal || Utilities.FactionsWar().GetResouceAmount(faction) / Math.Min(Find.AnyPlayerHomeMap.wealthWatcher.WealthTotal, 10000) > 0.5f - Utilities.FactionsWar().GetByFaction(faction).disposition / 100))
                 {
                     DiaOption tributarydiaOption = new DiaOption("FactionTributary".Translate());
                     if (faction.def.permanentEnemy)
                         tributarydiaOption.Disable("FactionTributaryDisabledEnemy".Translate());
-                    else if (Prefs.DevMode)
-                        tributarydiaOption.Disable("DevMode");
                     else tributarydiaOption.Disable("FactionTributaryDisabled".Translate());
                     diaNode1.options.Add(tributarydiaOption);
                 }

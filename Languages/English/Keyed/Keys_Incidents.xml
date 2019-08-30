@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <LanguageData>
 
+  <FactionDestroyed>Faction destroyed</FactionDestroyed> 
   <RoadsTimerDesc>Completion in {0} days.</RoadsTimerDesc>
 	
   <DefendArrival>Help {0}</DefendArrival>
@@ -50,19 +51,20 @@
   <LetterLabelJointRaidSuccess>Raid Success</LetterLabelJointRaidSuccess>
   <JointRaidSuccess>All hostiles are dead, {0_nameFull} has thanked you and has sent your reward of:\n\n</JointRaidSuccess>
   <JointRaidSuccessBonus>As the raid party survived with at least one member alive {0_nameFull} also sent the promised bonus reward of %{1} in silver.</JointRaidSuccessBonus>
+  <LetterLabelJointRaidAbandoned>Raid Abandoned</LetterLabelJointRaidAbandoned>
+  <JointRaidSuccessAbandoned>{1_nameFull}, {0} of {1_factionName} did not appreciate your caravan abandoning {1_possessive} raid party after the fight started. You forfeited the rewards and relations with {1_factionName} worsened.</JointRaidSuccessAbandoned>
   <LetterLabelJointRaidFail>Joint Raid Passed</LetterLabelJointRaidFail>
   <JointRaidFail>{0_factionName}'s leader, {0_nameFull}, informed you that {1} of {2}'s weakness was reinforced and that {0_pronoun} is no longer interested in a the joint raid offer.</JointRaidFail>
   <ExtraCompString_JointRaid>The target of a joint raid offer.</ExtraCompString_JointRaid>
   
   <!-- Settlement Defender-->
-  <LetterLabelSettlementDefense>Settlement Defense</LetterLabelSettlementDefense>
-  <SettlementDefense>A Settlement of {0_factionName} is coming under attack, {0_nameFull} is requesting that you send reinforcements.\nLetting the settlement get taken will strength the enemy and will led that the inhabitants will be taken to slavery or death.</SettlementDefense>
-  <LetterLabelSettlementDefenderWon>Settlement Defended</LetterLabelSettlementDefenderWon>
-  <SettlementDefenderWon>The raid on {0} was successfully repealed, you have {1} until you have to go.\n\n{2_factionName}'s leader {2_nameFull} is thankful\n\n{0_pronoun} rewarded you with:</SettlementDefenderWon>
-  <LetterLabelSettlementDefenderLost>Settlement Destroyed</LetterLabelSettlementDefenderLost>
-  <SettlementDefenderLost>{0} is lost, you have {1} until you have to go.\n\n{2_factionName}'s leader {2_nameFull} sounds mournful for the lost of lives.</SettlementDefenderLost>
-  <LetterLabelSettlementDefenderIgnored>Settlement Sacked</LetterLabelSettlementDefenderIgnored>
+  <LetterLabelSettlementDefenderWon>Settlement defended</LetterLabelSettlementDefenderWon>
+  <SettlementDefenderWon>The raid on {0} was successfully repealed, you have {1} until you have to leave.\n\n{2_factionName}'s leader {2_nameFull} is thankful\n\n{0_pronoun} rewarded you with:\n\n</SettlementDefenderWon>
+  <LetterLabelSettlementDefenderLost>Settlement destroyed</LetterLabelSettlementDefenderLost>
+  <SettlementDefenderLost>{0} has been destroyed.\n\nIn {1}, the caravan will automatically be reformed. You can reform the caravan now in the World screen by selecting the destroyed base and choosing the "Reform caravan" option.\n\n{2_factionName}'s leader {2_nameFull} has sent us a message, {2_pronoun} sounds mournful for the lose of life.</SettlementDefenderLost>
+  <LetterLabelSettlementDefenderIgnored>Settlement sacked</LetterLabelSettlementDefenderIgnored>
   <SettlementDefenderIgnored>The raid on {0} has successfully destroyed the settlement.\n\n{1_factionName}'s leader {1_nameFull} implored you to still travel there to try and save anyone who still might be alive.</SettlementDefenderIgnored>
+  <ExtraCompString_SettlementDefense>The target of a settlement defense quest. Time left until the settlement is destroyed: less than {0} days.</ExtraCompString_SettlementDefense>
   
   <!-- Settlement Rescue-->
   <LetterLabelSettlementRescue>Capturers Routed</LetterLabelSettlementRescue>
