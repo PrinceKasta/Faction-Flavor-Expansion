@@ -19,8 +19,14 @@ namespace Flavor_Expansion
         private bool active = false;
         private int timer = 0;
         private Faction ally;
-        private List<Thing> rewards;
-        private Thing Bonus;
+        private List<Thing> rewards = new List<Thing>();
+        private Thing Bonus = new Thing();
+
+        public WorldComp_JointRaid()
+        {
+            rewards = new List<Thing>();
+            Bonus = new Thing();
+        }
 
         public void StartComp(int stopTime, Faction ally,List<Thing> rewards, Thing silver)
         {
@@ -124,11 +130,16 @@ namespace Flavor_Expansion
 
         public override void PostExposeData()
         {
+            base.PostExposeData();
             Scribe_Values.Look(ref active, "jointraid_active", defaultValue: false);
-            Scribe_Values.Look(ref timer, "jointraid_timer", defaultValue : 0);
+            
+            Scribe_Values.Look(ref timer, "jointraid_timer", defaultValue: 0);
+            if (!active)
+                return;
             Scribe_References.Look(ref ally, "jointraid_ally");
             Scribe_References.Look(ref Bonus, "jointraid_Bonus");
-            Scribe_Collections.Look(ref rewards, "jointraid_rewards",LookMode.Reference);
+            Scribe_Collections.Look(ref rewards, "jointraid_rewards", LookMode.Reference);
+
         }
     }
 

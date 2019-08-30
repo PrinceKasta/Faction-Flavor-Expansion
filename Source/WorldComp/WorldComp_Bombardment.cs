@@ -24,26 +24,23 @@ namespace Flavor_Expansion
 
         public FE_MapComponent_Bombardment(Map map) : base(map)
         {
-
-
+            
         }
-
 
         public void ForceStart(int length)
         {
             this.length = length;
         }
 
-
         public override void MapComponentTick()
         {
             if (!(map.ParentFaction == Faction.OfPlayer) || !EndGame_Settings.Bombardment)
                 return;
             if (bomber == null && !(from s in Find.WorldObjects.Settlements
-                                    where s.Faction.HostileTo(Faction.OfPlayer) && Utilities.Reachable(map.Tile, s.Tile, 20)
+                                    where s.Faction.HostileTo(Faction.OfPlayer) && !s.Faction.def.techLevel.IsNeolithicOrWorse() && Utilities.Reachable(map.Tile, s.Tile, 20)
                                     select s).TryRandomElement(out bomber))
                 return;
-            if ((length==0 && Rand.Chance(BombardmentChance)))
+            if (length==0 && Rand.Chance(BombardmentChance))
             {
                 length = bombardmentLength.RandomInRange;
 
@@ -54,16 +51,15 @@ namespace Flavor_Expansion
             }
             if (length > 0)
                 length--; 
-            if ( length != 0 && length %100==0)
+            if ( length != 0 && length % 500==0)
             {
                 Projectile_Explosive shell = (Projectile_Explosive)ThingMaker.MakeThing(DefDatabase<ThingDef>.GetNamed("Bullet_Shell_HighExplosive"));
-                
+
                 IntVec3 edge= CellFinder.RandomEdgeCell(map);
 
-                IntVec3 intVec3 = CellFinderLoose.RandomCellWith(x=> !x.Fogged(map)&&x.DistanceTo(
-                   map.listerBuildings.allBuildingsColonist.Any() ? map.listerBuildings.allBuildingsColonist.First().InteractionCell : map.Center) <20 ,map);
+                IntVec3 intVec3= CellFinder.RandomNotEdgeCell(20, map);  
                 GenSpawn.Spawn(shell, edge, map);
-                shell.Launch(null, intVec3, intVec3, ProjectileHitFlags.IntendedTarget,shell);
+                shell.Launch(null, intVec3, intVec3, ProjectileHitFlags.IntendedTarget, shell);
                     
             }
             base.MapComponentTick();
