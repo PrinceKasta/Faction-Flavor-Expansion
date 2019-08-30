@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+	<Operation Class="PatchOperationAdd">
+	 <success>Normal</success>
+	  <xpath>*/WorldObjectDef[defName = "Site"]/comps</xpath>
+	  <value>
+	    <li Class="Flavor_Expansion.WorldObjectCompProperties_SiteResuce" />
+		<li Class="Flavor_Expansion.WorldObjectCompProperties_SiteDefense" />
+		<li Class="Flavor_Expansion.WorldObjectCompProperties_opbase" />
+		<li Class="Flavor_Expansion.WorldObjectCompProperties_Skirmish" />
+		<li Class="Flavor_Expansion.WorldObjectCompProperties_SupplyDepot" />
+		<li Class="Flavor_Expansion.WorldObjectCompProperties_MercenaryBattle" />
+	  </value>
+	</Operation>
+	
+	<Operation Class="PatchOperationAdd">
+	 <success>Normal</success>
+	  <xpath>*/WorldObjectDef[defName = "Settlement"]/comps</xpath>
+	  <value>
+	    <li Class="Flavor_Expansion.WorldObjectCompProperties_JointRaid" />
+		<li Class="Flavor_Expansion.WorldObjectCompProperties_SettlementDefender" />
+	  </value>
+	</Operation>
+	  
+	<!--<Operation Class="PatchOperationConditional">
+        <xpath>/Defs/WorldObjectDef[defName="Site"]/comps</xpath>
+        <nomatch Class="PatchOperationAdd">
+            <xpath>/Defs/WorldObjectDef[defName="Site"]</xpath>
+            <value>
+                <comps>
+                    <li Class="End_Game.WorldObjectCompProperties_SiteResuce">
+                    </li>
+                </comps>
+            </value>
+        </nomatch>
+        <match Class="PatchOperationAdd">
+            <xpath>/Defs/WorldObjectDef[defName="Site"]/comps</xpath>
+            <value>
+                <li 
+				   Class="End_Game.WorldObjectCompProperties_SiteResuce">
+                </li>
+            </value>
+        </match>
+    </Operation>-->
+</Patch>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+   <SitePartDef>
+    <defName>Outpost_SiteResuce</defName>
+    <label>captured settlement</label>
+    <description>captured Settlement</description>
+		<descriptionDialogue>there is a captured settlement at the area guarded by {0} enemies</descriptionDialogue>
+    <workerClass>SitePartWorker_Outpost</workerClass>
+		<siteTexture>World/WorldObjects/Sites/Outpost</siteTexture>
+    <expandingIconTexture>World/WorldObjects/Expanding/barbed-wire</expandingIconTexture>
+    <applyFactionColorToSiteTexture>true</applyFactionColorToSiteTexture>
+    <showFactionInInspectString>true</showFactionInInspectString>
+    <requiresFaction>true</requiresFaction>
+    <approachOrderString>Attack {0}</approachOrderString>
+    <approachingReportString>Attacking {0}</approachingReportString>
+    <arrivedLetter>There is a captured settlement in this area.\nRemove any opposition and save as many friendlies as possible</arrivedLetter>
+    <arrivedLetterDef>NegativeEvent</arrivedLetterDef>
+    <wantsThreatPoints>true</wantsThreatPoints>
+    <tags>
+      <li>PrisonerRescueQuestThreat</li>
+    </tags>
+  </SitePartDef>
+  
+  
+  <GenStepDef>
+    <defName>SettlementGenStep</defName>
+	<linkWithSite>Outpost_SiteResuce</linkWithSite>
+    <order>800</order>
+    <genStep Class="Flavor_Expansion.GenStep_Rescue">
+      <count>1</count>
+      <nearMapCenter>true</nearMapCenter>
+    </genStep>
+  </GenStepDef>
+
+  <GenStepDef>
+    <defName>OutpostPower_SiteResuceGenStep</defName>
+    <linkWithSite>Outpost_SiteResuce</linkWithSite>
+    <order>802</order>
+    <genStep Class="GenStep_Power"/>
+  </GenStepDef>
+
+
+   <SitePartDef>
+    <defName>Outpost_defense</defName>
+    <label>outpost</label>
+    <description>A small, guarded outpost.</description>
+		<descriptionDialogue>There is an friendly outpost in this area, defend it from hostiles. guarded by {0} friendlies</descriptionDialogue>
+    <workerClass>Flavor_Expansion.SitePartWorker_Outpost_Defense</workerClass>
+		<siteTexture>World/WorldObjects/Sites/Outpost</siteTexture>
+    <expandingIconTexture>World/WorldObjects/Expanding/lookout-tower</expandingIconTexture>
+    <applyFactionColorToSiteTexture>true</applyFactionColorToSiteTexture>
+    <showFactionInInspectString>true</showFactionInInspectString>
+    <requiresFaction>true</requiresFaction>
+    <approachOrderString>Attack {0}</approachOrderString>
+    <approachingReportString>Attacking {0}</approachingReportString>
+    <arrivedLetter>There is an friedly outpost in this area, defend it from hostiles.</arrivedLetter>
+    <arrivedLetterDef>NegativeEvent</arrivedLetterDef>
+    <wantsThreatPoints>true</wantsThreatPoints>
+  </SitePartDef>
+  
+  <GenStepDef>
+    <defName>OutpostGen</defName>
+    <linkWithSite>Outpost_defense</linkWithSite>
+    <order>450</order>
+    <genStep Class="GenStep_Outpost"/>
+  </GenStepDef>
+
+  <SitePartDef>
+    <defName>Outpost_opbase</defName>
+    <label>Forward operating base</label>
+    <description>A guarded Forward operating base.</description>
+		<descriptionDialogue>there is an enemy operating base at the site guarded by {0} enemies</descriptionDialogue>
+    <workerClass>SitePartWorker_Outpost</workerClass>
+		<siteTexture>World/WorldObjects/Sites/Outpost</siteTexture>
+    <expandingIconTexture>World/WorldObjects/Expanding/Sites/Outpost</expandingIconTexture>
+    <applyFactionColorToSiteTexture>true</applyFactionColorToSiteTexture>
+    <showFactionInInspectString>true</showFactionInInspectString>
+    <requiresFaction>true</requiresFaction>
+    <approachOrderString>Attack {0}</approachOrderString>
+    <approachingReportString>Attacking {0}</approachingReportString>
+    <arrivedLetter>There is an enemy outpost in this area.</arrivedLetter>
+    <arrivedLetterDef>NegativeEvent</arrivedLetterDef>
+    <wantsThreatPoints>true</wantsThreatPoints>
+  </SitePartDef>
+
+  <GenStepDef>
+    <defName>Outpost_opbaseGen</defName>
+    <linkWithSite>Outpost_opbase</linkWithSite>
+    <order>450</order>
+    <genStep Class="GenStep_Outpost"/>
+  </GenStepDef>
+  
+</Defs>

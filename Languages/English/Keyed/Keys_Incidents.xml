@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+
+  <RoadsTimerDesc>Completion in {0} days.</RoadsTimerDesc>
+	
+  <DefendArrival>Help {0}</DefendArrival>
+  
+  <VisitDispute>Visit {0}</VisitDispute>
+  
+  <LetterLabelGift>Gift</LetterLabelGift>
+  <Gift>{1} from {0}, your ally, has sent you a gift in the form of</Gift>
+  
+  <LetterLabelAid>Aid</LetterLabelAid>
+  <Aid>{0} from {1}, your ally, sent your colony aid in the form of</Aid>
+  
+  <ResearchGainedTitle>Research Sell Offer</ResearchGainedTitle>
+  <ResearchGained>{0_nameFull} from {0_factionName} has succeeded in {0_objective} latest research project and is offering to share it to you for {1} silver.\n\nResearch project {2} is the research available for purchase.</ResearchGained>
+  <ResearchGained_Purchase>Purchase Tech for {0} silver</ResearchGained_Purchase>
+  <ResearchGainedPurchase>The relevant files have been transfer to you. Research project {0} is now completed</ResearchGainedPurchase>
+  <ResearchGained_Decline>Decline</ResearchGained_Decline>
+  <!-- Settlement Defection
+  <DefectionRequestTitle>{0} defection request</DefectionRequestTitle>
+  <DefectionRequest>{1} from {0} is disillusioned by their faction and looking for new allies for security.\nTheir Leader, {2}, is requesting to join your faction.\n\nHe is warning you that it will anger their current faction significantly.</DefectionRequest>
+  <DefectionRequest_Accept>Accept defection</DefectionRequest_Accept>
+  <DefectionRequest_Reject>Reject the request</DefectionRequest_Reject>
+  <DefectionRequestAccept>{0} thanks you and he declare the preparations will start immediately\n\nShortly after another call comes from {1} cursing you for causing {2}'s betrayal and promising they won't forget it</DefectionRequestAccept>
+  <DefectionRequestReject>{0}, after heavy sigh, says there is only one another choice left for his people and hangs up.</DefectionRequestReject>
+  <LetterLabelDefectionReject>Defection Rejection</LetterLabelDefectionReject>
+  <DefectionRequestReject_result>{0}, formerly a member of {1} has join the hostile faction of {2} .</DefectionRequestReject_result>-->
+  
+  <!-- RoadsCamp-->
+  <RoadsCampRequestTitle>{0}'s Road Camp</RoadsCampRequestTitle>
+  <RoadsCampRequest>{0} has arrived at one of {1}'s road work camps, the camp itself appears to be abandoned but with one worker that is requesting you leave and is willing to pay a bribe so the caravan will leave, accepting the bride will worsen relations with {1}.\nThe camp is obviously lacking in fighting equipment and wherever the rest of the workers are hiding it's doubtful they could stop the destruction of the camp but doing so will negatively affect your relationship with their faction.</RoadsCampRequest>
+  <RoadsCampRequest_Attack>Attack</RoadsCampRequest_Attack>
+  <RoadsCampRequest_AttackReason>{0} vengeful of you attacking a defenseless worker's camp is now hostile to you.</RoadsCampRequest_AttackReason>
+  <RoadsCampRequestAttack>The unharmed messenger fell immediately and {0} scoured the camp and came up with some common raw resource and simple meals.\n\n{1_factionName}'s leader, {1_nameFull}, contacted the pillaging caravan through an abandoned communicator promising that {0_pronoun} will make your colony regret this.</RoadsCampRequestAttack>
+  <RoadsCampRequest_Bribe>Take Bribe of {0} silver</RoadsCampRequest_Bribe>
+  <RoadsCampRequestBribe>The messenger gave the caravan the {0} silver from a small chest and impatiently waited for {1} to leave. It was apparent that the hiding workers won't come out until the danger has completely passed.\nExpect relations with the workers' faction to be more hostile.</RoadsCampRequestBribe>
+  <RoadsCampRequest_Leave>Leave</RoadsCampRequest_Leave>
+  <RoadsCampRequestArrive>Arrive</RoadsCampRequestArrive>
+  <RoadsCampRequestBribe_Disabled>Already extorted</RoadsCampRequestBribe_Disabled>
+  
+  <!-- Outpost defense-->
+  <LetterLabelOutpostdefense>Outpost Defense</LetterLabelOutpostdefense>
+  <Outpostdefense>A vital Outpost of {0_factionName} is coming under attack and the leader, {0_nameFull}, is requesting that you send reinforcements.\nLetting the outpost be taken will strength enemy foothold in the region and will likely lead to an especially concentrated attack against you.</Outpostdefense>
+  <LetterLabelOutpostdefensesuccess>Enemies defeated</LetterLabelOutpostdefensesuccess>
+  <Outpostdefensesuccess>All hostiles have been defeated</Outpostdefensesuccess>
+  
+  <!-- Joint Raid-->
+  <LetterLabelJointRaidSuccess>Raid Success</LetterLabelJointRaidSuccess>
+  <JointRaidSuccess>All hostiles are dead, {0_nameFull} has thanked you and sent your reward of:\n\n</JointRaidSuccess>
+  <LetterLabelJointRaidFail>Joint Raid Passed</LetterLabelJointRaidFail>
+  <JointRaidFail>{0_factionName}'s leader, {0_nameFull}, informed you that {1} of {2}'s weakness was reinforced and that {0_pronoun} is no longer interested in a the joint raid offer.</JointRaidFail>
+  <ExtraCompString_JointRaid>The target of a joint raid offer.</ExtraCompString_JointRaid>
+  
+  <!-- Settlement Defender-->
+  <LetterLabelSettlementDefense>Settlement Defense</LetterLabelSettlementDefense>
+  <SettlementDefense>A Settlement of {0_factionName} is coming under attack, {0_nameFull} is requesting that you send reinforcements.\nLetting the settlement get taken will strength the enemy and will led that the inhabitants will be taken to slavery or death.</SettlementDefense>
+  <LetterLabelSettlementDefenderWon>Settlement Defended</LetterLabelSettlementDefenderWon>
+  <SettlementDefenderWon>The raid on {0} was successfully repealed, you have {1} until you have to go.\n\n{2_factionName}'s leader {2_nameFull} is thankful\n\n{0_pronoun} rewarded you with:</SettlementDefenderWon>
+  <LetterLabelSettlementDefenderLost>Settlement Destroyed</LetterLabelSettlementDefenderLost>
+  <SettlementDefenderLost>{0} is lost, you have {1} until you have to go.\n\n{2_factionName}'s leader {2_nameFull} sounds mournful for the lost of lives.</SettlementDefenderLost>
+  <LetterLabelSettlementDefenderIgnored>Settlement Sacked</LetterLabelSettlementDefenderIgnored>
+  <SettlementDefenderIgnored>The raid on {0} has successfully destroyed the settlement.\n\n{1_factionName}'s leader {1_nameFull} implored you to still travel there to try and save anyone who still might be alive.</SettlementDefenderIgnored>
+  
+  <!-- Settlement Rescue-->
+  <LetterLabelSettlementRescue>Capturers Routed</LetterLabelSettlementRescue>
+  <SettlementRescueWin>{0}'s capturers were successfully routed, you have {1} until you have to go.\n\n{2_factionName}'s leader {2_nameFull} is thankful\n\nHe rewarded you with:</SettlementRescueWin>
+  <LetterLabelSettlementRescueFail>Failed Rescue</LetterLabelSettlementRescueFail>
+  <SettlementRescueFail>{0}'s capturers were successfully routed but all prisoner are dead\nWe have {1} until you have to go.\n\n{2_factionName}'s leader {2_nameFull} sounds mournful for the lost of life.</SettlementRescueFail>
+  <LetterLabelSettlementRescueIgnored>Ally settlement looted</LetterLabelSettlementRescueIgnored>
+  <SettlementRescueIgnored>The raiders in {0} have departed from the destroyed settlement with their prisoners.\n\n{1_factionName}'s leader {1_nameFull} is livid that you repeatedly ignored {1_possessive} requested for help.</SettlementRescueIgnored>
+  
+  
+  <!-- Dispute-->
+  <LetterLabelDispute>Dispute Talks</LetterLabelDispute>
+  <Dispute>{0} and {1} from {2}, your sister faction, asked you to help them to settle a dispute\n</Dispute>
+  <LetterLabelDisputeDisaster>Dispute Disaster</LetterLabelDisputeDisaster>
+  <DisputeDisaster>The negotiation was a disaster and angered the representative of {0}.\nArmed fighters appeared from hidden spots in the surrounding wearing outfits with {1}'s insignia\n\n{2}'s delegation are arming themselves and expect you to join the fight.</DisputeDisaster>
+  <LetterLabelDisputeBackfire>Dispute Backfire</LetterLabelDisputeBackfire>
+  <DisputeBackfire>The negotiation backfired and offended the representative of {0}.\nHe claim the dispute is unsolvable and that they will know look for a solution from {1}\n\n{2}'s delegation are outraged of {0}'s treachery.\nThey propose {0} will be dealt with immediately the old fashioned way.</DisputeBackfire>
+  <LetterLabelDisputeFail>Dispute Fail</LetterLabelDisputeFail>
+  <DisputeFail>Our negotiator {0} pushed the other delegations from {1} and {2} to accept a compromise that neither of them wanted.\n\nThe issue is settled for now but it doesn't seem likely they will call you to help next time.</DisputeFail>
+  <LetterLabelDisputeMildSuccess>Dispute Mild Success</LetterLabelDisputeMildSuccess>
+  <DisputeMildSuccess>Our negotiator {0} pushed the other delegations from {1} and {2} to accept a compromise that both of them were satisfied with.\n\nThe issue is settled for now and it seem likely they will call you to help next time.</DisputeMildSuccess>
+  <LetterLabelDisputeSuccess>Dispute Success</LetterLabelDisputeSuccess>
+  <DisputeSuccess>Our negotiator {0} pushed the other delegations from {1} and {2} to accept a compromise that both of them were happy with.\n\nThe issue is settled for now and one of the settlement even pledged to upgrade the path between their settlement and your colony as a gesture of gratitude.</DisputeSuccess>
+  <LetterLabelDisputeTriumph>Dispute Triumph</LetterLabelDisputeTriumph>
+  <DisputeTriumph>Our negotiator {0} pushed the other delegations from {1} and {2} to accept a compromise that both of them were happy with.\n\nThe issue is settled for now and both settlement having solved the problem now started their plan to build a launch camp that will attack several enemy bases.</DisputeTriumph>
+  <DisputeFODdesc>Attack commencing in {0} days and {1} minutes on the enemy settlement {2}.</DisputeFODdesc>
+  <DisputeFODdescMinutes>Attack commencing in less than {0} minutes on the enemy settlement {1}.</DisputeFODdescMinutes>
+  
+  <!--FactionWar_CaravanSkirmish-->
+  <LetterLabelSkirmish>Skirmish</LetterLabelSkirmish>
+  <Skirmish>{0} were caught in a middle of a skirmish between {1} and {2}.\n\nFight or escape.</Skirmish>
+  
+  <!--FactionWar_MercenaryBattle-->
+  <LetterLabelMercenaryBattleRequestTitle>Mercenary Recruitment</LetterLabelMercenaryBattleRequestTitle>
+  <MercenaryBattleRequest>{0_factionName}, {0_nameFull}'s leader, is recruiting capable fighters to help them in an upcoming major battle in their war against {1}.\n{0_pronoun} is promising large compensation for all recruits.</MercenaryBattleRequest>
+  <MercenaryBattleRequest_Accept>Accept the job</MercenaryBattleRequest_Accept>
+  <MercenaryBattleRequest_Reject>Decline the request</MercenaryBattleRequest_Reject>
+  <MercenaryBattleRequestAccept>{0_nameFull} thanked you and shared the expected location of the battle.\n\nNot showing up after you have agreed to will anger {0_nameFull} and {0_factionName} as a whole.</MercenaryBattleRequestAccept>
+  <MercenaryBattleRequestReject>{0} were the winner of the hard-fought battle, {1} suffered heavy loses</MercenaryBattleRequestReject>
+  <LetterLabelMercenaryBattleRequestOutcomeWin>Battle Won</LetterLabelMercenaryBattleRequestOutcomeWin>
+  <MercenaryBattleRequestOutcomeWin>{0_factionName} is the winner of this battle, {0_nameFull} is grateful for the help in turning the tide of the battle.</MercenaryBattleRequestOutcomeWin>
+  <LetterLabelMercenaryBattleRequestOutcomeLose>Battle Lost</LetterLabelMercenaryBattleRequestOutcomeLose>
+  <MercenaryBattleRequestOutcomeLose>{0_factionName} lost this battle, {0_nameFull} seemed colder than before as he cut communications.</MercenaryBattleRequestOutcomeLose>
+  
+</LanguageData>

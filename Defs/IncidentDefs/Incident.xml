@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+	<IncidentDef>
+		<defName>FE_Gift</defName>
+		<label>Gift From Ally</label>
+		<targetTags>
+		<li>Map_PlayerHome</li>
+		</targetTags>
+		<workerClass>Flavor_Expansion.FE_IncidentWorker_Gift</workerClass>
+		<category>Misc</category>
+		<minRefireDays>2</minRefireDays>
+		<baseChance>0.8</baseChance>
+	</IncidentDef>
+	
+	<IncidentDef>
+		<defName>FE_Aid</defName>
+		<label>Aid From Ally</label>
+		<targetTags>
+		<li>Map_PlayerHome</li>
+		</targetTags>
+		<workerClass>Flavor_Expansion.FE_IncidentWorker_Aid</workerClass>
+		<category>Misc</category>
+		<minRefireDays>2</minRefireDays>
+		<baseChance>2</baseChance>
+	</IncidentDef>
+	
+	<!--<IncidentDef>
+		<defName>FE_SettlmentDefection</defName>
+		<label>Defection From Ally</label>
+		<targetTags>
+		<li>World</li>
+		</targetTags>
+		<workerClass>End_Game.IncidentWorker_Defection</workerClass>
+		<category>WorldQuest</category>
+		<baseChance>0.5</baseChance>
+	</IncidentDef>-->
+	
+	<IncidentDef>
+		<defName>FE_FactionAdvancment</defName>
+		<label>Research advancement from sister faction</label>
+		<targetTags>
+		<li>Map_PlayerHome</li>
+		</targetTags>
+		<workerClass>Flavor_Expansion.FE_IncidentWorker_Advancement</workerClass>
+		<category>Misc</category>
+		<baseChance>0.1</baseChance>
+	</IncidentDef>
+	
+	<IncidentDef>
+		<defName>FE_SiteDefender</defName>
+		<label>Defend a site of sister faction from a raid</label>
+		<targetTags>
+		<li>World</li>
+		</targetTags>
+		<workerClass>Flavor_Expansion.FE_IncidentWorker_SiteDefender</workerClass>
+		<category>Misc</category>
+		<baseChance>1</baseChance>
+		<pointsScaleable>true</pointsScaleable>
+		<chanceFactorByPopulationCurve>
+			<points>
+				<li>(3,0)</li>
+				<li>(7,1)</li>
+			</points>
+		</chanceFactorByPopulationCurve>
+		
+	</IncidentDef>
+	
+	<IncidentDef>
+		<defName>FE_SettlementDefender</defName>
+		<label>Defend a Settlement of sister faction from a raid</label>
+		<targetTags>
+		<li>World</li>
+		</targetTags>
+		<workerClass>Flavor_Expansion.FE_IncidentWorker_SettlementDefender</workerClass>
+		<category>Misc</category>
+		<baseChance>1</baseChance>
+		<pointsScaleable>true</pointsScaleable>
+		<chanceFactorByPopulationCurve>
+			<points>
+				<li>(4,0)</li>
+				<li>(7,1)</li>
+			</points>
+		</chanceFactorByPopulationCurve>
+		
+	</IncidentDef>
+	
+	<IncidentDef>
+		<defName>FE_JointRaid</defName>
+		<label>Defend a settlement from sister faction</label>
+		<targetTags>
+		<li>World</li>
+		</targetTags>
+		<workerClass>Flavor_Expansion.FE_IncidentWorker_Jointraid</workerClass>
+		<category>Misc</category>
+		<baseChance>1</baseChance>
+		<pointsScaleable>true</pointsScaleable>
+		<chanceFactorByPopulationCurve>
+			<points>
+				<li>(3,0)</li>
+				<li>(5,1)</li>
+			</points>
+		</chanceFactorByPopulationCurve>
+		<letterLabel>Joint raid quest</letterLabel>
+		<letterText>{0}, {1} of {2}, has sent us a message.\n\nApparently they found a weakness in a nearby enemy settlement's defenses. They've asked us to help them in their planned raid, which means eliminating all enemies and turrets together with their raid party.\n\nIf we succeed, their relations will improve, and they'll send us this reward worth {5}:\n\n{3}\n\nIf at least one fighters from the raid party survives they will add a bonus reward of {6} silver\n\nIf we don't destroy the camp in {4} days, the settlement's weakness will be reinforce and the opportunity will pass.</letterText>
+		<letterDef>PositiveEvent</letterDef>
+		
+	</IncidentDef>
+	
+	<IncidentDef>
+		<defName>FE_Dispute</defName>
+		<label>Broker peace between two disputing settlements</label>
+		<targetTags>
+		<li>World</li>
+		</targetTags>
+		<workerClass>Flavor_Expansion.FE_IncidentWorker_Dispute</workerClass>
+		<category>WorldQuest</category>
+		<baseChance>1</baseChance>
+		<pointsScaleable>true</pointsScaleable>
+		<minRefireDays>12</minRefireDays>
+		<chanceFactorByPopulationCurve>
+			<points>
+				<li>(3,0)</li>
+				<li>(7,1)</li>
+			</points>
+		</chanceFactorByPopulationCurve>
+		
+	</IncidentDef>
+	
+	<IncidentDef>
+    <defName>FE_Skirmish</defName>
+    <label>Skirmish</label>
+		<category>ThreatBig</category>
+		<targetTags>
+      <li>Caravan</li>
+      <li>Map_TempIncident</li>
+    </targetTags>
+		<workerClass>Flavor_Expansion.FE_IncidentWorker_FactionWar_CaravanSkirmish</workerClass>
+		<baseChance>1</baseChance>
+    <pointsScaleable>true</pointsScaleable>
+    <minRefireDays>2</minRefireDays>
+    <letterText>{0} has been ambushed by {1} from {2}!</letterText>
+    <letterLabel>Caravan ambushed</letterLabel>
+    <letterDef>ThreatBig</letterDef>
+    <tale>CaravanAmbushedByHumanlike</tale>
+	
+  </IncidentDef>
+  
+    <IncidentDef>
+		<defName>FE_MercenaryBattle</defName>
+		<label>Help a losing faction win a major battle in their war</label>
+		<targetTags>
+		<li>World</li>
+		</targetTags>
+		<workerClass>Flavor_Expansion.FE_IncidentWorker_FactionWar_Mercenary</workerClass>
+		<category>ThreatBig</category>
+		<baseChance>1</baseChance>
+		<pointsScaleable>true</pointsScaleable>
+		<minRefireDays>1.7</minRefireDays>
+		<chanceFactorByPopulationCurve>
+			<points>
+				<li>(5,0)</li>
+				<li>(10,1)</li>
+			</points>
+		</chanceFactorByPopulationCurve>
+		
+	</IncidentDef>
+	
+</Defs>
