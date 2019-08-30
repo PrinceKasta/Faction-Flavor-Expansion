@@ -65,12 +65,12 @@ namespace Flavor_Expansion
             List<Thing> list = new List<Thing>();
 
             Site site = SiteMaker.MakeSite(SiteCoreDefOf.Nothing, EndGameDefOf.Outpost_opbase, parent.Tile, enemy, true, new float?());
-
-            site.GetComponent<DefeatAllEnemiesQuestComp>().StartQuest(parent.Faction, 12, list);
+            
             int randomInRange = SiteTuning.QuestSiteTimeoutDaysRange.RandomInRange;
             // Balance
-            site.GetComponent<WorldComp_opbase>().StartComp(parms);
-            site.GetComponent<TimeoutComp>().StartTimeout(SiteTuning.QuestSiteRefugeeTimeoutDaysRange.RandomInRange);
+            site.GetComponent<TimeoutComp>().StartTimeout(SiteTuning.QuestSiteRefugeeTimeoutDaysRange.RandomInRange * Global.DayInTicks);
+            site.GetComponent<WorldComp_opbase>().StartComp();
+            
             Find.WorldObjects.Add(site);
             
         }
@@ -204,6 +204,12 @@ namespace Flavor_Expansion
             LordMaker.MakeNewLord(faction, new LordJob_DefendPoint(intVec2), map, list);
         }
 
+        public override string CompInspectStringExtra()
+        {
+            if(active)
+                return "ExtraCompString_Outpostdefense".Translate((NamedArgument)this.stopTime.ToStringTicksToPeriod());
+            return (string)null;
+        }
         public override void PostExposeData()
         {
             Scribe_Values.Look(ref active, "outpostdefense_active", defaultValue: false);

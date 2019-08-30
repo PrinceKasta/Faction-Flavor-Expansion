@@ -47,6 +47,10 @@
   <OutpostdefensesuccessJointRaid>{0_nameFull}, {1} of {0_factionName}, has sent us a message.\n\nAll hostiles are dead, {0_nameFull} has thanked you and has sent your reward of: {6}\n\nApparently they also found a weakness in a nearby enemy settlement's defenses as they exhausted their resources attacking the outpost. They've asked us to help them in their planned retaliation raid, which means eliminating all enemies and turrets together with their raid party.\n\nIf we succeed, their relations will improve, and they'll send us this reward worth {4}:\n\n{2}\n\nIf at least one fighters from the raid party survives they will add a bonus reward of ${5} in silver\n\nIf we don't destroy the settlement in {3} days, the target settlement's weakness will be reinforce and the opportunity will pass.</OutpostdefensesuccessJointRaid>
   <LetterLabelOutpostdefenseFriendliesDead>Outpost captured</LetterLabelOutpostdefenseFriendliesDead>
   <OutpostdefenseFriendliesDead>{0_nameFull}, {1} of {0_factionName}, has sent us a message.\n\nAll {0_possessive} faction members are dead and the enemy raid has overrun the outpost, {0_pronoun} bitterly advises you to be prepared for a raid launched from the captured outpost soon and then {0_pronoun} cut communications.</OutpostdefenseFriendliesDead>	
+  <ExtraCompString_Outpostdefense>Outpost captured in {0}.</ExtraCompString_Outpostdefense>
+  
+  <!-- Enemy Forward Operation Base-->
+  <ExtraCompString_FOB>Outpost launching raid in {0}.</ExtraCompString_FOB>
   
   <!-- Joint Raid-->
   <LetterLabelJointRaidSuccess>Raid Success</LetterLabelJointRaidSuccess>
