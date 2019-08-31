@@ -33,14 +33,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony">
-      <HintPath>..\Source-DLLs\0Harmony.dll</HintPath>
+      <HintPath>..\..\..\..\..\Users\Amrani\Documents\RIMWORLDPROJECT\rimworld-cities-0.3.0\rimworld-cities-0.3.0\Assemblies\0Harmony.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\Source-DLLs\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\..\..\..\Users\Amrani\Documents\RIMWORLDPROJECT\rimworld-cities-0.3.0\rimworld-cities-0.3.0\Assemblies\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="HugsLib">
-      <HintPath>..\..\HugsLib\Assemblies\HugsLib.dll</HintPath>
+      <HintPath>..\..\..\HugsLib\Assemblies\HugsLib.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -54,7 +54,7 @@
     <None Include="..\About\About.xml" />
     <None Include="..\Patches\Settlement.xml" />
     <Reference Include="UnityEngine">
-      <HintPath>..\Source-DLLs\UnityEngine.dll</HintPath>
+      <HintPath>..\..\..\..\..\Users\Amrani\Documents\RIMWORLDPROJECT\rimworld-cities-0.3.0\rimworld-cities-0.3.0\Assemblies\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
