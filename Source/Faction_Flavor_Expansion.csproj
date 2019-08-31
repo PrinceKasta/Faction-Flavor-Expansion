@@ -7,8 +7,8 @@
     <ProjectGuid>{D7D21B4A-1DA7-41D8-B202-C58CA8FA62AA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>End_Game</RootNamespace>
-    <AssemblyName>End_Game</AssemblyName>
+    <RootNamespace>Faction_Flavor_Expansion</RootNamespace>
+    <AssemblyName>Faction_Flavor_Expansion</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
