@@ -394,9 +394,12 @@ namespace Flavor_Expansion
                     Messages.Message("MessageFactionWarSupply".Translate(settlement.Faction), worldObject, MessageTypeDefOf.NeutralEvent, false);
                     
                 }
-                GetByFaction(settlement.Faction).SupplyDepots.Add(Global.DayInTicks * 14);
+                else
+                {
+                    GetByFaction(settlement.Faction).SupplyDepots.Add(Global.DayInTicks * 14);
+                    Messages.Message("MessageFactionWarSupply".Translate(settlement.Faction), null, MessageTypeDefOf.NeutralEvent, false);
+                }
                 GetByFaction(settlement.Faction).resources -= MEDIUM_EVENT_RESOURCE_VALUE;
-                Messages.Message("MessageFactionWarSupply".Translate(settlement.Faction),null, MessageTypeDefOf.NeutralEvent, false);
                 war.warHistory += "HistoryDate".Translate(5500 + Find.TickManager.TicksGame / Global.YearInTicks) + "MessageFactionWarSupply".Translate(settlement.Faction) + "\n\n";
                 return;
             }
