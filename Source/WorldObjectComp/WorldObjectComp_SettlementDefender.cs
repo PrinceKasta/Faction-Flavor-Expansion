@@ -184,7 +184,7 @@ namespace Flavor_Expansion
         public override string CompInspectStringExtra()
         {
             if(active)
-                return base.CompInspectStringExtra() + "ExtraCompString_SettlementDefense".Translate(timeOut/60000 + 1);
+                return base.CompInspectStringExtra() + "ExtraCompString_SettlementDefense".Translate(timeOut.ToStringTicksToPeriod());
             return base.CompInspectStringExtra();
         }
         public override void PostExposeData()

@@ -215,8 +215,8 @@ namespace Flavor_Expansion
             {
                 if (!Find.FactionManager.AllFactions.Contains(info.faction) || info.faction.defeated)
                     factionInfo.Remove(info);
-                else if (info.resources < 0 || info.resources > Find.WorldObjects.Settlements.Where(x => x.Faction == info.faction).Count() * SETTLEMENT_RESOURCE_VALUE + (int)info.faction.def.techLevel * TECHLEVEL_RESOURCE_VALUE + info.disposition * 200)
-                    info.resources = Mathf.Clamp(info.resources, 0 , Find.WorldObjects.Settlements.Where(x => x.Faction == info.faction).Count() * SETTLEMENT_RESOURCE_VALUE + (int)info.faction.def.techLevel * TECHLEVEL_RESOURCE_VALUE + info.disposition * 200);
+                else if (info.resources < 0 || info.resources > MaxResourcesForFaction(info.faction))
+                    info.resources = Mathf.Clamp(info.resources, 0 , MaxResourcesForFaction(info.faction));
 
                 if (info.SupplyDepots == null)
                     info.SupplyDepots = new List<int>();
@@ -231,6 +231,12 @@ namespace Flavor_Expansion
                 }
 
             }
+        }
+
+        public float MaxResourcesForFaction(Faction faction)
+        {
+            LE_FactionInfo info = GetByFaction(faction);
+            return Find.WorldObjects.Settlements.Where(x => x.Faction == info.faction).Count() * SETTLEMENT_RESOURCE_VALUE + (int)info.faction.def.techLevel * TECHLEVEL_RESOURCE_VALUE + info.disposition * 200;
         }
 
         #region WarMethods

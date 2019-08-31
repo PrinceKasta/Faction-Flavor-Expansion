@@ -60,7 +60,7 @@
   <JointRaidSuccessAbandoned>{1_nameFull}, {0} of {1_factionName} did not appreciate your caravan abandoning {1_possessive} raid party after the fight started. You forfeited the rewards and relations with {1_factionName} worsened.</JointRaidSuccessAbandoned>
   <LetterLabelJointRaidFail>Joint Raid Passed</LetterLabelJointRaidFail>
   <JointRaidFail>{0_factionName}'s leader, {0_nameFull}, informed you that {1} of {2}'s weakness was reinforced and that {0_pronoun} is no longer interested in a the joint raid offer.</JointRaidFail>
-  <ExtraCompString_JointRaid>The target of a joint raid offer.</ExtraCompString_JointRaid>
+  <ExtraCompString_JointRaid>The target of a joint raid offer, settlement reinforcemented in {0}.</ExtraCompString_JointRaid>
   
   <!-- Settlement Defender-->
   <LetterLabelSettlementDefenderWon>Settlement defended</LetterLabelSettlementDefenderWon>
@@ -95,8 +95,7 @@
   <DisputeSuccess>Our negotiator {0} pushed the other delegations from {1} and {2} to accept a compromise that both of them were happy with.\n\nThe issue is settled for now and one of the settlement even pledged to upgrade the path between their settlement and your colony as a gesture of gratitude.</DisputeSuccess>
   <LetterLabelDisputeTriumph>Dispute Triumph</LetterLabelDisputeTriumph>
   <DisputeTriumph>Our negotiator {0} pushed the other delegations from {1} and {2} to accept a compromise that both of them were happy with.\n\nThe issue is settled for now and both settlement having solved the problem now started their plan to build a launch camp that will attack several enemy bases.</DisputeTriumph>
-  <DisputeFODdesc>Attack commencing in {0} days and {1} minutes on the enemy settlement {2}.</DisputeFODdesc>
-  <DisputeFODdescMinutes>Attack commencing in less than {0} minutes on the enemy settlement {1}.</DisputeFODdescMinutes>
+  <DisputeFODdesc>Attack commencing in {0} on the enemy settlement {1}.</DisputeFODdesc>
   
   <!--FactionWar_CaravanSkirmish-->
   <LetterLabelSkirmish>Skirmish</LetterLabelSkirmish>

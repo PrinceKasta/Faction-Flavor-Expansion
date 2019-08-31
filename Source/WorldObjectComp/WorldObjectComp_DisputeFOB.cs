@@ -18,7 +18,7 @@ namespace Flavor_Expansion
     {
         // balance
         private static readonly IntRange timerTarget = new IntRange(100, 200);
-        private int timer = 0, stopTimer, loop = 0;
+        private int stopTimer, loop = 0;
         
 
         private bool active = false;
@@ -47,7 +47,7 @@ namespace Flavor_Expansion
                 Find.WorldObjects.Remove(parent);
                 return;
             }
-            timer++;
+            stopTimer--;
             base.CompTick();
             if (target == null && NextTarget(out target))
             {
@@ -58,14 +58,14 @@ namespace Flavor_Expansion
                 loop = 4;
                 return;
             }
-            if (timer>=stopTimer)
+            if (stopTimer<=0)
             {
                 loop++;
-                timer = 0;
                 // balance
                 if (Rand.Chance(0.35f))
                 {
                     Utilities.FactionsWar().GetByFaction(target.Faction).resources -= FE_WorldComp_FactionsWar.SETTLEMENT_RESOURCE_VALUE;
+                    Utilities.FactionsWar().GetByFaction(parent.Faction).resources += FE_WorldComp_FactionsWar.SETTLEMENT_RESOURCE_VALUE / 1.5f;
                     Find.WorldObjects.Remove(target);
                     Messages.Message("MessageFriendlyAttackSuccess".Translate(target, set1, set2),MessageTypeDefOf.PositiveEvent);
                     target = null;
@@ -91,8 +91,7 @@ namespace Flavor_Expansion
         }
         public override void PostExposeData()
         {
-            Scribe_Values.Look(ref timer, "DisputeFOD_timer");
-            Scribe_Values.Look(ref stopTimer, "DisputeFOD_stopTimer");
+            Scribe_Values.Look(ref stopTimer, "DisputeFOD_stopTimer", defaultValue: 0);
             Scribe_Values.Look(ref loop, "DisputeFOD_loop", defaultValue : 0);
             Scribe_References.Look(ref target, "DisputeFOD_target");
             Scribe_References.Look(ref set1, "DisputeFOD_set1");
@@ -100,9 +99,9 @@ namespace Flavor_Expansion
         }
         public override string CompInspectStringExtra()
         {
-            if((int)(stopTimer - timer).TicksToDays()>0)
-                return base.CompInspectStringExtra()+ "DisputeFODdesc".Translate((int)(stopTimer-timer).TicksToDays(), (int)((stopTimer - timer)% Global.DayInTicks).TicksToSeconds()/60, target);
-            return base.CompInspectStringExtra() + "DisputeFODdescMinutes".Translate((int)((stopTimer - timer) % Global.DayInTicks).TicksToSeconds() / 60+1, target);
+            if(active)
+                return base.CompInspectStringExtra()+ "DisputeFODdesc".Translate(stopTimer.ToStringTicksToPeriod(), target);
+            return (string) null;
         }
     }
     public class WorldObjectCompProperties_DisputeCity : WorldObjectCompProperties

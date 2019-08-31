@@ -24,7 +24,8 @@
 	
 	<!-- Faction disposition-->
 	<FactionChose>This faction's disposition to conflict is {0}</FactionChose>
-	<FactionDispositionInfo>Faction's disposition affects their strength in attacks such as raid and likeliness to start a war.</FactionDispositionInfo>
+	<FactionDispositionInfo>A faction's disposition affects their strength and likeliness to start a war.\n\n</FactionDispositionInfo>
+	<FactionResourcesInfo>{0} has {1}% resources out of the faction's total capacity. The capacity is a combination of the faction's size, their technological level and their disposition.</FactionResourcesInfo>
 	<FactionNeutral>Neutral</FactionNeutral>
 	<FactionGenocidal>Genocidal</FactionGenocidal>
 	<FactionWarlike>Warlike</FactionWarlike>

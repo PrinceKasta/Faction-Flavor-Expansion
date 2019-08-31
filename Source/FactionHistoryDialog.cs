@@ -21,7 +21,7 @@ namespace Flavor_Expansion
             DiaOption diaOption1 = new DiaOption(text);
 
             int disposition = Utilities.FactionsWar().GetByFaction(faction).disposition;
-            DiaNode diaNode1 = new DiaNode("FactionChose".Translate(disposition == 0 ? "FactionNeutral".Translate() : disposition > 0 ? (disposition> 4 ? "FactionGenocidal".Translate() : "FactionWarlike".Translate()) : disposition<-4 ? "FactionPacifistic".Translate() : "FactionPeacelike".Translate()) + (Prefs.DevMode ? " (Debug): (" + disposition + ")\n" : "\n") + "FactionDispositionInfo".Translate());
+            DiaNode diaNode1 = new DiaNode("FactionChose".Translate(disposition == 0 ? "FactionNeutral".Translate() : disposition > 0 ? (disposition> 4 ? "FactionGenocidal".Translate() : "FactionWarlike".Translate()) : disposition<-4 ? "FactionPacifistic".Translate() : "FactionPeacelike".Translate()) + (Prefs.DevMode ? " (Debug): (" + disposition + ")\n" : "\n") + "FactionDispositionInfo".Translate()+ "FactionResourcesInfo".Translate(faction,Math.Floor(Utilities.FactionsWar().GetByFaction(faction).resources/Utilities.FactionsWar().MaxResourcesForFaction(faction) * 100))+(Prefs.DevMode ? ("(DevMode) resources:"+ Utilities.FactionsWar().GetByFaction(faction).resources)+", Total Capacity: "+ Utilities.FactionsWar().MaxResourcesForFaction(faction) : ""));
             
             #region History
             // Faction History
@@ -349,7 +349,7 @@ namespace Flavor_Expansion
                 text += "FactionWarInfoSettlemate".Translate(subject, (subject == war.DefenderFaction() ? war.AttackerFaction() : war.DefenderFaction()));
             else text += "FactionWarInfo".Translate(subject, (subject == war.DefenderFaction() ? war.AttackerFaction() : war.DefenderFaction()), war.AttackerFaction(), resourceAtt > resourceDefe ? war.AttackerFaction() : war.DefenderFaction(), resourceAtt > resourceDefe ? Math.Floor((1-(float)resourceDefe / (float)resourceAtt) * 100) : Math.Floor((1-(float)resourceAtt / (float)resourceDefe) * 100)) + "\n\n";
             if (Prefs.DevMode)
-                text += resourceAtt + ", " + resourceDefe + "\n\n";
+                text += "Attacker resources: "+resourceAtt + ", defender resources: " + resourceDefe + "\n\n";
             text += war.warHistory;
 
             if (text == "")

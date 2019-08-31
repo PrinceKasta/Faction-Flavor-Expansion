@@ -84,12 +84,8 @@ namespace Flavor_Expansion
                 if(Bonus.stackCount>0)
                     DropPodUtility.DropThingsNear(intVec3, target, new List<Thing>() { Bonus }, 110, false, false, true);
                 DropPodUtility.DropThingsNear(intVec3, target, (IEnumerable<Thing>)rewards, 110, false, true, true);
-                string reward="";
-                foreach(Thing t in rewards)
-                {
-                    reward += t.Label + "\n";   
-                }
-                Find.LetterStack.ReceiveLetter("LetterLabelJointRaidSuccess".Translate(), TranslatorFormattedStringExtensions.Translate("JointRaidSuccess", ally.leader) + reward + (Bonus.stackCount >0 ? TranslatorFormattedStringExtensions.Translate("JointRaidSuccessBonus", ally.leader, Bonus.stackCount) : "")
+
+                Find.LetterStack.ReceiveLetter("LetterLabelJointRaidSuccess".Translate(), TranslatorFormattedStringExtensions.Translate("JointRaidSuccess", ally.leader) + GenLabel.ThingsLabel(rewards,string.Empty) + (Bonus.stackCount > 0 ? "\n"+TranslatorFormattedStringExtensions.Translate("JointRaidSuccessBonus", ally.leader, Bonus.stackCount) : "")
                     , LetterDefOf.PositiveEvent, null, ally, (string)null);
                 active = false;
             }
@@ -124,7 +120,7 @@ namespace Flavor_Expansion
         public override string CompInspectStringExtra()
         {
             if(active)
-                return base.CompInspectStringExtra() + "ExtraCompString_JointRaid".Translate();
+                return base.CompInspectStringExtra() + "ExtraCompString_JointRaid".Translate(timer.ToStringTicksToPeriod());
             return base.CompInspectStringExtra();
         }
 
@@ -137,8 +133,8 @@ namespace Flavor_Expansion
             if (!active)
                 return;
             Scribe_References.Look(ref ally, "jointraid_ally");
-            Scribe_References.Look(ref Bonus, "jointraid_Bonus");
-            Scribe_Collections.Look(ref rewards, "jointraid_rewards", LookMode.Reference);
+            Scribe_Deep.Look(ref Bonus, "jointraid_Bonus");
+            Scribe_Collections.Look(ref rewards, "jointraid_rewards", LookMode.Deep);
 
         }
     }
