@@ -41,9 +41,9 @@ Incidents:
 
 	- Joint Raid: An ally faction requests you help them in their raid of an enemy settlement, they will give a bonus reward of silver if at least one of their fighter is alive after the battle.
 	
-	- Settlement Defense: An ally faction request you help them defense against an upcoming raid of one of their settlements, if you are successful they might decide it is the perfect time to counterstrike and a joint raid offer will come.
+	- Settlement Defense: An ally faction requests you help them defense against an upcoming raid of one of their settlements, if you are successful they might decide it is the perfect time to counterstrike and a joint raid offer will come.
 	
-	- Outpost Defense: An ally faction warns you that a hostile faction is trying to take over a strategic outpost in order to turn if as a base of operation that will launch a powerful raid against you, help them repeal the take over and help your self in a process.
+	- Outpost Defense: An ally faction warns you that a hostile faction is trying to take over a strategic outpost in order to turn it to a base of operation that will launch a powerful raid against you, help them repeal the take over and help your self in a process.
 	
 	- Faction Advancement: An ally faction discovered a new technology that you don't already possess and they are willing to sell it to you.
 	
