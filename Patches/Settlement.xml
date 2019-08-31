@@ -23,24 +23,4 @@
 	  </value>
 	</Operation>
 	  
-	<!--<Operation Class="PatchOperationConditional">
-        <xpath>/Defs/WorldObjectDef[defName="Site"]/comps</xpath>
-        <nomatch Class="PatchOperationAdd">
-            <xpath>/Defs/WorldObjectDef[defName="Site"]</xpath>
-            <value>
-                <comps>
-                    <li Class="End_Game.WorldObjectCompProperties_SiteResuce">
-                    </li>
-                </comps>
-            </value>
-        </nomatch>
-        <match Class="PatchOperationAdd">
-            <xpath>/Defs/WorldObjectDef[defName="Site"]/comps</xpath>
-            <value>
-                <li 
-				   Class="End_Game.WorldObjectCompProperties_SiteResuce">
-                </li>
-            </value>
-        </match>
-    </Operation>-->
 </Patch>
