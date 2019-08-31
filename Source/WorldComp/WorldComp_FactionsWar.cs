@@ -73,9 +73,8 @@ namespace Flavor_Expansion
                 WarEnd();
                 ManageHiddenFaction();
             }
-
-            if (Find.TickManager.TicksGame % 300 == 0)//
-            //if((Find.TickManager.TicksGame % Global.DayInTicks * currentDaysToDeclareWar == 0))
+            
+            if(Find.TickManager.TicksGame % (Global.DayInTicks * currentDaysToDeclareWar) == 0 || (Prefs.DevMode && Find.TickManager.TicksGame % 300 == 0))
             {
                 TryDeclareWar();
                 currentDaysToDeclareWar = daysToDeclareWar.RandomInRange;
@@ -202,7 +201,7 @@ namespace Flavor_Expansion
         }
         
         /*
-         * Updates the factionInfo list to make sure any valid factions are in there and any invalid are removed
+         * Updates the factionInfo list to make sure any valid factions are in there and any invalid ones are removed
          */
          
         private void UpdatefactionInfo()
