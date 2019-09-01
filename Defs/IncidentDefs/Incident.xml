@@ -160,11 +160,11 @@
 		<baseChance>1</baseChance>
     <pointsScaleable>true</pointsScaleable>
     <minRefireDays>2</minRefireDays>
-    <letterText>{0} has been ambushed by {1} from {2}!</letterText>
-    <letterLabel>Caravan ambushed</letterLabel>
-    <letterDef>ThreatBig</letterDef>
     <tale>CaravanAmbushedByHumanlike</tale>
-	<minThreatPoints>450</minThreatPoints>
+	<minThreatPoints>350</minThreatPoints>
+	<letterLabel>Skirmish Encounter</letterLabel>
+	<letterText>{0} wandered too close to a war zone and were caught in a fight between {1} from {2} and {3} from {4}!</letterText>
+	<letterDef>NegativeEvent</letterDef>
 	
   </IncidentDef>
   

@@ -34,7 +34,7 @@ namespace Flavor_Expansion
             {
                 
                 askingFaction.TryAffectGoodwillWith(Faction.OfPlayer, -50);
-                Utilities.FactionsWar().GetResouceAmount(askingFaction, -Utilities.FactionsWar().GetResouceAmount(askingFaction) + -Utilities.FactionsWar().GetResouceAmount(askingFaction) / 4);
+                Utilities.FactionsWar().GetByFaction(askingFaction).resources -= Utilities.FactionsWar().GetByFaction(askingFaction).resources * (3/ 4);
             }
             if ((Utilities.FactionsWar().GetWars().Where(w=> w.AttackerFaction() ==war.AttackerFaction() && w.DefenderFaction() == war.DefenderFaction()).Count()==0))
             {
@@ -64,7 +64,7 @@ namespace Flavor_Expansion
         private void BattleEnd(Faction loser, Faction winner)
         {
             MercenaryBattle_Active = false;
-            Utilities.FactionsWar().GetResouceAmount(loser, -Math.Max(Utilities.FactionsWar().GetResouceAmount(loser) / 2, 1000));
+            Utilities.FactionsWar().GetByFaction(loser).resources -=Math.Max(Utilities.FactionsWar().GetByFaction(loser).resources / 2, 1000);
             if (loser == askingFaction)
             {
                 loser.TryAffectGoodwillWith(Faction.OfPlayer, 5);
@@ -103,9 +103,7 @@ namespace Flavor_Expansion
                 int side = (Rand.Chance(0.5f) ? 0 : 1);
                 if (!RCellFinder.TryFindRandomPawnEntryCell(out vec3, parent.Map, 0, false, x=> (x.Standable(parent.Map)) && (i== 0 ? (x.x == (side==0 ? 0 : parent.Map.Size.x - 1)) : x.x==(side==0 ? parent.Map.Size.x-1: 0))))
                     return;
-                Log.Warning("" + vec3.x+", "+vec3.z);
-                Log.Warning(Utilities.FactionsWar().GetResouceAmount(f) / 10 + Flavor_Expansion.EndGame_Settings.MassiveBattles + StorytellerUtility.DefaultThreatPointsNow(parms) + ",overall     "+ StorytellerUtility.DefaultThreatPointsNow(parms)+" defualt, "+ Utilities.FactionsWar().GetResouceAmount(f) / 10);
-                Utilities.GenerateFighter(Mathf.Clamp(Utilities.FactionsWar().GetResouceAmount(f)/10+Flavor_Expansion.EndGame_Settings.MassiveBattles+ StorytellerUtility.DefaultThreatPointsNow(parms), 1000,10000), lord, kindDefs, parent.Map, f, vec3);
+                Utilities.GenerateFighter(Mathf.Clamp(Utilities.FactionsWar().GetByFaction(f).resources/10+Flavor_Expansion.EndGame_Settings.MassiveBattles+ StorytellerUtility.DefaultThreatPointsNow(parms), 1000,10000), lord, kindDefs, parent.Map, f, vec3);
             }
             base.PostMapGenerate();
         }

@@ -67,7 +67,6 @@
     <Compile Include="Incidents\FE_IncidentWorker_FactionWar_Mercenary.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="WorldComp\WorldComp_Bombardment.cs" />
-    <Compile Include="WorldComp\WorldComp_Expansion.cs" />
     <Compile Include="WorldComp\WorldComp_FactionsWar.cs" />
     <Compile Include="WorldComp\WorldComp_FactionsVassal.cs" />
     <Compile Include="WorldObjectComp\WorldObjectComp_DisputeFOB.cs" />
@@ -85,7 +84,7 @@
     <Compile Include="WorldObjectComp\WorldObjectComp_SettlementDefender.cs" />
     <Compile Include="WorldObjectComp\WorldObjectComp_SiteDefense.cs" />
     <Compile Include="WorldObjectComp\WorldObjectComp_SettlementResuce.cs" />
-    <Compile Include="WorldObjectComp\WorldObjectComp_Skirmish.cs" />
+    <Compile Include="MapComp_Skirmish.cs" />
     <Compile Include="WorldObjectComp\WorldObjectComp_SupplyDepot.cs" />
     <Compile Include="WorldObjectComp\WorldObjectComp_MercenaryBattle.cs" />
     <Compile Include="WorldObject_Dispute.cs" />

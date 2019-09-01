@@ -27,9 +27,10 @@ namespace Flavor_Expansion
             return Find.WorldGrid.ApproxDistanceInTiles(from, to) < minDist && Find.WorldReachability.CanReach(from, to);
         }
 
-        public static void GenerateFighter(float points, Lord lord, List<PawnKindDef> kindDefs, Map map, Faction faction ,IntVec3 vec3)
+        public static List<Pawn> GenerateFighter(float points, Lord lord, List<PawnKindDef> kindDefs, Map map, Faction faction ,IntVec3 vec3 ,bool toList=false)
         {
             Pawn fighter = new Pawn();
+            List<Pawn> pawns = new List<Pawn>();
             PawnKindDef def = new PawnKindDef();
             while (points > 0)
             {
@@ -42,13 +43,21 @@ namespace Flavor_Expansion
                     fighter.equipment.Primary.Destroy();
                     fighter.equipment.AddEquipment((ThingWithComps)ThingMaker.MakeThing(DefDatabase<ThingDef>.GetNamed("Gun_Revolver")));
                 }
-                GenSpawn.Spawn(fighter, vec3, map);
-                vec3 = fighter.RandomAdjacentCell8Way();
-                vec3.ClampInsideMap(map);
                 points -= fighter.kindDef.combatPower;
-                lord.AddPawn(fighter);
-                map.mapPawns.UpdateRegistryForPawn(fighter);
+                
+
+                if (!toList)
+                {
+                    lord.AddPawn(fighter);
+                    GenSpawn.Spawn(fighter, vec3, map);
+                    vec3 = fighter.RandomAdjacentCell8Way();
+                    vec3.ClampInsideMap(map);
+                    map.mapPawns.UpdateRegistryForPawn(fighter);
+                }
+                else pawns.Add(fighter);
             }
+            Log.Warning(pawns.Count.ToString());
+            return pawns;
         }
 
         public static List<PawnKindDef> GeneratePawnKindDef(int combatpower, Faction faction)

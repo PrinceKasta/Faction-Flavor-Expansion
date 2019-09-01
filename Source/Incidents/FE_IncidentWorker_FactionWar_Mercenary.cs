@@ -17,24 +17,20 @@ namespace Flavor_Expansion
     {
         protected override bool CanFireNowSub(IncidentParms parms)
         {
-            int tile;
-            War war;
-            return base.CanFireNowSub(parms) && TryFindWar(out war) && TryFindSuitableBattleLocation(out tile) && EndGame_Settings.FactionWar;
+            return base.CanFireNowSub(parms) && TryFindWar(out War war) && TryFindSuitableBattleLocation(out int tile) && EndGame_Settings.FactionWar;
         }
         protected override bool TryExecuteWorker(IncidentParms parms)
         {
-            int tile;
-            War war;
-            if (!TryFindWar(out war) || !TryFindSuitableBattleLocation(out tile) || !EndGame_Settings.FactionWar)
+            if (!TryFindWar(out War war) || !TryFindSuitableBattleLocation(out int tile) || !EndGame_Settings.FactionWar)
                 return false;
             Faction askingFaction;
             if (!war.AttackerFaction().HostileTo(Faction.OfPlayer) && !war.DefenderFaction().HostileTo(Faction.OfPlayer))
-                askingFaction = Utilities.FactionsWar().GetResouceAmount(war.AttackerFaction()) > Utilities.FactionsWar().GetResouceAmount(war.DefenderFaction()) ? war.DefenderFaction() : war.AttackerFaction();
+                askingFaction = Utilities.FactionsWar().GetByFaction(war.AttackerFaction()).resources > Utilities.FactionsWar().GetByFaction(war.DefenderFaction()).resources ? war.DefenderFaction() : war.AttackerFaction();
             else askingFaction = war.AttackerFaction().HostileTo(Faction.OfPlayer) ? war.DefenderFaction() : war.AttackerFaction();
             bool f1Win = false;
             //Rejection option's solution to the battle
-            float f1Resources = Utilities.FactionsWar().GetResouceAmount(war.AttackerFaction());
-            float f2Resources = Utilities.FactionsWar().GetResouceAmount(war.DefenderFaction());
+            float f1Resources = Utilities.FactionsWar().GetByFaction(war.AttackerFaction()).resources;
+            float f2Resources = Utilities.FactionsWar().GetByFaction(war.DefenderFaction()).resources;
             if (Rand.Chance(0.5f + f1Resources == f2Resources ? f1Resources > f2Resources ? (0.5f - f2Resources / f1Resources / 2) : -(0.5f - f2Resources / f1Resources / 2) : 0))
                 f1Win = true;
             else f1Win = false;
@@ -68,12 +64,12 @@ namespace Flavor_Expansion
                     
                     if(f1Win)
                     {
-                        Utilities.FactionsWar().GetResouceAmount(war.DefenderFaction(), -Math.Max(Utilities.FactionsWar().GetResouceAmount(war.DefenderFaction()) / 2, 1000));
+                        Utilities.FactionsWar().GetByFaction(war.DefenderFaction()).resources -= Math.Max(Utilities.FactionsWar().GetByFaction(war.DefenderFaction()).resources / 2, 1000);
                         f1Win = true;
                     }
                     else
                     {
-                        Utilities.FactionsWar().GetResouceAmount(war.AttackerFaction(), -Math.Max(Utilities.FactionsWar().GetResouceAmount(war.AttackerFaction()) / 2, 1000));
+                        Utilities.FactionsWar().GetByFaction(war.AttackerFaction()).resources  -= Math.Max(Utilities.FactionsWar().GetByFaction(war.AttackerFaction()).resources / 2, 1000);
                         f1Win = false;
                     }
                     if((f1Win && war.DefenderFaction() == askingFaction)|| (!f1Win && war.AttackerFaction()==askingFaction))

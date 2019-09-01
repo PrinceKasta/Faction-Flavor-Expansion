@@ -93,7 +93,7 @@ namespace Flavor_Expansion
                     })
                 };
 
-                if (!Prefs.DevMode || faction.def.permanentEnemy || (Utilities.FactionsWar().GetResouceAmount(faction) < 2000 && Utilities.FactionsWar().GetResouceAmount(faction) >= Find.AnyPlayerHomeMap.wealthWatcher.WealthTotal || Utilities.FactionsWar().GetResouceAmount(faction) / Math.Min(Find.AnyPlayerHomeMap.wealthWatcher.WealthTotal, 10000) > 0.25f - Utilities.FactionsWar().GetByFaction(faction).disposition/100))
+                if (!Prefs.DevMode || faction.def.permanentEnemy || (Utilities.FactionsWar().GetByFaction(faction).resources < 2000 && Utilities.FactionsWar().GetByFaction(faction).resources >= Find.AnyPlayerHomeMap.wealthWatcher.WealthTotal || Utilities.FactionsWar().GetByFaction(faction).resources / Math.Min(Find.AnyPlayerHomeMap.wealthWatcher.WealthTotal, 10000) > 0.25f - Utilities.FactionsWar().GetByFaction(faction).disposition/100))
                 {
                     DiaOption vassalagediaOption = new DiaOption("FactionVassalage".Translate());
                     if (faction.def.permanentEnemy)
@@ -117,7 +117,7 @@ namespace Flavor_Expansion
                     })
                 };
 
-                if (!Prefs.DevMode || faction.def.permanentEnemy || (Utilities.FactionsWar().GetResouceAmount(faction) < 3000 && Utilities.FactionsWar().GetResouceAmount(faction) >= Find.AnyPlayerHomeMap.wealthWatcher.WealthTotal || Utilities.FactionsWar().GetResouceAmount(faction) / Math.Min(Find.AnyPlayerHomeMap.wealthWatcher.WealthTotal, 10000) > 0.5f - Utilities.FactionsWar().GetByFaction(faction).disposition / 100))
+                if (!Prefs.DevMode || faction.def.permanentEnemy || (Utilities.FactionsWar().GetByFaction(faction).resources < 3000 && Utilities.FactionsWar().GetByFaction(faction).resources >= Find.AnyPlayerHomeMap.wealthWatcher.WealthTotal || Utilities.FactionsWar().GetByFaction(faction).resources / Math.Min(Find.AnyPlayerHomeMap.wealthWatcher.WealthTotal, 10000) > 0.5f - Utilities.FactionsWar().GetByFaction(faction).disposition / 100))
                 {
                     DiaOption tributarydiaOption = new DiaOption("FactionTributary".Translate());
                     if (faction.def.permanentEnemy)
@@ -141,8 +141,7 @@ namespace Flavor_Expansion
 
                         action = new Action(() =>
                         {
-                            ThingDef def;
-                            if (!DefDatabase<ThingDef>.AllDefs.Where(x => x.CountAsResource && x.IsStuff && x.BaseMarketValue >= 5 && x.PlayerAcquirable && !x.CanHaveFaction).TryRandomElement(out def))
+                            if (!DefDatabase<ThingDef>.AllDefs.Where(x => x.CountAsResource && x.IsStuff && x.BaseMarketValue >= 5 && x.PlayerAcquirable && !x.CanHaveFaction).TryRandomElement(out ThingDef def))
                             {
                                 Log.Error("No def found");
                                 return;
@@ -193,8 +192,8 @@ namespace Flavor_Expansion
         public static List<string> GetOptions()
         {
             List<string> HistoryOptions = new List<string>();
-            string text;
-            if ("HistoryFactions".TryTranslate(out text))
+
+            if ("HistoryFactions".TryTranslate(out string text))
             {
                 HistoryOptions.Add("HistoryFactions");
                 int y = 2;
@@ -266,8 +265,7 @@ namespace Flavor_Expansion
             int year = Find.TickManager.StartingYear-300;
             while(year< Find.TickManager.StartingYear)
             {
-                string option = "";
-                if (!HistoryOptions.TryRandomElement(out option))
+                if (!HistoryOptions.TryRandomElement(out string option))
                 {
                     return "";
                 }
@@ -342,8 +340,8 @@ namespace Flavor_Expansion
             while (wars.Count() > 20)
                 wars.Remove(wars.First());
 
-            float resourceAtt = Utilities.FactionsWar().GetResouceAmount(war.AttackerFaction());
-            float resourceDefe = Utilities.FactionsWar().GetResouceAmount(war.DefenderFaction());
+            float resourceAtt = Utilities.FactionsWar().GetByFaction(war.AttackerFaction()).resources;
+            float resourceDefe = Utilities.FactionsWar().GetByFaction(war.DefenderFaction()).resources;
             if (resourceAtt / resourceDefe == 0 && resourceDefe / resourceAtt == 0)
                 text += "FactionWarInfoSettlemate".Translate(subject, (subject == war.DefenderFaction() ? war.AttackerFaction() : war.DefenderFaction()));
             else text += "FactionWarInfo".Translate(subject, (subject == war.DefenderFaction() ? war.AttackerFaction() : war.DefenderFaction()), war.AttackerFaction(), resourceAtt > resourceDefe ? war.AttackerFaction() : war.DefenderFaction(), resourceAtt > resourceDefe ? Math.Floor((1-(float)resourceDefe / (float)resourceAtt) * 100) : Math.Floor((1-(float)resourceAtt / (float)resourceDefe) * 100)) + "\n\n";

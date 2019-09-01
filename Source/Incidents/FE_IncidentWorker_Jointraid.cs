@@ -34,16 +34,11 @@ namespace Flavor_Expansion
 
         protected override bool CanFireNowSub(IncidentParms parms)
         {
-            Settlement tile;
-            Faction ally;
-            return base.CanFireNowSub(parms) && TryFindSettlement(out ally, out tile) && EndGame_Settings.JointRaid;
+            return base.CanFireNowSub(parms) && TryFindSettlement(out Faction ally, out Settlement tile) && EndGame_Settings.JointRaid;
         }
         protected override bool TryExecuteWorker(IncidentParms parms)
         {
-            Settlement Set;
-            Faction  ally;
-
-            if (!TryFindSettlement(out ally, out Set))
+            if (!TryFindSettlement(out Faction ally, out Settlement Set))
             {
                 Log.Error("joinraid null");
                 return false;

@@ -18,14 +18,11 @@ namespace Flavor_Expansion
         private static readonly FloatRange valueRange = new FloatRange(300f, 700f);
         protected override bool CanFireNowSub(IncidentParms parms)
         {
-            Faction faction;
-            return base.CanFireNowSub(parms) && this.TryFindFactions(out faction);
+            return base.CanFireNowSub(parms) && this.TryFindFactions(out Faction faction);
         }
         protected override bool TryExecuteWorker(IncidentParms parms)
         {
-            
-            Faction faction;
-            if (!this.TryFindFactions(out faction))
+            if (!this.TryFindFactions(out Faction faction))
                 return false;
 
             Map target = (Map)parms.target;

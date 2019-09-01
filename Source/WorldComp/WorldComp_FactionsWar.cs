@@ -28,16 +28,34 @@ namespace Flavor_Expansion
         public List<LE_FactionInfo> factionInfo = new List<LE_FactionInfo>();
 
         #endregion vars
-
-        public LE_FactionInfo GetByFaction(Faction f)
+        public static readonly SimpleCurve daysToExpansion = new SimpleCurve()
         {
-            LE_FactionInfo info = factionInfo.FirstOrDefault(x => f == x.faction);
-            if (info == null)
             {
-                return null;
+                new CurvePoint(5, Global.DayInTicks),
+                true
+            },
+            {
+                new CurvePoint(10f, Global.DayInTicks * 2),
+                true
+            },
+            {
+                new CurvePoint(15f, Global.DayInTicks * 4),
+                true
+            },
+            {
+                new CurvePoint(20f, Global.DayInTicks * 10),
+                true
+            },
+            {
+                new CurvePoint(25f, Global.DayInTicks * 15),
+                true
+            },
+            {
+                new CurvePoint(30f, Global.DayInTicks * 20),
+                true
             }
-            return info;
-        }
+        };
+        
         
         public FE_WorldComp_FactionsWar(World world) : base(world)
         {
@@ -45,10 +63,9 @@ namespace Flavor_Expansion
         }
 
         public override void WorldComponentTick()
-        {
-            
-            base.WorldComponentTick();
+        { 
             UpdatefactionInfo();
+            NaturalSettlementExpansion();
             if (factionInfo.Count == 0)
             {
                 //Log.ErrorOnce("ResourcePool empty",1); 
@@ -61,7 +78,7 @@ namespace Flavor_Expansion
             {
                 foreach (LE_FactionInfo f in factionInfo.ToList())
                 {
-                    if (f.resources < Find.WorldObjects.Settlements.Where(x => x.Faction == f.faction).Count() * SETTLEMENT_RESOURCE_VALUE + (int)f.faction.def.techLevel * TECHLEVEL_RESOURCE_VALUE)
+                    if (f.resources < Find.WorldObjects.Settlements.Count(x => x.Faction == f.faction) * SETTLEMENT_RESOURCE_VALUE + (int)f.faction.def.techLevel * TECHLEVEL_RESOURCE_VALUE)
                         f.resources += 0.1f + f.SupplyDepots.Count/10 + Find.WorldObjects.AllWorldObjects.Count(x=> x.GetComponent<WorldObjectComp_SupplyDepot>() != null && x.GetComponent<WorldObjectComp_SupplyDepot>().IsActive())/10;
 
                     if (TryUseResourcesAtPeace(f.faction))
@@ -86,13 +103,14 @@ namespace Flavor_Expansion
         {
             return this.Wars;
         }
-
-        public float GetResouceAmount(Faction f, float value = -99999)
+        public LE_FactionInfo GetByFaction(Faction f)
         {
-            if (value == -99999)
-                return factionInfo.Find(x => x.faction == f).resources;
-            factionInfo.Find(x => x.faction == f).resources += value;
-            return factionInfo.Find(x => x.faction == f).resources;
+            LE_FactionInfo info = factionInfo.FirstOrDefault(x => f == x.faction);
+            if (info == null)
+            {
+                return null;
+            }
+            return info;
         }
 
         private void ManageHiddenFaction()
@@ -101,9 +119,8 @@ namespace Flavor_Expansion
             if (chance < 5)
             {
                 Faction hidden = Rand.Chance(0.5f) ? Faction.OfInsects : Faction.OfMechanoids;
-
-                Settlement set;
-                if (!Find.WorldObjects.Settlements.Where(f => factionInfo.Exists(x=> x.faction == f.Faction)).TryRandomElement(out set))
+                
+                if (!Find.WorldObjects.Settlements.Where(f => factionInfo.Exists(x=> x.faction == f.Faction)).TryRandomElement(out Settlement set))
                     return;
                 Find.WorldObjects.Remove(set);
 
@@ -111,13 +128,52 @@ namespace Flavor_Expansion
                 GetByFaction(set.Faction).history += "HistoryDate".Translate(5500 + Find.TickManager.TicksGame / Global.YearInTicks) + "MessageFactionWarHiddenRaid".Translate(hidden, set, set.Faction) + "\n\n";
             }
         }
+
+        /*
+           * this method manages faction expansion.
+           * Each faction has a timer, when it ends a new settlement is built
+        */
+        private void NaturalSettlementExpansion()
+        {
+            if (!EndGame_Settings.FactionExpansion)
+                return;
+
+            foreach (LE_FactionInfo info in factionInfo.ToList())
+            {
+                if (info.faction.defeated)
+                {
+                    factionInfo.Remove(info);
+                    return;
+                }
+                
+                if (info.expansionCoolddown < Find.TickManager.TicksGame)
+                    return;
+                
+                info.expansionCoolddown = Find.TickManager.TicksGame + (int)daysToExpansion.Evaluate(Find.WorldObjects.Settlements.Count(s => s.Faction == info.faction));
+                if (!Find.WorldObjects.Settlements.Where(x => x.Faction == info.faction).TryRandomElement(out Settlement origin))
+                    continue;
+                Settlement expand = (Settlement)WorldObjectMaker.MakeWorldObject(WorldObjectDefOf.Settlement);
+                expand.SetFaction(info.faction);
+                expand.Tile = TileFinder.RandomSettlementTileFor(expand.Faction, false, x => Find.WorldGrid.ApproxDistanceInTiles(Find.AnyPlayerHomeMap.Tile, x) <
+                    Find.WorldGrid.ApproxDistanceInTiles(Find.AnyPlayerHomeMap.Tile, origin.Tile) - 20 && Find.WorldGrid.ApproxDistanceInTiles(x, origin.Tile) < 40
+                    && TileFinder.IsValidTileForNewSettlement(x, (StringBuilder)null));
+                expand.Name = SettlementNameGenerator.GenerateSettlementName(expand,info.faction.def.settlementNameMaker);
+                Find.WorldObjects.Add(expand);
+                GetByFaction(info.faction).resources -= LARGE_EVENT_Cache_RESOURCE_VALUE;
+                Messages.Message("MessageExpanded".Translate(origin, info.faction, expand), expand, MessageTypeDefOf.NeutralEvent, false);
+                GetByFaction(info.faction).history += "HistoryDate".Translate(5500 + Find.TickManager.TicksGame / Global.YearInTicks) + "MessageExpanded".Translate(origin, info.faction, expand) + "\n\n";
+
+
+            }
+        }
+
         private bool TryUseResourcesAtPeace(Faction f)
         {
             if (f == null)
                 return false;
             int chance = PeaceEventChance.RandomInRange;
             // Roads
-            if (!f.def.techLevel.IsNeolithicOrWorse() && chance < 50)//!Find.WorldObjects.AllWorldObjects.FindAll(x=> x.def == EndGameDefOf.Roads_Camp).Any())//
+            if (!f.def.techLevel.IsNeolithicOrWorse() && chance < 50)
             {
                 Settlement set1 = new Settlement(), set2 = new Settlement();
                 foreach (Settlement s in Find.WorldObjects.Settlements.Where(x => x.Faction == f).InRandomOrder())
@@ -170,26 +226,24 @@ namespace Flavor_Expansion
             {
                 if (!f.def.CanEverBeNonHostile)
                     return false;
-                Faction faction;
                 IntRange goodwillChange = new IntRange(-10, 10);
-                if (!Find.FactionManager.AllFactionsListForReading.Where(x => !x.def.isPlayer && x.def.CanEverBeNonHostile).TryRandomElement(out faction))
+                if (!Find.FactionManager.AllFactionsListForReading.Where(x => !x.def.isPlayer && x.def.CanEverBeNonHostile).TryRandomElement(out Faction faction))
                     return false;
                 f.TryAffectGoodwillWith(faction,goodwillChange.RandomInRange,false,false);
                 factionInfo.Find(x => x.faction == f).resources -= 200;
                 return true;
             }
             // Settlement Expansion
-            if(chance<300 && Find.WorldObjects.Settlements.Where(x=> x.Faction==f).Count() < 3 && factionInfo.Find(x => x.faction == f).resources > 1000)
+            if(chance<300 && Find.WorldObjects.Settlements.Count(x=> x.Faction==f) < 3 && factionInfo.Find(x => x.faction == f).resources > 1000)
             {
-                Settlement origin;
-                if (!Find.WorldObjects.Settlements.Where(x => x.Faction == f).TryRandomElement(out origin)) 
+                if (!Find.WorldObjects.Settlements.Where(x => x.Faction == f).TryRandomElement(out Settlement origin)) 
                     return false;
                 Settlement expand = (Settlement)WorldObjectMaker.MakeWorldObject(WorldObjectDefOf.Settlement);
                 expand.SetFaction(f);
                 expand.Tile = TileFinder.RandomSettlementTileFor(expand.Faction, false, x => Find.WorldGrid.ApproxDistanceInTiles(Find.AnyPlayerHomeMap.Tile, x) <
                     Find.WorldGrid.ApproxDistanceInTiles(Find.AnyPlayerHomeMap.Tile, origin.Tile) - 20 && Find.WorldGrid.ApproxDistanceInTiles(x, origin.Tile) < 40
                     && TileFinder.IsValidTileForNewSettlement(x, (StringBuilder)null));
-                expand.Name = SettlementNameGenerator.GenerateSettlementName(expand);
+                expand.Name = SettlementNameGenerator.GenerateSettlementName(expand,f.def.settlementNameMaker);
                 Find.WorldObjects.Add(expand);
                 Messages.Message("MessageExpanded".Translate(origin, f, expand), expand, MessageTypeDefOf.NeutralEvent, false);
                 GetByFaction(f).history += "HistoryDate".Translate(5500 + Find.TickManager.TicksGame / Global.YearInTicks) + "MessageExpanded".Translate(origin, f, expand) + "\n\n";
@@ -205,7 +259,7 @@ namespace Flavor_Expansion
          */
         private void UpdatefactionInfo()
         {
-            foreach (Faction f in Find.FactionManager.AllFactions.Where(x => !x.def.hidden && !x.IsPlayer && factionInfo.Where(fac=> fac.faction==x).Count()==0))
+            foreach (Faction f in Find.FactionManager.AllFactions.Where(x => !x.def.hidden && !x.IsPlayer && factionInfo.Count(fac=> fac.faction==x) == 0))
             {
                 factionInfo.Add( new LE_FactionInfo(f, Find.WorldObjects.Settlements.Where(x => x.Faction == f).Count() * SETTLEMENT_RESOURCE_VALUE + (int)f.def.techLevel * TECHLEVEL_RESOURCE_VALUE));
             }
@@ -234,7 +288,7 @@ namespace Flavor_Expansion
         public float MaxResourcesForFaction(Faction faction)
         {
             LE_FactionInfo info = GetByFaction(faction);
-            return Find.WorldObjects.Settlements.Where(x => x.Faction == info.faction).Count() * SETTLEMENT_RESOURCE_VALUE + (int)info.faction.def.techLevel * TECHLEVEL_RESOURCE_VALUE + info.disposition * 200;
+            return Find.WorldObjects.Settlements.Count(x => x.Faction == info.faction) * SETTLEMENT_RESOURCE_VALUE + (int)info.faction.def.techLevel * TECHLEVEL_RESOURCE_VALUE + info.disposition * 200;
         }
 
         #region WarMethods
@@ -245,7 +299,7 @@ namespace Flavor_Expansion
             //if(Rand.Chance(0.1f))
             if (Wars.Count > 2)
                 return false;
-            foreach (LE_FactionInfo attacker in factionInfo.Where(f => !Wars.Where(war => (war.DefenderFaction() == f.faction)).Any()).InRandomOrder()) //!warringFactions.ContainsKey(f) && !warringFactions.ContainsValue(f)).InRandomOrder())
+            foreach (LE_FactionInfo attacker in factionInfo.Where(f => !Wars.Where(war => (war.DefenderFaction() == f.faction)).Any()).InRandomOrder())
             {
                 if (!Rand.Chance(0.001f + (GetByFaction(attacker.faction).disposition * 0.005f)))
                     continue;
@@ -373,9 +427,8 @@ namespace Flavor_Expansion
             // SupplyDepot 0.0025%
             if (chance < 225)
             {
-                int tile = 0;
                 Settlement settlement = Find.WorldObjects.Settlements.Where(x => x.Faction == f1 || x.Faction == f2).RandomElement();
-                if (!TileFinder.TryFindPassableTileWithTraversalDistance(settlement.Tile, 5, 25, out tile))
+                if (!TileFinder.TryFindPassableTileWithTraversalDistance(settlement.Tile, 5, 25, out int tile))
                     return;
                 if (settlement.Faction.HostileTo(Faction.OfPlayer))
                 {
@@ -440,11 +493,10 @@ namespace Flavor_Expansion
             }
 
             // settlement Nuked - toxic fallout 0.002%
-            if (chance<595 && Find.TickManager.TicksGame > Global.DayInTicks * 20 && Find.Storyteller.difficulty.difficulty>=2 && !Find.AnyPlayerHomeMap.GameConditionManager.ConditionIsActive(GameConditionDefOf.ToxicFallout))
+            if (chance < 595 && Find.TickManager.TicksGame > Global.DayInTicks * 20 && Find.Storyteller.difficulty.difficulty >= 2 && !Find.AnyPlayerHomeMap.GameConditionManager.ConditionIsActive(GameConditionDefOf.ToxicFallout))
             {
-                Settlement ruin;
                 if (!(Rand.Chance(0.5f + GetByFaction(f2).resources == GetByFaction(f1).resources ? GetByFaction(f2).resources / GetByFaction(f1).resources < 1 ? (0.5f - (GetByFaction(f2).resources / GetByFaction(f1).resources) / 2f) : -(0.5f - (GetByFaction(f2).resources / GetByFaction(f1).resources) / 2f) : 0) && (f1.def.techLevel == TechLevel.Industrial || f1.def.techLevel == TechLevel.Spacer) &&
-                    Find.WorldObjects.Settlements.Where(x => x.Faction == f2 && Utilities.Reachable(Find.AnyPlayerHomeMap.Tile, x.Tile, 30)).TryRandomElement(out ruin)))
+                    Find.WorldObjects.Settlements.Where(x => x.Faction == f2 && Utilities.Reachable(Find.AnyPlayerHomeMap.Tile, x.Tile, 30)).TryRandomElement(out Settlement ruin)))
                 {
                     if (!((f2.def.techLevel == TechLevel.Industrial || f1.def.techLevel == TechLevel.Spacer) && Find.WorldObjects.Settlements.Where(x => x.Faction == f1 && Utilities.Reachable(Find.AnyPlayerHomeMap.Tile, x.Tile, 30)).TryRandomElement(out ruin)))
                     {
@@ -452,11 +504,13 @@ namespace Flavor_Expansion
                     }
                 }
                 Find.WorldObjects.Remove(ruin);
-                
+
                 GetByFaction(ruin.Faction).resources -= SETTLEMENT_RESOURCE_VALUE * 7;
-                IncidentParms parms = new IncidentParms();
-                parms.forced = true;
-                parms.target = Find.AnyPlayerHomeMap;
+                IncidentParms parms = new IncidentParms()
+                {
+                    forced = true,
+                    target = Find.AnyPlayerHomeMap
+                };
                 IncidentDefOf.ToxicFallout.Worker.TryExecute(parms);
                 Messages.Message("MessageFactionWarSettlementNuked".Translate(ruin, ruin.Faction == f1 ? f2 : f1), MessageTypeDefOf.ThreatSmall);
 
@@ -577,7 +631,7 @@ namespace Flavor_Expansion
                 {
                     Find.WorldObjects.Remove(ob);
                 }
-                GetByFaction(winner).resources = Find.WorldObjects.Settlements.Where(x => x.Faction == winner).Count() * SETTLEMENT_RESOURCE_VALUE + (int)winner.def.techLevel * TECHLEVEL_RESOURCE_VALUE;
+                GetByFaction(winner).resources = Find.WorldObjects.Settlements.Count(x => x.Faction == winner) * SETTLEMENT_RESOURCE_VALUE + (int)winner.def.techLevel * TECHLEVEL_RESOURCE_VALUE;
                 loser.defeated = true;
                 factionInfo.Remove(GetByFaction(loser));
                 return;
@@ -608,6 +662,7 @@ namespace Flavor_Expansion
         // 0 - nothing, - 1 tribute, 2- vassal
         public int vassalage = 0;
         public int vassalageResourseCooldown = 0;
+        public int expansionCoolddown = 0;
 
         public LE_FactionInfo()
         {
@@ -621,6 +676,7 @@ namespace Flavor_Expansion
             if (faction.def.permanentEnemy)
                 disposition -= 4;
             this.resources = resources;
+            expansionCoolddown = Find.TickManager.TicksGame + (int)FE_WorldComp_FactionsWar.daysToExpansion.Evaluate(Find.WorldObjects.Settlements.Count(x => x.Faction == faction));
         }
 
         public void ExposeData()
@@ -633,6 +689,7 @@ namespace Flavor_Expansion
             Scribe_Values.Look(ref disposition, "disposition", defaultValue: 0);
             Scribe_Values.Look(ref vassalage, "vassalage", defaultValue : 0);
             Scribe_Values.Look(ref vassalageResourseCooldown, "vassalageResourseCooldown", defaultValue: 0);
+            Scribe_Values.Look(ref expansionCoolddown, "expansionCoolddown", defaultValue: 0);
         }
     }
     #endregion class LE_Faction
@@ -710,7 +767,7 @@ namespace Flavor_Expansion
             float total = 0;
             foreach(Faction ally in alliesAttacker)
             {
-                total += Utilities.FactionsWar().GetResouceAmount(ally);
+                total += Utilities.FactionsWar().GetByFaction(ally).resources;
             }
             return total;
         }
@@ -720,7 +777,7 @@ namespace Flavor_Expansion
             float total = 0;
             foreach (Faction ally in alliesDefender)
             {
-                total += Utilities.FactionsWar().GetResouceAmount(ally);
+                total += Utilities.FactionsWar().GetByFaction(ally).resources;
             }
             return total;
         }
