@@ -21,12 +21,6 @@ namespace Flavor_Expansion
         public static WorldObjectDef Dispute_Camp;
         public static WorldObjectDef Dispute_FOB;
         public static WorldObjectDef Roads_Camp;
-        public static ThoughtDef Security;
-        public static IncidentDef FE_Gift;
-        public static IncidentDef FE_Aid;
-        public static IncidentDef FE_FactionAdvancment;
-        public static IncidentDef FE_OutpostDefender;
-        public static IncidentDef FE_SettlementDefender;
         public static IncidentDef FE_JointRaid;
         public static SitePartDef Outpost_defense;
         public static SitePartDef Outpost_opbase;

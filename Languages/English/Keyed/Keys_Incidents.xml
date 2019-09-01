@@ -8,17 +8,15 @@
   
   <VisitDispute>Visit {0}</VisitDispute>
   
-  <LetterLabelGift>Gift</LetterLabelGift>
-  <Gift>{1} from {0}, your ally, has sent you a gift in the form of</Gift>
-  
-  <LetterLabelAid>Aid</LetterLabelAid>
-  <Aid>{0} from {1}, your ally, sent your colony aid in the form of</Aid>
+  <FFE_LetterLabelAid>Aid</FFE_LetterLabelAid>
+  <FFE_Aid>{0} from {1}, your ally, sent your colony aid in the form of</FFE_Aid>
   
   <ResearchGainedTitle>Research Sell Offer</ResearchGainedTitle>
   <ResearchGained>{0_nameFull} from {0_factionName} has succeeded in {0_objective} latest research project and is offering to share it to you for {1} silver.\n\nResearch project {2} is the research available for purchase.</ResearchGained>
   <ResearchGained_Purchase>Purchase Tech for {0} silver</ResearchGained_Purchase>
   <ResearchGainedPurchase>The relevant files have been transfer to you. Research project {0} is now completed</ResearchGainedPurchase>
   <ResearchGained_Decline>Decline</ResearchGained_Decline>
+  
   <!-- Settlement Defection
   <DefectionRequestTitle>{0} defection request</DefectionRequestTitle>
   <DefectionRequest>{1} from {0} is disillusioned by their faction and looking for new allies for security.\nTheir Leader, {2}, is requesting to join your faction.\n\nHe is warning you that it will anger their current faction significantly.</DefectionRequest>

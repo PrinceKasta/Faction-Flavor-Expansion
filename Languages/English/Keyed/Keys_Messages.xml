@@ -15,7 +15,7 @@
 	
 	<MessageFactionWarSettlementConquered>{0} has conquered {1} of {2}.</MessageFactionWarSettlementConquered>
 	<MessageFactionWarSettlementConqueredLoser>{0} has been conquered by {1}</MessageFactionWarSettlementConqueredLoser>
-	<MessageFactionWarSettlementConqueredWinner>{0} has been successfully conquered from {1}</MessageFactionWarSettlementConqueredWinner>
+	<MessageFactionWarSettlementConqueredWinner>{0} has successfully conquered {1}</MessageFactionWarSettlementConqueredWinner>
 	
 	<MessageFactionWarSettlementNuked>A nuke has been detonated on the settlement {0} nearby by {1}, the toxic fallout is washing over this area.</MessageFactionWarSettlementNuked>
 	<MessageFactionWarSettlementWinner>{0} of {1} was utterly destroyed by a nuke launched by {2}.\n\n</MessageFactionWarSettlementWinner>
@@ -26,7 +26,7 @@
 	
 	<MessageFactionWarArtifactCache>{0} has recovered a cache of valuable artifacts, revitalizing their war effort.</MessageFactionWarArtifactCache>
 	
-	<MessageFactionWarFarms>{0} has burned several major farms of {1}.</MessageFactionWarFarms>
+	<MessageFactionWarFarms>{0} has burned down several major farms of {1}.</MessageFactionWarFarms>
 	
 	<MessageFactionWarSupply>{0} has created a supply depot to support their war effort.</MessageFactionWarSupply>
 	
@@ -38,7 +38,7 @@
 	
 	<MessageFactionWarMinorOutpostRaid>{0} has raided and destroyed a minor outpost of {1}.</MessageFactionWarMinorOutpostRaid>
 	
-	<MessageFactionRoads>{0} established a site to work on an upgrade to the road between the settlements of {1} and {2}.</MessageFactionRoads>
+	<MessageFactionRoads>{0} has established a site to work on an upgrade to the road between the settlements of {1} and {2}.</MessageFactionRoads>
 	
 	<MessageFactionWarFailRaid>{0}'s raid of {1} of {2} failed and {0} suffered heavy loses.</MessageFactionWarFailRaid>
 	

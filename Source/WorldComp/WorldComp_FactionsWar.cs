@@ -203,7 +203,6 @@ namespace Flavor_Expansion
         /*
          * Updates the factionInfo list to make sure any valid factions are in there and any invalid ones are removed
          */
-         
         private void UpdatefactionInfo()
         {
             foreach (Faction f in Find.FactionManager.AllFactions.Where(x => !x.def.hidden && !x.IsPlayer && factionInfo.Where(fac=> fac.faction==x).Count()==0))
@@ -248,8 +247,8 @@ namespace Flavor_Expansion
                 return false;
             foreach (LE_FactionInfo attacker in factionInfo.Where(f => !Wars.Where(war => (war.DefenderFaction() == f.faction)).Any()).InRandomOrder()) //!warringFactions.ContainsKey(f) && !warringFactions.ContainsValue(f)).InRandomOrder())
             {
-                //if (!Rand.Chance(0.001f + (GetByFaction(attacker.faction).disposition * 0.005f)))
-                   // continue;
+                if (!Rand.Chance(0.001f + (GetByFaction(attacker.faction).disposition * 0.005f)))
+                    continue;
                 foreach (LE_FactionInfo defender in factionInfo.Where(x => x.faction != attacker.faction && x.faction.HostileTo(attacker.faction) && attacker.faction.HostileTo(x.faction) && !Wars.Where(war => war.Equal(attacker.faction, x.faction)).Any()).InRandomOrder())
                 {
                     
@@ -284,6 +283,7 @@ namespace Flavor_Expansion
                 return;
             // Settlement conqured
             int chance = WarEventChance.RandomInRange;
+
             // Event Chance - 0.00695% every 600 ticks
 
             // Settlement Conqoured 0.0005%
@@ -346,13 +346,11 @@ namespace Flavor_Expansion
                 if (Rand.Chance(0.5f))
                 {
                     GetByFaction(f1).resources += LARGE_EVENT_Cache_RESOURCE_VALUE;
-                    //Messages.Message("MessageFactionWarArtifactCache".Translate(f1), MessageTypeDefOf.NeutralEvent);
                     war.warHistory += "HistoryDate".Translate(5500 + Find.TickManager.TicksGame / Global.YearInTicks) + "MessageFactionWarArtifactCache".Translate(f1) + "\n\n";
                 }
                 else
                 {
                     GetByFaction(f2).resources += LARGE_EVENT_Cache_RESOURCE_VALUE;
-                    //Messages.Message("MessageFactionWarArtifactCache".Translate(f2), MessageTypeDefOf.NeutralEvent);
                     war.warHistory += "HistoryDate".Translate(5500 + Find.TickManager.TicksGame / Global.YearInTicks) + "MessageFactionWarArtifactCache".Translate(f1) + "\n\n";
                 }
                 return;
@@ -363,13 +361,11 @@ namespace Flavor_Expansion
                 if (Rand.Chance(0.5f))
                 {
                     GetByFaction(f2).resources -= MEDIUM_EVENT_RESOURCE_VALUE;
-                   // Messages.Message("MessageFactionWarFarms".Translate(f1, f2), MessageTypeDefOf.NeutralEvent);
                     war.warHistory += "HistoryDate".Translate(5500 + Find.TickManager.TicksGame / Global.YearInTicks) + "MessageFactionWarFarms".Translate(f1, f2) + "\n\n";
                 }
                 else
                 {
                     GetByFaction(f1).resources -= MEDIUM_EVENT_RESOURCE_VALUE;
-                    //Messages.Message("MessageFactionWarFarms".Translate(f2, f1), MessageTypeDefOf.NeutralEvent);
                     war.warHistory += "HistoryDate".Translate(5500 + Find.TickManager.TicksGame / Global.YearInTicks) + "MessageFactionWarFarms".Translate(f2, f1) + "\n\n";
                 }
                 return;
@@ -408,7 +404,6 @@ namespace Flavor_Expansion
                 Faction ambusher = Rand.Chance(0.5f) ? f2 : f1;
 
                 GetByFaction(ambusher == f1 ? f2 : f1).resources -= MINOR_EVENT_RESOURCE_VALUE;
-                //Messages.Message("MessageFactionWarCaravanAmbush".Translate(ambusher, ambusher == f1 ? f2 : f1), MessageTypeDefOf.NeutralEvent);
                 war.warHistory += "HistoryDate".Translate(5500 + Find.TickManager.TicksGame / Global.YearInTicks) + "MessageFactionWarCaravanAmbush".Translate(ambusher, ambusher == f1 ? f2 : f1) + "\n\n";
                 return;
             }
@@ -419,7 +414,6 @@ namespace Flavor_Expansion
 
                 GetByFaction(raider == f1 ? f2 : f1).resources -= MEDIUM_EVENT_RESOURCE_VALUE;
                 GetByFaction(raider).resources += MEDIUM_EVENT_RESOURCE_VALUE / 2;
-                //Messages.Message("MessageFactionWarMinorOutpostRaid".Translate(raider, raider == f1 ? f2 : f1), MessageTypeDefOf.NeutralEvent);
                 war.warHistory += "HistoryDate".Translate(5500 + Find.TickManager.TicksGame / Global.YearInTicks) + "MessageFactionWarMinorOutpostRaid".Translate(raider, raider == f1 ? f2 : f1)+"\n\n";
                 return;
             }
@@ -439,7 +433,7 @@ namespace Flavor_Expansion
                 }
                 Find.WorldObjects.Remove(settlement);
 
-                GetByFaction(settlement.Faction == f1 ? f2 : f1).resources -= LARGE_EVENT_Cache_RESOURCE_VALUE;//SETTLEMENT_RESOURCE_VALUE / 2;
+                GetByFaction(settlement.Faction == f1 ? f2 : f1).resources -= LARGE_EVENT_Cache_RESOURCE_VALUE;
                 
                 war.warHistory += "HistoryDate".Translate(5500 + Find.TickManager.TicksGame / Global.YearInTicks) + "MessageFactionWarFailRaid".Translate(settlement.Faction == f1 ? f2 : f1, settlement, settlement.Faction) + "\n\n";
                 return;
@@ -485,7 +479,6 @@ namespace Flavor_Expansion
 
         private void WarEnd()
         {
-            //foreach (KeyValuePair<Faction, Faction> f in warringFactions.ToList())
             foreach(War war in Wars.ToList())
             {
                 float winnerTotal = 0;

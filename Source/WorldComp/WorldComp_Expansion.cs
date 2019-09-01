@@ -39,22 +39,22 @@ namespace Flavor_Expansion
         {
             if (!EndGame_Settings.FactionExpansion)
                 return;
-            List<Faction> list = Find.FactionManager.AllFactions.Where(x => !x.IsPlayer && !x.def.hidden).ToList();
+
             List<Faction> trim = new List<Faction>();
             
-            foreach (Faction f in list)
+            foreach (Faction f in Find.FactionManager.AllFactions.Where(x => !x.IsPlayer && !x.def.hidden).ToList())
             {
                 if (f.defeated && factionsToExpand.ContainsKey(f.loadID))
                     factionsToExpand.Remove(f.loadID);
                 else if (!factionsToExpand.ContainsKey(f.loadID))
-                    factionsToExpand.Add(f.loadID, tillExpansion.RandomInRange-Find.WorldObjects.Settlements.Count * 50);
+                    factionsToExpand.Add(f.loadID, tillExpansion.RandomInRange-Find.WorldObjects.Settlements.Count * 500);
                 else factionsToExpand[f.loadID]--;
             }
             foreach (KeyValuePair<int,int> i in factionsToExpand.ToList())
             {
                 if (i.Value == 0)
                 {
-                    Faction current = Find.FactionManager.AllFactions.Where(f => f.loadID == i.Key).First();
+                    Faction current = Find.FactionManager.AllFactions.First(f => f.loadID == i.Key);
                     factionsToExpand[i.Key] = tillExpansion.RandomInRange - Find.WorldObjects.Settlements.Count * 50;
                     Settlement origin;
                     if (!Find.WorldObjects.Settlements.Where(x => x.Faction == current).TryRandomElement(out origin))

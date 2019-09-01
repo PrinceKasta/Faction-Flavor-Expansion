@@ -51,7 +51,7 @@ Incidents:
 	
 	- Aid: An ally faction sent you supplies when they heard about your troubles.
 	
-	- Gift: An ally faction has sent you a gift.
+	- Gift: An non hostile faction has sent you a gift.
 	
 	- Mercenary Battle: a faction that is losing its war is hiring mercenaries for an important battle.
 	

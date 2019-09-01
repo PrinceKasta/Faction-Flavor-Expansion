@@ -13,11 +13,11 @@
 	<FE_ExpansionCheckBox>Enable/Disable settlement expansion of NPC factions</FE_ExpansionCheckBox>
 	<FE_ExpansionCheckBoxDesc>Enabled every non hidden faction will have a chance to build a new settlement once in a while.</FE_ExpansionCheckBoxDesc>
 	<FE_BombardmentCheckBox>Enable/Disable the ability of hostile NPC factions with a base adjacent to a player map to rarely bomb it with mortar fire.</FE_BombardmentCheckBox>
-	<FE_JointRaidCheckBox>Enable/Disable the 'Joint raid' incident to attack a faction with an ally.</FE_JointRaidCheckBox>
+	<FE_JointRaidCheckBox>Enable/Disable the Joint raid incident to attack a settlement with an ally.</FE_JointRaidCheckBox>
 	<FE_SettlementDefenseCheckBox>Enable/Disable the settlement defense incident to defend an ally settlement.</FE_SettlementDefenseCheckBox>
 	<FE_SiteDefenderCheckBox>Enable/Disable the settlement defense incident to defend an ally outpost.</FE_SiteDefenderCheckBox>
-	<FE_AdvancementCheckBox>Enable/Disable the incident where a good ally shares a tech discovery.</FE_AdvancementCheckBox>
+	<FE_AdvancementCheckBox>Enable/Disable the incident where an ally sells you an undiscovered tech.</FE_AdvancementCheckBox>
 	<FE_AidCheckBox>Enable/Disable the Aid incident that an ally gives you aid when in need</FE_AidCheckBox>
-	<FE_GiftCheckBox>Enable/Disable the Gift incident that an ally faction gives you a gift.</FE_GiftCheckBox>
+	<FE_GiftCheckBox>Enable/Disable the Gift incident that a faction gives you a gift.</FE_GiftCheckBox>
 	
 </LanguageData>

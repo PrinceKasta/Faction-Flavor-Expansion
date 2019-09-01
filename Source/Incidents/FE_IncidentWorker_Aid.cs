@@ -48,12 +48,8 @@ namespace Flavor_Expansion
             List<Thing> thingList = GenerateRewards(faction, enumerableFood.Count(), enumerableInjured.Count(), parms);
             IntVec3 intVec3 = DropCellFinder.TradeDropSpot(target);
             DropPodUtility.DropThingsNear(intVec3, target, (IEnumerable<Thing>)thingList, 110, false, true, true);
-            string itemList = "";
-            for (int i = 0; i < thingList.Count(); i++)
-            {
-                itemList += thingList[i].LabelShort + "\n";
-            }
-            Find.LetterStack.ReceiveLetter("LetterLabelAid".Translate(), "Aid".Translate(sis, faction) + itemList
+
+            Find.LetterStack.ReceiveLetter("FFE_LetterLabelAid".Translate(), "FFE_Aid".Translate(sis, faction) + GenLabel.ThingsLabel(thingList,string.Empty)
             , LetterDefOf.PositiveEvent, (LookTargets)new TargetInfo(intVec3, target, false), faction, (string)null);
 
             return true;

@@ -10,7 +10,17 @@
 		<workerClass>Flavor_Expansion.FE_IncidentWorker_Gift</workerClass>
 		<category>Misc</category>
 		<minRefireDays>2</minRefireDays>
-		<baseChance>0.8</baseChance>
+		<baseChance>1.4</baseChance>
+		<letterLabel>Gift from {0}</letterLabel>
+		<letterText>{0}, {1} of {2} has sent you a gift as a gesture to hopefully improve relations between your colony and theirs.\n\nThe gift is worth {3} and consists of: {4}</letterText>
+		<letterDef>PositiveEvent</letterDef>
+		<chanceFactorByPopulationCurve>
+			<points>
+				<li>(5,0)</li>
+				<li>(15,1)</li>
+			</points>
+		</chanceFactorByPopulationCurve>
+		
 	</IncidentDef>
 	
 	<IncidentDef>
@@ -45,6 +55,8 @@
 		<workerClass>Flavor_Expansion.FE_IncidentWorker_Advancement</workerClass>
 		<category>Misc</category>
 		<baseChance>0.1</baseChance>
+		<minRefireDays>20</minRefireDays>
+		<earliestDay>15</earliestDay>
 	</IncidentDef>
 	
 	<IncidentDef>
@@ -57,6 +69,7 @@
 		<category>WorldQuest</category>
 		<baseChance>1</baseChance>
 		<pointsScaleable>true</pointsScaleable>
+		<minRefireDays>8</minRefireDays>
 		<chanceFactorByPopulationCurve>
 			<points>
 				<li>(3,0)</li>
@@ -79,6 +92,7 @@
 		<category>WorldQuest</category>
 		<baseChance>1</baseChance>
 		<pointsScaleable>true</pointsScaleable>
+		<minRefireDays>4</minRefireDays>
 		<chanceFactorByPopulationCurve>
 			<points>
 				<li>(4,0)</li>
@@ -101,6 +115,7 @@
 		<category>WorldQuest</category>
 		<baseChance>1</baseChance>
 		<pointsScaleable>true</pointsScaleable>
+		<minRefireDays>5</minRefireDays>
 		<chanceFactorByPopulationCurve>
 			<points>
 				<li>(3,0)</li>
@@ -149,6 +164,7 @@
     <letterLabel>Caravan ambushed</letterLabel>
     <letterDef>ThreatBig</letterDef>
     <tale>CaravanAmbushedByHumanlike</tale>
+	<minThreatPoints>450</minThreatPoints>
 	
   </IncidentDef>
   
@@ -169,6 +185,8 @@
 				<li>(10,1)</li>
 			</points>
 		</chanceFactorByPopulationCurve>
+		<minThreatPoints>550</minThreatPoints>
+		<earliestDay>20</earliestDay>
 		
 	</IncidentDef>
 	

@@ -269,7 +269,6 @@ namespace Flavor_Expansion
                 string option = "";
                 if (!HistoryOptions.TryRandomElement(out option))
                 {
-                    Log.Error("TopHistory is empty");
                     return "";
                 }
                 text += "HistoryDate".Translate(year);
