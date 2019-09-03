@@ -13,7 +13,7 @@ namespace Flavor_Expansion
         public static bool FactionExpansion = true;
         public static bool FactionHistory = true;
         public static bool FactionServitude = true;
-        public static bool Bombardment = false;
+        public static bool Bombardment = true;
         public static bool JointRaid = true;
         public static bool SettlementDefense = true;
         public static bool SiteDefender = true;
@@ -64,7 +64,7 @@ namespace Flavor_Expansion
             Scribe_Values.Look(value: ref FactionWar, label: "FactionWar", defaultValue: true);
             Scribe_Values.Look(value: ref FactionServitude, label: "FactionServitude", defaultValue: true);
             Scribe_Values.Look(value: ref FactionExpansion, label: "FactionExpansion", defaultValue: true);
-            Scribe_Values.Look(value: ref Bombardment, label: "Bombardment", defaultValue: false);
+            Scribe_Values.Look(value: ref Bombardment, label: "Bombardment", defaultValue: true);
             Scribe_Values.Look(value: ref JointRaid, label: "JointRaid", defaultValue: true);
             Scribe_Values.Look(value: ref SettlementDefense, label: "SettlementDefense", defaultValue: true);
             Scribe_Values.Look(value: ref SiteDefender, label: "SiteDefender", defaultValue: true);

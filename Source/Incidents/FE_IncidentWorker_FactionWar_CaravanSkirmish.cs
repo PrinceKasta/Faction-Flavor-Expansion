@@ -16,7 +16,6 @@ namespace Flavor_Expansion
 
     class FE_IncidentWorker_FactionWar_CaravanSkirmish : IncidentWorker_Ambush
     {
-        private static readonly IntRange SpawningDeviation = new IntRange(0, 20);
 
         protected override bool CanFireNowSub(IncidentParms parms)
         {
@@ -96,7 +95,7 @@ namespace Flavor_Expansion
             Map map = CaravanIncidentUtility.GetOrGenerateMapForIncident(caravan, new IntVec3(incidentMapSize, 1, incidentMapSize), WorldObjectDefOf.Ambush);
             IntVec3 vec3;
             map.GetComponent<FE_MapComp_Skirmish>().StartComp(f2[0].Faction, f1[0].Faction);
-            int variationCellMod = +(Rand.Chance(0.5f) ? 30 : -30) + SpawningDeviation.RandomInRange;
+            int variationCellMod = +(Rand.Chance(0.5f) ? 50 : -50);
             CaravanEnterMapUtility.Enter(caravan, map, (Func<Pawn, IntVec3>)(p=> CellFinder.RandomSpawnCellForPawnNear(new IntVec3(map.Center.x, 1, map.Center.z + variationCellMod), map, 4)),CaravanDropInventoryMode.DoNotDrop,true);
             for (int index = 0; index < 2; ++index)
             {

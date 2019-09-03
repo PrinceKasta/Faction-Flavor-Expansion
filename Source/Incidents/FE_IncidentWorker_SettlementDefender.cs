@@ -17,15 +17,11 @@ namespace Flavor_Expansion
     {
         protected override bool CanFireNowSub(IncidentParms parms)
         {
-            Faction enemyFaction, ally;
-            Settlement tile;
-            return base.CanFireNowSub(parms) && TryFindFactions(out ally, out enemyFaction) && TryFindTile(ally, out tile) && EndGame_Settings.SettlementDefense;
+            return base.CanFireNowSub(parms) && TryFindFactions(out Faction ally, out Faction enemyFaction) && TryFindTile(ally, out Settlement tile) && EndGame_Settings.SettlementDefense;
         }
         protected override bool TryExecuteWorker(IncidentParms parms)
         {
-            Faction enemyFaction, ally;
-            Settlement sis;
-            if (!TryFindFactions(out ally, out enemyFaction) || !TryFindTile(ally, out sis) )
+            if (!TryFindFactions(out Faction ally, out Faction enemyFaction) || !TryFindTile(ally, out Settlement sis) )
                 return false;
 
             int random = new IntRange(Global.DayInTicks * 5, Global.DayInTicks * 7).RandomInRange;

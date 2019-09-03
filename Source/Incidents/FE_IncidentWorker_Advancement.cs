@@ -36,18 +36,11 @@ namespace Flavor_Expansion
         };
         protected override bool CanFireNowSub(IncidentParms parms)
         {
-            ResearchProjectDef def;
-            Settlement settlement;
-            Faction faction;
-            return base.CanFireNowSub(parms) && TryFindFactions(out faction) && TryFindSettlement(out settlement, faction) && Find.ResearchManager.AnyProjectIsAvailable && TryFindSutiableResearch(out def, faction) && TradeUtility.ColonyHasEnoughSilver(Find.AnyPlayerHomeMap, (int)silverCurve.Evaluate((int)def.techLevel));
+            return base.CanFireNowSub(parms) && TryFindFactions(out Faction faction) && TryFindSettlement(out Settlement settlement, faction) && Find.ResearchManager.AnyProjectIsAvailable && TryFindSutiableResearch(out ResearchProjectDef def, faction) && TradeUtility.ColonyHasEnoughSilver(Find.AnyPlayerHomeMap, (int)silverCurve.Evaluate((int)def.techLevel));
         }
         protected override bool TryExecuteWorker(IncidentParms parms)
         {
-            Faction faction;
-            ResearchProjectDef def;
-            Settlement settlement;
-
-            if (!TryFindFactions(out faction) || !TryFindSutiableResearch(out def, faction) || !TryFindSettlement(out settlement, faction) || !TradeUtility.ColonyHasEnoughSilver(Find.AnyPlayerHomeMap, (int)silverCurve.Evaluate((int)def.techLevel)))
+            if (!TryFindFactions(out Faction faction) || !TryFindSutiableResearch(out ResearchProjectDef def, faction) || !TryFindSettlement(out Settlement settlement, faction) || !TradeUtility.ColonyHasEnoughSilver(Find.AnyPlayerHomeMap, (int)silverCurve.Evaluate((int)def.techLevel)))
                 return false;
             
             Thing silver = ThingMaker.MakeThing(ThingDefOf.Silver);

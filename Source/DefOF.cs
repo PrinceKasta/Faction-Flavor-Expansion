@@ -26,6 +26,7 @@ namespace Flavor_Expansion
         public static SitePartDef Outpost_opbase;
         public static SitePartDef Outpost_SiteResuce;
         public static RoadDef StoneRoad;
+        public static ThingDef Bullet_Shell_HighExplosive;
 
 
     }

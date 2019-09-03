@@ -17,13 +17,11 @@ namespace Flavor_Expansion
     {
         protected override bool CanFireNowSub(IncidentParms parms)
         {
-            Faction faction;
-            return base.CanFireNowSub(parms) && this.TryFindFactions(out faction);
+            return base.CanFireNowSub(parms) && this.TryFindFactions(out Faction faction);
         }
         protected override bool TryExecuteWorker(IncidentParms parms)
         {
-            Faction faction;
-            if (!this.TryFindFactions(out faction))
+            if (!this.TryFindFactions(out Faction faction))
                 return false;
             IEnumerable<Pawn> enumerableFood, enumerableInjured;
             if (Find.CurrentMap.IsPlayerHome)
@@ -39,10 +37,10 @@ namespace Flavor_Expansion
             else return false;
             if (enumerableFood.Count() == 0 && enumerableInjured.Count() == 0)
                 return false;
-            Settlement sis;
+
             if (!(from f in Find.WorldObjects.Settlements
                   where f.Faction == faction && f.Spawned
-                  select f).TryRandomElement(out sis))
+                  select f).TryRandomElement(out Settlement sis))
                 return false;
             Map target = (Map)parms.target;
             List<Thing> thingList = GenerateRewards(faction, enumerableFood.Count(), enumerableInjured.Count(), parms);

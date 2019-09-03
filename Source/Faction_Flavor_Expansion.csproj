@@ -7,7 +7,7 @@
     <ProjectGuid>{D7D21B4A-1DA7-41D8-B202-C58CA8FA62AA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Faction_Flavor_Expansion</RootNamespace>
+    <RootNamespace>Flavor_Expansion</RootNamespace>
     <AssemblyName>Faction_Flavor_Expansion</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -58,7 +58,7 @@
     <Compile Include="FactionHistoryDialog.cs" />
     <Compile Include="Incidents\FE_IncidentWorker_Advancement.cs" />
     <Compile Include="Incidents\FE_IncidentWorker_Aid.cs" />
-    <Compile Include="Incidents\FE_IncidentWorker_Defection.cs" />
+    <Compile Include="Incidents\FE_IncidentWorker_Bombardment.cs" />
     <Compile Include="Incidents\FE_IncidentWorker_SiteDefender.cs" />
     <Compile Include="Incidents\FE_IncidentWorker_Jointraid.cs" />
     <Compile Include="Incidents\FE_IncidentWorker_SettlementDefender.cs" />
@@ -66,7 +66,7 @@
     <Compile Include="Incidents\FE_IncidentWorker_FactionWar_CaravanSkirmish.cs" />
     <Compile Include="Incidents\FE_IncidentWorker_FactionWar_Mercenary.cs" />
     <Compile Include="Settings.cs" />
-    <Compile Include="WorldComp\WorldComp_Bombardment.cs" />
+    <Compile Include="MapComp\MapComp_Bombardment.cs" />
     <Compile Include="WorldComp\WorldComp_FactionsWar.cs" />
     <Compile Include="WorldComp\WorldComp_FactionsVassal.cs" />
     <Compile Include="WorldObjectComp\WorldObjectComp_DisputeFOB.cs" />
@@ -84,7 +84,7 @@
     <Compile Include="WorldObjectComp\WorldObjectComp_SettlementDefender.cs" />
     <Compile Include="WorldObjectComp\WorldObjectComp_SiteDefense.cs" />
     <Compile Include="WorldObjectComp\WorldObjectComp_SettlementResuce.cs" />
-    <Compile Include="MapComp_Skirmish.cs" />
+    <Compile Include="MapComp\MapComp_Skirmish.cs" />
     <Compile Include="WorldObjectComp\WorldObjectComp_SupplyDepot.cs" />
     <Compile Include="WorldObjectComp\WorldObjectComp_MercenaryBattle.cs" />
     <Compile Include="WorldObject_Dispute.cs" />

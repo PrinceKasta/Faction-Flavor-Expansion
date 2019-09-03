@@ -35,16 +35,25 @@
 		<baseChance>2</baseChance>
 	</IncidentDef>
 	
-	<!--<IncidentDef>
-		<defName>FE_SettlmentDefection</defName>
-		<label>Defection From Ally</label>
+	<IncidentDef>
+		<defName>FE_Bombardment</defName>
+		<label>bombardment</label>
+		<category>Misc</category>
 		<targetTags>
-		<li>World</li>
+		<li>Map_PlayerHome</li>
 		</targetTags>
-		<workerClass>End_Game.IncidentWorker_Defection</workerClass>
-		<category>WorldQuest</category>
-		<baseChance>0.5</baseChance>
-	</IncidentDef>-->
+		<workerClass>Flavor_Expansion.FE_IncidentWorker_Bombardment</workerClass>
+		<letterLabel>Bombardment</letterLabel>
+		<letterText>{0} from {1} have initiated a far range bombing of the colony.</letterText>
+		<letterDef>ThreatSmall</letterDef>
+		<minRefireDays>15</minRefireDays>
+		<minDifficulty>2</minDifficulty>
+		<baseChance>1.3</baseChance>
+		<durationDays>
+			<min>0.075</min>
+			<max>0.1</max>
+		</durationDays>
+	</IncidentDef>
 	
 	<IncidentDef>
 		<defName>FE_FactionAdvancment</defName>

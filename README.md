@@ -55,4 +55,6 @@ Incidents:
 	
 	- Mercenary Battle: a faction that is losing its war is hiring mercenaries for an important battle.
 	
-	- Skirmish: Your caravan was too close to an settlement who's faction is at war and ran straight into a small scale battle between the warring faction.
+	- Skirmish: Your caravan was too close to an settlement whose faction is at war and ran straight into a small scale battle between the warring factions.
+	
+	- Bombardment: An hostile faction with a settlement a least as close as 20 tile will threaten carpet bombing of the colony unless you pay for protection.

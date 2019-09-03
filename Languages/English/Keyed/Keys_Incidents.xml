@@ -17,16 +17,6 @@
   <ResearchGainedPurchase>The relevant files have been transfer to you. Research project {0} is now completed</ResearchGainedPurchase>
   <ResearchGained_Decline>Decline</ResearchGained_Decline>
   
-  <!-- Settlement Defection
-  <DefectionRequestTitle>{0} defection request</DefectionRequestTitle>
-  <DefectionRequest>{1} from {0} is disillusioned by their faction and looking for new allies for security.\nTheir Leader, {2}, is requesting to join your faction.\n\nHe is warning you that it will anger their current faction significantly.</DefectionRequest>
-  <DefectionRequest_Accept>Accept defection</DefectionRequest_Accept>
-  <DefectionRequest_Reject>Reject the request</DefectionRequest_Reject>
-  <DefectionRequestAccept>{0} thanks you and he declare the preparations will start immediately\n\nShortly after another call comes from {1} cursing you for causing {2}'s betrayal and promising they won't forget it</DefectionRequestAccept>
-  <DefectionRequestReject>{0}, after heavy sigh, says there is only one another choice left for his people and hangs up.</DefectionRequestReject>
-  <LetterLabelDefectionReject>Defection Rejection</LetterLabelDefectionReject>
-  <DefectionRequestReject_result>{0}, formerly a member of {1} has join the hostile faction of {2} .</DefectionRequestReject_result>-->
-  
   <!-- RoadsCamp-->
   <RoadsCampRequestTitle>{0}'s Road Camp</RoadsCampRequestTitle>
   <RoadsCampRequest>{0} has arrived at one of {1}'s road work camps, the camp itself appears to be abandoned but with one worker that is requesting you leave and is willing to pay a bribe so the caravan will leave, accepting the bride will worsen relations with {1}.\nThe camp is obviously lacking in fighting equipment and wherever the rest of the workers are hiding it's doubtful they could stop the destruction of the camp but doing so will negatively affect your relationship with their faction.</RoadsCampRequest>
@@ -80,7 +70,7 @@
   
   <!-- Dispute-->
   <LetterLabelDispute>Dispute Talks</LetterLabelDispute>
-  <Dispute>{0} and {1} from {2}, your sister faction, asked you to help them to settle a dispute\n</Dispute>
+  <Dispute>{0} and {1} from {2} has sent you a request to act as a mediator in their dispute.\n</Dispute>
   <LetterLabelDisputeDisaster>Dispute Disaster</LetterLabelDisputeDisaster>
   <DisputeDisaster>The negotiation was a disaster and angered the representative of {0}.\nArmed fighters appeared from hidden spots in the surrounding wearing outfits with {1}'s insignia\n\n{2}'s delegation are arming themselves and expect you to join the fight.</DisputeDisaster>
   <LetterLabelDisputeBackfire>Dispute Backfire</LetterLabelDisputeBackfire>
@@ -111,4 +101,18 @@
   <LetterLabelMercenaryBattleRequestOutcomeLose>Battle Lost</LetterLabelMercenaryBattleRequestOutcomeLose>
   <MercenaryBattleRequestOutcomeLose>{0_factionName} lost this battle, {0_nameFull} seemed colder than before as he cut communications.</MercenaryBattleRequestOutcomeLose>
   
+  <!--Bombardment-->
+  <LetterLabelBombardmentTitle>Bombing Threat</LetterLabelBombardmentTitle>
+  <BombardmentThreat>{0_nameFull}, {1} of {0_factionName} calls us from the nearby town of {2}.\n\n{0_labelShort} claims there are several long range artillery currently aimed at you and is ready to fire unless you agree to {0_possessive} demand worth {3}:\n\n{4}\n\n{0_pronoun} will also agree to accept silver if you double the demand's total worth.\n\nIf you refuse to either demand be prepared for the artillery starting bombing you in {5}, alternatively if you destroy {2} before they can start firing you'll stop the danger.</BombardmentThreat>
+  <BombardmentThreat_AcceptThings>Send the items</BombardmentThreat_AcceptThings>
+  <BombardmentThreatAcceptThings>{0_nameFull} sent us a message following the arrival of the demand, {0_pronoun} says that they will spare us from {0_possessive} artillery for the moment.</BombardmentThreatAcceptThings>
+  <BombardmentThreat_AcceptSilver>Pay {0}</BombardmentThreat_AcceptSilver>
+  <BombardmentThreat_AcceptSilverDisabled>Not enough silver</BombardmentThreat_AcceptSilverDisabled>
+  <BombardmentThreat_Refusal>Refuse</BombardmentThreat_Refusal>
+  <BombardmentThreatRefusal>{0_nameFull} promises the destruction of our colony and then cuts the line immediately after.</BombardmentThreatRefusal>
+  <LetterLabelBombardmentThreatStarted>Artillery attack</LetterLabelBombardmentThreatStarted>
+  <BombardmentThreatStarted>{0}'s bombing of our colony has commenced, take shelter to avoid the heavy artillery shells.</BombardmentThreatStarted>
+  <LetterLabelBombardmentThreatStopped>Artillery fire stopped</LetterLabelBombardmentThreatStopped>  
+  <BombardmentThreatStopped>{0}'s bombing of our colony has stopped.</BombardmentThreatStopped>
+
 </LanguageData>

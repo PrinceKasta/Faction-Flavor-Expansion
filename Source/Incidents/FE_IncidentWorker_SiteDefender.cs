@@ -18,16 +18,11 @@ namespace Flavor_Expansion
 
         protected override bool CanFireNowSub(IncidentParms parms)
         {
-            Faction sister, enemyFaction;
-            int tile;
-            return base.CanFireNowSub(parms) && TryFindFactions(out sister, out enemyFaction) && TryFindTile(out tile) && EndGame_Settings.SiteDefender;
+            return base.CanFireNowSub(parms) && TryFindFactions(out Faction sister, out Faction enemyFaction) && TryFindTile(out int tile) && EndGame_Settings.SiteDefender;
         }
         protected override bool TryExecuteWorker(IncidentParms parms)
         {
-            Faction ally, enemyFaction;
-            int tile;
-            
-            if (!TryFindFactions(out ally, out enemyFaction) || !TryFindTile(out tile))
+            if (!TryFindFactions(out Faction ally, out Faction enemyFaction) || !TryFindTile(out int tile))
                 return false;
             Site site = SiteMaker.MakeSite(SiteCoreDefOf.Nothing, EndGameDefOf.Outpost_defense, tile, ally, true);
 
@@ -49,10 +44,9 @@ namespace Flavor_Expansion
 
         private bool TryFindTile(out int tile)
         {
-            Settlement sis;
             if (!(from f in Find.WorldObjects.Settlements
                   where !f.Faction.IsPlayer && f.Faction.PlayerRelationKind == FactionRelationKind.Ally && Utilities.Reachable(f.Tile,Find.AnyPlayerHomeMap.Tile,120) && Find.WorldReachability.CanReach(Find.AnyPlayerHomeMap.Tile, f.Tile)
-                  select f).TryRandomElement(out sis))
+                  select f).TryRandomElement(out Settlement sis))
             {
                 tile = -1;
                 return false;
@@ -63,8 +57,7 @@ namespace Flavor_Expansion
         }
         private bool TryFindFactions(out Faction alliedFaction, out Faction enemyFaction)
         {
-            Faction ally;
-            if(!Find.FactionManager.AllFactionsVisible.Where(x=> !x.IsPlayer && x.PlayerRelationKind== FactionRelationKind.Ally).TryRandomElement(out ally))
+            if(!Find.FactionManager.AllFactionsVisible.Where(x=> !x.IsPlayer && x.PlayerRelationKind== FactionRelationKind.Ally).TryRandomElement(out Faction ally))
             if (ally==null || (ally!=null && !ally.defeated))
             {
                 alliedFaction = null;

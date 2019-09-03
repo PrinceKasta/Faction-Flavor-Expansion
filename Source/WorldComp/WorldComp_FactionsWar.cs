@@ -684,7 +684,7 @@ namespace Flavor_Expansion
             Scribe_References.Look(ref faction, "faction");
             Scribe_Values.Look(ref history, "history");
             Scribe_Values.Look(ref ancientHistory, "ancientHistory");
-            Scribe_Values.Look(ref resources, "resources");
+            Scribe_Values.Look(ref resources, "resources", defaultValue : 0);
             Scribe_Collections.Look(ref SupplyDepots, "SupplyDepots",LookMode.Value);
             Scribe_Values.Look(ref disposition, "disposition", defaultValue: 0);
             Scribe_Values.Look(ref vassalage, "vassalage", defaultValue : 0);

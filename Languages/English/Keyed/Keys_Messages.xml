@@ -7,8 +7,6 @@
 	
 	<MessageExpanded>{0} from {1} founded a new settlement called {2}.</MessageExpanded>
 	
-	<MessageHositleBombing>{0} from {1} have initiated a far range bombing of the colony.</MessageHositleBombing>
-	
 	<MessageFactionWarWhitePeace>{0} and {1}'s war has reached a stalemate and a white peace has been achieved.</MessageFactionWarWhitePeace>
 	<MessageFactionWarFactionDestoryed>{0} and {1}'s war has ended and {0} has agreed to disband.</MessageFactionWarFactionDestoryed>
 	<MessageFactionWarFactionConquered>{0} and {1}'s war has ended and {1} has successfully conquered {0}. </MessageFactionWarFactionConquered>

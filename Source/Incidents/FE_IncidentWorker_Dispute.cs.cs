@@ -16,14 +16,12 @@ namespace Flavor_Expansion
     {
         protected override bool CanFireNowSub(IncidentParms parms)
         {
-            Settlement set1, set2;
-            return base.CanFireNowSub(parms) && FindSettlements(out set1,out set2);
+            return base.CanFireNowSub(parms) && FindSettlements(out Settlement set1,out Settlement set2);
         }
 
         protected override bool TryExecuteWorker(IncidentParms parms)
         {
-            Settlement set1, set2;
-            if (!FindSettlements(out set1, out set2))
+            if (!FindSettlements(out Settlement set1, out Settlement set2))
                 return false;
             int tile;
             //WorldPathFinder
