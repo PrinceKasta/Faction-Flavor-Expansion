@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+
+	<!-- Vassalization -->
+	<FactionVassalage>Demand Vassalization</FactionVassalage>
+	<FactionVassalageDisabled>They are not weak enough</FactionVassalageDisabled>
+	<FactionVassalageGoodWillDecay>Unrest about being a subject to a foreign faction slowly lowers goodwill</FactionVassalageGoodWillDecay>
+	<FactionVassalageDisabledEnemy>Permanent Enemy</FactionVassalageDisabledEnemy>
+	<FactionVasalageInfo>{0}'s leader agreed to the demand and now the faction is your vassal. They will pay silver at the start of a year and will be forced to comply to demands for rare resources every couple of days.</FactionVasalageInfo>
+	<FactionVassalDemandResources>Demand Resources</FactionVassalDemandResources>
+	<FactionVassalDemandResourcesDisabled>Already demanded recently</FactionVassalDemandResourcesDisabled>
+	<LetterFactionVassalSilverRecived>Payment from vassal</LetterFactionVassalSilverRecived>
+	<FactionVassalSilverRecivedBoth>Your vassals and tributaries have sent their tribute to you worth {0}.\n\n{1}\n\nThe factions that paid are: </FactionVassalSilverRecivedBoth>
+	<FactionVassalSilverRecivedVassals>Your vassals have sent their tribute to you worth {0}.\n\n{1}\n\nThe factions that paid are: </FactionVassalSilverRecivedVassals>
+	<FactionVassalSilverRecivedTrivutaries>Your tributaries have sent their tribute to you worth {0}.\n\n{1}\n\nThe factions that paid are:\n\n</FactionVassalSilverRecivedTrivutaries>
+	
+	
+	<FactionTributary>Demand they agree to become a tributary</FactionTributary>
+	<FactionTributaryInfo>{0}'s leader have agree to submit to you and now they are a tributary under you. They will pay 850 to 1350 silver every month to be under your protection, they will break off if goodwill falls below -75 and they became hostile.</FactionTributaryInfo>
+	<FactionTributaryDisabledEnemy>Permanent Enemy</FactionTributaryDisabledEnemy>
+	<FactionTributaryDisabled>They are not weak enough</FactionTributaryDisabled>
+	
+	<!-- Investments-->
+	<FactionInvestment>Check Investments</FactionInvestment>
+	<FactionInvestmentInfo></FactionInvestmentInfo>
+	<FactionInvestmentMaxed>Maxed</FactionInvestmentMaxed>
+	<FactionInvestmentNoPrice>Lacking the funds</FactionInvestmentNoPrice>
+	<FactionInvestmentCoolDown>Upgraded recently</FactionInvestmentCoolDown>
+	
+	<!--Armory 0-4-->
+	<FactionInvestmentArmory>Armory</FactionInvestmentArmory>
+	<FactionInvestmentArmoryUpgrade>Upgrade Armory</FactionInvestmentArmoryUpgrade>
+	<FE_ArmoryLevel0>{0} have only the essentials for building basic armors, any other armors in their possession beyond those who were acquired from scavenging or from dead foes.\n\nResource needed for the next upgrade:\n\n{1}\n\nInvesting in trade will give us a return of a poor quality armor piece at the start of each month.</FE_ArmoryLevel0>
+	<FE_ArmoryLevel1>{0} have the infrastructure and amateur workers to mass produce poor quality armors.\n\nWe are receiving a poor quality armor piece at the start of each month.\n\nResource needed for the next upgrade:\n\n{1}\n\nInvesting in trade will give us a return of a normal quality armor piece at the start of each month.</FE_ArmoryLevel1>
+	<FE_ArmoryLevel2>{0} have the infrastructure and trained personnel to mass produce normal quality armors.\n\nWe are receiving a normal quality armor piece at the start of each month.\n\nResource needed for the next upgrade:\n\n{1}\n\nInvesting in trade will give us a return of a good quality armor piece at the start of each month.</FE_ArmoryLevel2>
+	<FE_ArmoryLevel3>{0} have the infrastructure and expert designers to mass produce good quality armors.\n\nWe are receiving a good quality armor piece at the start of each month.\n\nResource needed for the next upgrade:\n\n{1}\n\nInvesting in trade will give us a return of an excellent quality armor piece at the start of each month.</FE_ArmoryLevel3>
+	<FE_ArmoryLevel4>{0} have world class industry that mass produces excellent quality armors.\n\nWe are receiving an excellent quality armor piece at the start of each month.</FE_ArmoryLevel4>
+	
+	<!--Weaponry 0-4-->
+	<FactionInvestmentWeaponry>Weaponry</FactionInvestmentWeaponry>
+	<FactionInvestmentWeaponryUpgrade>Upgrade Weaponry</FactionInvestmentWeaponryUpgrade>
+	<FE_WeaponryLevel0>{0} have only the essentials for building basic weapons to faction members, any other weapons in their possession beyond those were acquired from scavenging or from dead foes.\n\nResource needed for the next upgrade:\n\n{1}\n\nInvesting in trade will give us a return of a poor quality gun at the start of each month.</FE_WeaponryLevel0>
+	<FE_WeaponryLevel1>{0} have the infrastructure and amateur workers to mass produce poor quality weapons.\n\nWe are receiving a poor quality gun at the start of each month.\n\nResource needed for the next upgrade:\n\n{1}\n\nInvesting in trade will give us a return of a normal quality gun at the start of each month.</FE_WeaponryLevel1>
+	<FE_WeaponryLevel2>{0} have the infrastructure and trained personnel to mass produce normal quality weapons.\n\nWe are receiving a normal quality gun at the start of each month.\n\nResource needed for the next upgrade:\n\n{1}\n\nInvesting in trade will give us a return of a good quality gun at the start of each month.</FE_WeaponryLevel2>
+	<FE_WeaponryLevel3>{0} have the infrastructure and expert designers to mass produce good quality weapons.\n\nWe are receiving a good quality gun at the start of each month.\n\nResource needed for the next upgrade:\n\n{1}\n\nInvesting in trade will give us a return of an excellent quality gun at the start of each month.</FE_WeaponryLevel3>
+	<FE_WeaponryLevel4>{0} have world class industry that mass produces excellent quality weapons.\n\nWe are receiving an excellent quality gun at the start of each month.</FE_WeaponryLevel4>
+	
+	<!--Raw Materials 0-4-->
+	<FactionInvestmentRawMaterial>Raw Materials</FactionInvestmentRawMaterial>
+	<FactionInvestmentRawMaterialUpgrade>Upgrade Raw Materials</FactionInvestmentRawMaterialUpgrade>
+	<FE_RawMaterialLevel0>{0} have only enough resources and manpower for gathering basic materials for faction members' use.\n\nResource needed for the next upgrade:\n\n{1}\n\nInvesting in trade will give us a return of a stack of wood and stone at the start of each month.</FE_RawMaterialLevel0>
+	<FE_RawMaterialLevel1>{0} have the infrastructure to mass gather and export wood and stone.\n\nWe are receiving a stack of wood and stone at the start of each month.\n\nResource needed for the next upgrade:\n\n{1}\n\nInvesting in trade will give us a return of two stacks of wood, stone and a stack of steel at the start of each month.</FE_RawMaterialLevel1>
+	<FE_RawMaterialLevel2>{0} have the infrastructure to mass gather and export wood, stone and steel.\n\nWe are receiving two stacks of wood, stone and a stack of steel at the start of each month.\n\nResource needed for the next upgrade:\n\n{1}\n\nInvesting in trade will give us a return of three stacks of wood and stone, two stacks of steel and one stack gold and jade at the start of each month.</FE_RawMaterialLevel2>
+	<FE_RawMaterialLevel3>{0} have the infrastructure to mass gather and export wood, stone, steel, jade and gold.\n\nWe are receiving three stacks of wood and stone, two stacks of steel and one stack gold and jade at the start of each month.\n\nResource needed for the next upgrade:\n\n{1}\n\nInvesting in trade will give us a return of three stacks of wood and stone, two stacks of steel and one stack gold, jade, plasteel and uranium at the start of each month.</FE_RawMaterialLevel3>
+	<FE_RawMaterialLevel4>{0} have the infrastructure to mass gather and export wood, stone, steel, jade, gold, plasteel and uranium.\n\nWe are receiving three stacks of wood and stone, two stacks of steel and one stack gold, jade, plasteel and uranium at the start of each month.</FE_RawMaterialLevel4>
+	
+	<!--Medicine 0-3-->
+	<FactionInvestmentMedicine>Medicine</FactionInvestmentMedicine>
+	<FactionInvestmentMedicineUpgrade>Upgrade Medicine</FactionInvestmentMedicineUpgrade>
+	<FE_MedicineLevel0>{0} have a few herbal medicine plant fields and traded medicine the are enough only for faction members' use.\n\nResource needed for the next upgrade:\n\n{1}\n\nInvesting in trade will give us a return of  at the start of each month.</FE_MedicineLevel0>
+	<FE_MedicineLevel1>{0} have dedicated herbal medicine farms to mass produce herbal medicine for trade.\n\nWe are receiving a stack of herbal medicine at the start of each month.\n\nResource needed for the next upgrade:\n\n{1}\n\nInvesting in trade will give us a return of o at the start of each month.</FE_MedicineLevel1>
+	<FE_MedicineLevel2>{0} have the infrastructure to produce from their herbal medicine farms' products large amounts of industrial medicine for export.\n\nWe are receiving a stack of herbal medicine and industrial medicine at the start of each month.\n\nResource needed for the next upgrade:\n\n{1}\n\nInvesting in trade will give us a return of o at the start of each month.</FE_MedicineLevel2>
+	<FE_MedicineLevel3>{0} have the infrastructure to produce from their herbal medicine farms' products large amounts of industrial medicine and Neutroamine for export.\n\nWe are receiving a stack of herbal medicine, industrial medicine and half a stack of glitterworld medicine at the start of each month.</FE_MedicineLevel3>
+	
+	<!--Drug labs 0-3-->
+	<FactionInvestmentDruglabs>Drug labs</FactionInvestmentDruglabs>
+	<FactionInvestmentDruglabsUpgrade>Upgrade Drug Labs</FactionInvestmentDruglabsUpgrade>
+	<FE_DruglabsLevel0>{0} doesn't manufacture any drugs in official capacity, any drug use is from imports or home brewed.\n\nResource needed for the next upgrade:\n\n{1}\n\nInvesting in trade will give us a return of a stack of beer and smokeleaf joints at the start of each month.</FE_DruglabsLevel0>
+	<FE_DruglabsLevel1>{0} is growing hops and smokeleafs in dedicated farms for internal recreational use and trading.\n\nWe are receiving a stack of beer and smokeleaf joints at the start of each month.\n\nResource needed for the next upgrade:\n\n{1}\n\nInvesting in trade will give us a return of a stack of beer, smokeleaf, psychite Tea and penoxycyline at the start of each month.</FE_DruglabsLevel1>
+	<FE_DruglabsLevel2>{0} is growing hops, psychite tea and smokeleafs in dedicated farms for internal recreational use and trading together with penoxycyline creation.\n\nWe are receiving a stack of beer, smokeleaf, psychite Tea and penoxycyline at the start of each month.\n\nResource needed for the next upgrade:\n\n{1}\n\nInvesting in trade will give us a return of every drug besides luciferium at the start of each month.</FE_DruglabsLevel2>
+	<FE_DruglabsLevel3>{0} have a massive industry capable of mass producing any drug excluding luciferium for both internal use and for use in trading.\n\nWe are receiving a stack of every drug besides luciferium at the start of each month.\n\nResource needed for the next upgrade:\n\n{1}\n\nInvesting in trade will give us a return of a stack of every drug at the start of each month.</FE_DruglabsLevel3>
+	<FE_DruglabsLevel4>{0} have a massive industry capable of mass producing any drug including luciferium for both internal use and for use in trading.\n\nWe are receiving a stack of every drug at the start of each month.</FE_DruglabsLevel4>
+	
+	<!--Prosthetics labs 0-4-->
+	<FactionInvestmentProstheticslabs>Prosthetics labs</FactionInvestmentProstheticslabs>
+	<FactionInvestmentProstheticslabsUpgrade>Upgrade Prosthetics Labs</FactionInvestmentProstheticslabsUpgrade>
+	<FE_ProstheticslabsLevel0>{0} have only scavenged parts to replace destroyed limbs of faction members, many non combatants walk around with peg legs and eye patches.\n\nResource needed for the next upgrade:\n\n{1}\n\nInvesting in trade will give us a return of one prosthetic arm and leg at the start of each month.</FE_ProstheticslabsLevel0>
+	<FE_ProstheticslabsLevel1>{0} have basic prosthetics labs and amateur workers to mass produce simple prosthetics limbs.\n\nWe are receiving one prosthetic arm and leg at the start of each month.\n\nResource needed for the next upgrade:\n\n{1}\n\nInvesting in trade will give us a return of one bionic arm and leg at the start of each month.</FE_ProstheticslabsLevel1>
+	<FE_ProstheticslabsLevel2>{0} have advanced prosthetics labs and trained personnel to mass produce bionic limbs.\n\nWe are receiving one bionic arm and leg at the start of each month.\n\nResource needed for the next upgrade:\n\n{1}\n\nInvesting in trade will give us a return of one bionic arm, leg, ear and eye at the start of each month.</FE_ProstheticslabsLevel2>
+	<FE_ProstheticslabsLevel3>{0} have advanced prosthetics labs and expert designers to mass produce bionic limbs and bionic facial organs.\n\nWe are receiving one bionic arm, leg, ear and eye at the start of each month.\n\nResource needed for the next upgrade:\n\n{1}\n\nInvesting in trade will give us a return of one bionic leg, arm, ear, eye, spine and stomach at the start of each month.</FE_ProstheticslabsLevel3>
+	<FE_ProstheticslabsLevel4>{0} have world class prosthetics industry that mass produces every bionic organ or limb possible at their current technological level.\n\nWe are receiving one bionic leg, arm, ear, eye, spine and stomach at the start of each month.</FE_ProstheticslabsLevel4>
+	
+	<!--Food 0-3-->
+	<FactionInvestmentFood>Food</FactionInvestmentFood>
+	<FactionInvestmentFoodUpgrade>Upgrade Food</FactionInvestmentFoodUpgrade>
+	<FE_FoodLevel0>{0} have only small rice farms to feed their faction members, any surplus food acquired is used for trading in exchange for more essential resources.\n\nResource needed for the next upgrade:\n\n{1}\n\nInvesting in trade will give us a return of one stack of plant matter at the start of each month.</FE_FoodLevel0>
+	<FE_FoodLevel1>{0} have medium sized farms around most of their settlement and small ranching zones for livestock which allows them to have unused products for trading.\n\nWe are receiving a stacks of plants matter at the start of each month.\n\nResource needed for the next upgrade:\n\n{1}\n\nInvesting in trade will give us a return of two stacks of plant matter and one stack of meat at the start of each month.</FE_FoodLevel1>
+	<FE_FoodLevel2>All of {0}'s towns are surrounded by fields of farms that are growing a variety of plants and beyond them large ranching zone for the herds of livestock the towns own, {0}'s food export is a central part of their economy and counts for a large percentage of their income.\n\nWe are receiving two stacks of plant matter and one stack of meat at the start of each month.\n\nResource needed for the next upgrade:\n\n{1}\n\nInvesting in trade will give us a return of five stacks of meat and plant matter at the start of each month.</FE_FoodLevel2>
+	<FE_FoodLevel3>{0}'s world class food industry mass produces so much high quality food that trade ships fight for the license to buy and distribute their produce across the star system.\n\nWe are receiving five stacks of plant matter and meat at the start of each month.</FE_FoodLevel3>
+	
+	<!--Components 0-3-->
+	<FactionInvestmentComponents>Components</FactionInvestmentComponents>
+	<FactionInvestmentComponentsUpgrade>Upgrade Components</FactionInvestmentComponentsUpgrade>
+	<FE_ComponentsLevel0>{0} do not manufacture components themselves and they get all components needed from trade or mining.\n\nResource needed for the next upgrade:\n\n{1}\n\nInvesting in trade will give us a return of 30 components at the start of each month.</FE_ComponentsLevel0>
+	<FE_ComponentsLevel1>The more wealthy settlement of {0} have fabrication benches manufacturing components from excess steel.\n\nWe are receiving 30 components at the start of each month.\n\nResource needed for the next upgrade:\n\n{1}\n\nInvesting in trade will give us a return of 60 components at the start of each month.</FE_ComponentsLevel1>
+	<FE_ComponentsLevel2>{0} have fabrication benches in all settlement manufacturing components to personal maintenance purposes and trading.\n\nWe are receiving 60 components at the start of each month.\n\nResource needed for the next upgrade:\n\n{1}\n\nInvesting in trade will give us a return of 60 components and 10 advanced components at the start of each month.</FE_ComponentsLevel2>
+	<FE_ComponentsLevel3>{0} have fabrication benches in all settlement manufacturing advanced and regular components to personal maintenance purposes and trading.\n\nWe are receiving 60 components and 10 advanced components at the start of each month.</FE_ComponentsLevel3>
+	
+	<!--Trade 0-3-->
+	<FactionInvestmentTrade>Trade</FactionInvestmentTrade>
+	<FactionInvestmentTradeUpgrade>Upgrade Trade</FactionInvestmentTradeUpgrade>
+	<FE_TradeLevel0>{0} have no central economical center and trade consist of trade caravans and local exchange of goods.\n\nResource needed for the next upgrade:\n\n{1}\n\nInvesting in trade will give us a return of 1500 silver at the start of each month.</FE_TradeLevel0>
+	<FE_TradeLevel1>{0} have small markets in their larger settlements to provide a space for trader to offer their goods.\n\nWe are receiving 1500 silver at the start of each month.\n\nResource needed for the next upgrade:\n\n{1}\n\nInvesting in trade will give us a return of 3000 silver at the start of each month.</FE_TradeLevel1>
+	<FE_TradeLevel2>{0} have markets in most towns where traders rest, offer their goods for purchase and gather with their guild's member to discuss their practice.\n\nWe are receiving 3000 silver at the start of each month.\n\nResource needed for the next upgrade:\n\n{1}\n\nInvesting in trade will give us a return of 5000 silver at the start of each month.</FE_TradeLevel2>
+	<FE_TradeLevel3>{0} is littered with markets in every major town and several are a stop to rare trade ship and artifact merchants.\n\nWe are receiving 5000 silver at the start of each month.</FE_TradeLevel3>
+	
+	<!--Relations 0-3-->
+	<FactionInvestmentRelations>Relations</FactionInvestmentRelations>
+	<FactionInvestmentRelationsUpgrade>Upgrade Relations</FactionInvestmentRelationsUpgrade>
+	<FE_RelationsLevel0>We have no connections with any political figures in {0}, as their subjugator local rumors and opinions on us tend to be negative\n\nResource needed for next upgrade:\n\n{1}\n\nInvesting in relations will stop the natural goodwill lose from being a vassal.</FE_RelationsLevel0>
+	<FE_RelationsLevel1>With a few high ranking politicians supporting us, {0} are not actively campaign against us and are more indifferent to our rule.\n\nResource needed for next upgrade:\n\n{1}\n\nInvesting in relations will let us regularly gain +10 goodwill with the faction every week.</FE_RelationsLevel1>
+	<FE_RelationsLevel2>All important politician are praising and keep our agenda while law-making, while there are a minority of dissenters their powers in growing more limited by the day.\n\nWe currently gain +10 goodwill with the vassal every week.\n\nResource needed for next upgrade:\n\n{1}\n\nInvesting in relations will let us regularly gain +15 goodwill with the faction every week.</FE_RelationsLevel2>
+	<FE_RelationsLevel3>Every decision in {0} is made with our well-being in mind, propaganda explaining the benefits of being our vassal is a common sight throughout the vassal's settlements\n\nWe currently gain +15 goodwill with the vassal every week.</FE_RelationsLevel3>
+	
+	
+</LanguageData>

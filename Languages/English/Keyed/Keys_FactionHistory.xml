@@ -3,24 +3,7 @@
 
 	<FactionInfo>More Options</FactionInfo>
 	
-	<!-- Vassalization -->
-	<FactionVassalage>Demand Vassalization</FactionVassalage>
-	<FactionVassalageDisabled>They are not weak enough</FactionVassalageDisabled>
-	<FactionVassalageGoodWillDecay>Unrest about being a subject to a foreign faction slowly lowers goodwill</FactionVassalageGoodWillDecay>
-	<FactionVassalageDisabledEnemy>Permanent Enemy</FactionVassalageDisabledEnemy>
-	<FactionVasalageInfo>{0}'s leader agreed to the demand and now the faction is your vassal. They will pay silver at the start of a year and will be forced to comply to demands for rare resources every couple of days.</FactionVasalageInfo>
-	<FactionVassalDemandResources>Demand Resources</FactionVassalDemandResources>
-	<FactionVassalDemandResourcesDisabled>Already demanded recently</FactionVassalDemandResourcesDisabled>
-	<LetterFactionVassalSilverRecived>Payment from vassal</LetterFactionVassalSilverRecived>
-	<FactionVassalSilverRecivedBoth>Your vassals and tributaries have sent their tribute to you to the total of {0} silver.\nThe factions that paid are: </FactionVassalSilverRecivedBoth>
-	<FactionVassalSilverRecivedVassals>Your vassals have sent their tribute to you to the total of {0} silver.\nThe factions that paid are: </FactionVassalSilverRecivedVassals>
-	<FactionVassalSilverRecivedTrivutaries>Your tributaries have sent their tribute to you to the total of {0} silver.\nThe factions that paid are: </FactionVassalSilverRecivedTrivutaries>
 	
-	
-	<FactionTributary>Demand they agree to become a tributary</FactionTributary>
-	<FactionTributaryInfo>{0}'s leader has agree to submit to you and now they are a tributary under you. They will pay X silver every month to be under your protection, they will break off if goodwill falls below -75 and they became hostile.</FactionTributaryInfo>
-	<FactionTributaryDisabledEnemy>Permanent Enemy</FactionTributaryDisabledEnemy>
-	<FactionTributaryDisabled>They are not weak enough</FactionTributaryDisabled>
 	
 	<!-- Faction disposition-->
 	<FactionChose>This faction's disposition to conflict is {0}</FactionChose>

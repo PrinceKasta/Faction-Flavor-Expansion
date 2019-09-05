@@ -87,11 +87,13 @@ namespace Flavor_Expansion
                 }
                 foreach(War war in Wars)
                     WarUpdate(war);
-                WarEnd();
+               
                 ManageHiddenFaction();
             }
-            
-            if(Find.TickManager.TicksGame % (Global.DayInTicks * currentDaysToDeclareWar) == 0 || (Prefs.DevMode && Find.TickManager.TicksGame % 300 == 0))
+
+            WarEnd();
+
+            if (Find.TickManager.TicksGame % (Global.DayInTicks * currentDaysToDeclareWar) == 0 || (Prefs.DevMode && Find.TickManager.TicksGame % 300 == 0))
             {
                 TryDeclareWar();
                 currentDaysToDeclareWar = daysToDeclareWar.RandomInRange;
@@ -146,7 +148,7 @@ namespace Flavor_Expansion
                     return;
                 }
                 
-                if (info.expansionCoolddown < Find.TickManager.TicksGame)
+                if (info.expansionCoolddown > Find.TickManager.TicksGame)
                     return;
                 
                 info.expansionCoolddown = Find.TickManager.TicksGame + (int)daysToExpansion.Evaluate(Find.WorldObjects.Settlements.Count(s => s.Faction == info.faction));
@@ -315,13 +317,6 @@ namespace Flavor_Expansion
                         Find.LetterStack.ReceiveLetter("LetterLabelFactionWarSubject".Translate(), "FactionWarSubject".Translate(defender.faction,attacker.faction), LetterDefOf.NegativeEvent);
                     }
 
-                    foreach (LE_FactionInfo ally in factionInfo.Where(ally => ally != attacker && ally != defender && !Wars.Where(wars => wars.DefenderFaction() == ally.faction).Any()))
-                    {
-                        if (ally.faction.RelationKindWith(attacker.faction) == FactionRelationKind.Ally && Rand.Chance(0.6f))
-                            war.AddFaction(ally.faction);
-                        else if (ally.faction.RelationKindWith(defender.faction) == FactionRelationKind.Ally && Rand.Chance(0.6f))
-                            war.AddFaction(null, defender.faction);
-                    }
                     Wars.Add(war);
                     return true;
                 }
@@ -535,29 +530,26 @@ namespace Flavor_Expansion
         {
             foreach(War war in Wars.ToList())
             {
-                float winnerTotal = 0;
                 
-                if (GetByFaction(war.AttackerFaction()).resources + war.GetAlliesAttackerrResources()/3 <= 0)
+                if (GetByFaction(war.AttackerFaction()).resources<= 1)
                 {
-                    winnerTotal = war.GetAlliesAttackerrResources();
                     Wars.Remove(war);
-                    WarAftermath(war.AttackerFaction(), war.DefenderFaction(), winnerTotal);
+                    WarAftermath(war.AttackerFaction(), war.DefenderFaction());
 
                 }
-                if (GetByFaction(war.DefenderFaction()).resources + war.GetAlliesDefenderrResources() <= 0)
+                if (GetByFaction(war.DefenderFaction()).resources<= 1)
                 {
-                    winnerTotal = war.GetAlliesDefenderrResources();
                     Wars.Remove(war);
-                    WarAftermath(war.DefenderFaction(), war.AttackerFaction(), winnerTotal);
+                    WarAftermath(war.DefenderFaction(), war.AttackerFaction());
                 }
             }
         }
         // Balance High priority
-        private void WarAftermath(Faction loser, Faction winner, float allyResources)
+        private void WarAftermath(Faction loser, Faction winner)
         {
             if (loser == null || winner == null)
                 return;
-            if (GetByFaction(winner).resources + allyResources < 100)
+            if (GetByFaction(winner).resources < 100)
             {
                 Messages.Message("MessageFactionWarWhitePeace".Translate(loser, winner), MessageTypeDefOf.SituationResolved);
                 GetByFaction(loser).resources += (int)loser.def.techLevel * TECHLEVEL_RESOURCE_VALUE;
@@ -566,7 +558,7 @@ namespace Flavor_Expansion
                 GetByFaction(winner).history += "HistoryDate".Translate(5500 + Find.TickManager.TicksGame / Global.YearInTicks) + "MessageFactionWarWhitePeace".Translate(loser, winner) + "\n\n";
                 return;
             }
-            if (GetByFaction(winner).resources + allyResources < 4000)
+            if (GetByFaction(winner).resources < 4000)
             {
                 Messages.Message("MessageFactionWarFactionDestoryed".Translate(loser, winner), MessageTypeDefOf.SituationResolved);
                 GetByFaction(loser).history += "HistoryDate".Translate(5500 + Find.TickManager.TicksGame / Global.YearInTicks) + "MessageFactionWarFactionDestoryed".Translate(loser, winner) + "\n\n";
@@ -659,8 +651,8 @@ namespace Flavor_Expansion
         public float resources;
         public List<int> SupplyDepots = new List<int>();
         public int disposition = 0;
-        // 0 - nothing, - 1 tribute, 2- vassal
-        public int vassalage = 0;
+        public Investments investments = new Investments();
+        public int vassalage = 0; // 0 - nothing, - 1 tribute, 2- vassal
         public int vassalageResourseCooldown = 0;
         public int expansionCoolddown = 0;
 
@@ -681,6 +673,7 @@ namespace Flavor_Expansion
 
         public void ExposeData()
         {
+            Scribe_Deep.Look(ref investments, "investments");
             Scribe_References.Look(ref faction, "faction");
             Scribe_Values.Look(ref history, "history");
             Scribe_Values.Look(ref ancientHistory, "ancientHistory");
@@ -694,13 +687,55 @@ namespace Flavor_Expansion
     }
     #endregion class LE_Faction
 
+    public class Investments : IExposable
+    {
+        public int cooldown;
+        public int Armory;
+        public int Weaponry;
+        public int Mining;
+        public int Medicine;
+        public int Druglabs;
+        public int Prosthetics;
+        public int Food;
+        public int Components;
+        public int Trade;
+        public int Relations;
+
+        public Investments()
+        {
+            cooldown = 0;
+            Armory = 0;
+            Weaponry = 0;
+            Mining = 0;
+            Medicine = 0;
+            Druglabs = 0;
+            Prosthetics = 0;
+            Food = 0;
+            Components = 0;
+            Trade = 0;
+            Relations = 0;
+        }
+        public void ExposeData()
+        {
+            Scribe_Values.Look(ref cooldown, "cooldown", defaultValue: 0);
+            Scribe_Values.Look(ref Armory, "Armory", defaultValue: 0);
+            Scribe_Values.Look(ref Weaponry, "Weaponry", defaultValue: 0);
+            Scribe_Values.Look(ref Mining, "Mining", defaultValue: 0);
+            Scribe_Values.Look(ref Medicine, "Medicine", defaultValue: 0);
+            Scribe_Values.Look(ref Druglabs, "Druglabs", defaultValue: 0);
+            Scribe_Values.Look(ref Prosthetics, "Prosthetics", defaultValue: 0);
+            Scribe_Values.Look(ref Food, "Food", defaultValue: 0);
+            Scribe_Values.Look(ref Components, "Components", defaultValue: 0);
+            Scribe_Values.Look(ref Trade, "Trade", defaultValue: 0);
+            Scribe_Values.Look(ref Relations, "Relations", defaultValue: 0);
+        }
+    }
+
     #region War
     public class War : IExposable  , ILoadReferenceable
     {
         private Faction attackerFaction = new Faction();
         private Faction defenderFaction = new Faction();
-        List<Faction> alliesAttacker = new List<Faction>();
-        List<Faction> alliesDefender = new List<Faction>();
 
         public string warHistory = "";
 
@@ -733,53 +768,11 @@ namespace Flavor_Expansion
             return false;
         }
 
-        public void AddFaction(Faction attacker=null, Faction defender=null)
-        {
-            
-            if (attacker != null && attacker != attackerFaction && !alliesAttacker.Contains(attacker) && !alliesDefender.Contains(attacker))
-                alliesAttacker.Add(attacker);
-            if (defender != null && defender != defenderFaction && !alliesDefender.Contains(defender) && !alliesAttacker.Contains(defender))
-                alliesDefender.Add(defender);
-        }
-
-        public bool TryFindAttackerAlly(Faction f)
-        {
-            if (alliesAttacker.Contains(f))
-                return true;
-            return false;
-        }
-        public bool TryFindDefenderAlly(Faction f)
-        {
-            if (alliesDefender.Contains(f))
-                return true;
-            return false;
-        }
-
         public bool TryFindFactioninvolved(Faction f)
         {
-            if (TryFindDefenderAlly(f) || TryFindAttackerAlly(f) || attackerFaction == f || defenderFaction == f)
+            if (attackerFaction == f || defenderFaction == f)
                 return true;
             return false;
-        }
-
-        public float GetAlliesAttackerrResources()
-        {
-            float total = 0;
-            foreach(Faction ally in alliesAttacker)
-            {
-                total += Utilities.FactionsWar().GetByFaction(ally).resources;
-            }
-            return total;
-        }
-
-        public float GetAlliesDefenderrResources()
-        {
-            float total = 0;
-            foreach (Faction ally in alliesDefender)
-            {
-                total += Utilities.FactionsWar().GetByFaction(ally).resources;
-            }
-            return total;
         }
 
         public string GetUniqueLoadID()
@@ -792,8 +785,7 @@ namespace Flavor_Expansion
             
             Scribe_References.Look(ref attackerFaction, "attackerFaction");
             Scribe_References.Look(ref defenderFaction, "defenderFaction");
-            Scribe_Collections.Look(ref alliesAttacker, "alliesAttacker", LookMode.Reference);
-            Scribe_Collections.Look(ref alliesDefender, "alliesDefender", LookMode.Reference);
+
             Scribe_Values.Look(ref warHistory, "warHistory");
 
         }

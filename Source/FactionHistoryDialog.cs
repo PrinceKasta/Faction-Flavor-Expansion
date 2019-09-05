@@ -12,9 +12,7 @@ namespace Flavor_Expansion
     
     class FactionHistoryDialog
     {
-        public static DiaOption RequestFactionInfoOption(
-        Faction faction,
-         Pawn negotiator)
+        public static DiaOption RequestFactionInfoOption(Faction faction, Pawn negotiator)
         {
             
             string text = "FactionInfo".Translate();
@@ -64,6 +62,27 @@ namespace Flavor_Expansion
             }
             #endregion War
 
+
+
+            #region Vassal
+
+
+            RequestVassalOptions(faction, diaNode1);
+            
+            #endregion Vassal
+
+            diaNode1.options.Add(new DiaOption("GoBack".Translate())
+            {
+                linkLateBind = (Func<DiaNode>)(() => FactionDialogMaker.FactionDialogFor(negotiator, faction))
+
+            });
+
+            diaOption1.link = diaNode1;
+            return diaOption1;
+        }
+
+        public static void RequestVassalOptions(Faction faction, DiaNode diaNode1)
+        {
             DiaNode vassalInfo = new DiaNode("FactionVasalageInfo".Translate(faction));
 
             vassalInfo.options.Add(new DiaOption("Disconnect".Translate())
@@ -73,12 +92,10 @@ namespace Flavor_Expansion
 
             DiaNode tributaryInfo = new DiaNode("FactionTributaryInfo".Translate(faction));
 
-            tributaryInfo.options.Add(new DiaOption("\""+"Disconnect".Translate()+"\"")
+            tributaryInfo.options.Add(new DiaOption("\"" + "Disconnect".Translate() + "\"")
             {
                 resolveTree = true
             });
-
-            #region Vassal
 
             if (Utilities.FactionsWar().GetByFaction(faction).vassalage == 0)
             {
@@ -89,11 +106,11 @@ namespace Flavor_Expansion
                     action = new Action(() =>
                     {
                         Utilities.FactionsWar().GetByFaction(faction).vassalage = 2;
-                        faction.TryAffectGoodwillWith(Faction.OfPlayer, 100);
+                        faction.TrySetRelationKind(Faction.OfPlayer, FactionRelationKind.Ally);
                     })
                 };
 
-                if (!Prefs.DevMode || faction.def.permanentEnemy || (Utilities.FactionsWar().GetByFaction(faction).resources < 2000 && Utilities.FactionsWar().GetByFaction(faction).resources >= Find.AnyPlayerHomeMap.wealthWatcher.WealthTotal || Utilities.FactionsWar().GetByFaction(faction).resources / Math.Min(Find.AnyPlayerHomeMap.wealthWatcher.WealthTotal, 10000) > 0.25f - Utilities.FactionsWar().GetByFaction(faction).disposition/100))
+                if (!Prefs.DevMode || faction.def.permanentEnemy || (Utilities.FactionsWar().GetByFaction(faction).resources < 2000 && Utilities.FactionsWar().GetByFaction(faction).resources >= Find.AnyPlayerHomeMap.wealthWatcher.WealthTotal || Utilities.FactionsWar().GetByFaction(faction).resources / Math.Min(Find.AnyPlayerHomeMap.wealthWatcher.WealthTotal, 10000) > 0.25f - Utilities.FactionsWar().GetByFaction(faction).disposition / 100))
                 {
                     DiaOption vassalagediaOption = new DiaOption("FactionVassalage".Translate());
                     if (faction.def.permanentEnemy)
@@ -113,8 +130,7 @@ namespace Flavor_Expansion
                     action = new Action(() =>
                     {
                         Utilities.FactionsWar().GetByFaction(faction).vassalage = 1;
-                        faction.TrySetRelationKind(Faction.OfPlayer, FactionRelationKind.Neutral);
-                    })
+                        faction.TrySetRelationKind(Faction.OfPlayer, FactionRelationKind.Neutral);                    })
                 };
 
                 if (!Prefs.DevMode || faction.def.permanentEnemy || (Utilities.FactionsWar().GetByFaction(faction).resources < 3000 && Utilities.FactionsWar().GetByFaction(faction).resources >= Find.AnyPlayerHomeMap.wealthWatcher.WealthTotal || Utilities.FactionsWar().GetByFaction(faction).resources / Math.Min(Find.AnyPlayerHomeMap.wealthWatcher.WealthTotal, 10000) > 0.5f - Utilities.FactionsWar().GetByFaction(faction).disposition / 100))
@@ -133,11 +149,11 @@ namespace Flavor_Expansion
             }
             else if (Utilities.FactionsWar().GetByFaction(faction).vassalage == 2)
             {
-                if (Find.TickManager.TicksGame - Utilities.FactionsWar().GetByFaction(faction).vassalageResourseCooldown < Global.DayInTicks * 3)
+                if (Find.TickManager.TicksGame > Utilities.FactionsWar().GetByFaction(faction).vassalageResourseCooldown)
                 {
                     DiaOption vassalage = new DiaOption("FactionVassalDemandResources".Translate())
                     {
-                        link = diaNode1,
+                        resolveTree = true,
 
                         action = new Action(() =>
                         {
@@ -151,7 +167,7 @@ namespace Flavor_Expansion
                             thing.stackCount = new IntRange(75, 100).RandomInRange;
                             IntVec3 intVec3 = DropCellFinder.TradeDropSpot(Find.AnyPlayerHomeMap);
                             DropPodUtility.DropThingsNear(intVec3, Find.AnyPlayerHomeMap, new List<Thing>() { thing }, 110, false, false, false);
-                            Utilities.FactionsWar().GetByFaction(faction).vassalageResourseCooldown = Find.TickManager.TicksGame;
+                            Utilities.FactionsWar().GetByFaction(faction).vassalageResourseCooldown = Find.TickManager.TicksGame + Global.DayInTicks * 3;
                         })
                     };
                     diaNode1.options.Add(vassalage);
@@ -162,28 +178,618 @@ namespace Flavor_Expansion
                     vassalage.Disable("FactionVassalDemandResourcesDisabled".Translate());
                     diaNode1.options.Add(vassalage);
                 }
+                RequestInvestmentsNode(faction, diaNode1);
             }
-            
-            
-            #endregion Vassal
+        }
 
-            diaNode1.options.Add(new DiaOption("GoBack".Translate())
+        public static void RequestInvestmentsNode(Faction faction, DiaNode diaNode1)
+        {
+            int cooldown = Global.DayInTicks * 3;
+            DiaNode mainNode = new DiaNode("FactionInvestmentInfo".Translate());
+            List<Thing> requirements = new List<Thing>();
+            bool canUpgrade =FactionDialogUtilities.CanUpgradeRawMaterials(faction, requirements, Utilities.FactionsWar().GetByFaction(faction).investments.Mining);
+
+            #region Raw Materials
+
+            DiaNode rawMaterialsNode = new DiaNode(FactionDialogUtilities.RawMaterialsTextPerLevel(faction, requirements));
+
+            if (Utilities.FactionsWar().GetByFaction(faction).investments.Mining >= 4)
             {
-                linkLateBind = (Func<DiaNode>)(() => FactionDialogMaker.FactionDialogFor(negotiator, faction))
+                rawMaterialsNode.options.Add(new DiaOption("FactionInvestmentRawMaterialUpgrade".Translate())
+                {
+                    disabled = true,
+                    disabledReason = "FactionInvestmentMaxed".Translate()
+                });
+            } else if (Find.TickManager.TicksGame < Utilities.FactionsWar().GetByFaction(faction).investments.cooldown)
+            {
+                rawMaterialsNode.options.Add(new DiaOption("FactionInvestmentRawMaterialUpgrade".Translate())
+                {
+                    disabled = true,
+                    disabledReason = "FactionInvestmentCoolDown".Translate()
+                });
+            }
+            else if (!canUpgrade)
+            {
+                rawMaterialsNode.options.Add(new DiaOption("FactionInvestmentRawMaterialUpgrade".Translate())
+                {
+                    disabled = true,
+                    disabledReason = "FactionInvestmentNoPrice".Translate()
+                });
+            } else
+            {
+                rawMaterialsNode.options.Add(new DiaOption("FactionInvestmentRawMaterialUpgrade".Translate())
+                {
+                    action = () =>
+                    {
+                        if (Utilities.FactionsWar().GetByFaction(faction).investments.Mining < 4)
+                        {
+                            Utilities.FactionsWar().GetByFaction(faction).investments.Mining++;
+                            rawMaterialsNode.text = FactionDialogUtilities.RawMaterialsTextPerLevel(faction, requirements);
+                            Utilities.FactionsWar().GetByFaction(faction).investments.cooldown = Find.TickManager.TicksGame + cooldown;
+                        }
+                    },
+                    resolveTree = true
+                });
+            }
 
+            rawMaterialsNode.options.Add(new DiaOption("GoBack".Translate())
+            {
+                link = mainNode
             });
 
-            diaOption1.link = diaNode1;
-            return diaOption1;
+            mainNode.options.Add(new DiaOption("FactionInvestmentRawMaterial".Translate())
+            {
+                link = rawMaterialsNode
+            });
+
+            #endregion Raw Materials
+
+            #region Medicine
+
+            canUpgrade = FactionDialogUtilities.CanUpgradeRawMaterials(faction, requirements, Utilities.FactionsWar().GetByFaction(faction).investments.Medicine);
+            DiaNode medicineNode = new DiaNode(FactionDialogUtilities.MedicineTextPerLevel(faction, requirements));
+
+            if(Utilities.FactionsWar().GetByFaction(faction).investments.Medicine >= 3)
+            {
+                medicineNode.options.Add(new DiaOption("FactionInvestmentMedicineUpgrade".Translate())
+                {
+                    disabled = true,
+                    disabledReason = "FactionInvestmentMaxed".Translate()
+                });
+            }
+            else if (Find.TickManager.TicksGame < Utilities.FactionsWar().GetByFaction(faction).investments.cooldown)
+            {
+                medicineNode.options.Add(new DiaOption("FactionInvestmentMedicineUpgrade".Translate())
+                {
+                    disabled = true,
+                    disabledReason = "FactionInvestmentCoolDown".Translate()
+                });
+            }
+            else if(!canUpgrade)
+            {
+                medicineNode.options.Add(new DiaOption("FactionInvestmentMedicineUpgrade".Translate())
+                {
+                    disabled = true,
+                    disabledReason = "FactionInvestmentNoPrice".Translate()
+                });
+            }
+            else
+            {
+                medicineNode.options.Add(new DiaOption("FactionInvestmentMedicineUpgrade".Translate())
+                {
+                    action = () =>
+                    {
+                        if (Utilities.FactionsWar().GetByFaction(faction).investments.Medicine < 3)
+                        {
+                            Utilities.FactionsWar().GetByFaction(faction).investments.Medicine++;
+                            medicineNode.text = FactionDialogUtilities.MedicineTextPerLevel(faction, requirements);
+                            Utilities.FactionsWar().GetByFaction(faction).investments.cooldown = Find.TickManager.TicksGame + cooldown;
+                        }
+                    },
+                    resolveTree = true
+                });
+            }
+
+            medicineNode.options.Add(new DiaOption("GoBack".Translate())
+            {
+                link = mainNode
+            });
+
+            mainNode.options.Add(new DiaOption("FactionInvestmentMedicine".Translate())
+            {
+                link = medicineNode
+            });
+
+            #endregion Medicine
+
+            if (Utilities.FactionsWar().GetByFaction(faction).investments.Medicine == 3)
+            {
+                #region Drug labs
+
+                canUpgrade = FactionDialogUtilities.CanUpgradeDruglabs(faction, requirements, Utilities.FactionsWar().GetByFaction(faction).investments.Druglabs);
+                DiaNode druglabsNode = new DiaNode(FactionDialogUtilities.DruglabsTextPerLevel(faction, requirements));
+
+                if (Utilities.FactionsWar().GetByFaction(faction).investments.Druglabs >= 4)
+                {
+                    druglabsNode.options.Add(new DiaOption("FactionInvestmentDruglabsUpgrade".Translate())
+                    {
+                        disabled = true,
+                        disabledReason = "FactionInvestmentMaxed".Translate()
+                    });
+                }
+                else if (Find.TickManager.TicksGame < Utilities.FactionsWar().GetByFaction(faction).investments.cooldown)
+                {
+                    druglabsNode.options.Add(new DiaOption("FactionInvestmentDruglabsUpgrade".Translate())
+                    {
+                        disabled = true,
+                        disabledReason = "FactionInvestmentCoolDown".Translate()
+                    });
+                }
+                else  if (!canUpgrade)
+                {
+                    druglabsNode.options.Add(new DiaOption("FactionInvestmentDruglabsUpgrade".Translate())
+                    {
+                        disabled = true,
+                        disabledReason = "FactionInvestmentNoPrice".Translate()
+                    });
+                } else
+                { 
+                    druglabsNode.options.Add(new DiaOption("FactionInvestmentDruglabsUpgrade".Translate())
+                    {
+                        action = () =>
+                        {
+                            if (Utilities.FactionsWar().GetByFaction(faction).investments.Druglabs < 4)
+                            {
+                                Utilities.FactionsWar().GetByFaction(faction).investments.Druglabs++;
+                                druglabsNode.text = FactionDialogUtilities.DruglabsTextPerLevel(faction, requirements);
+                                Utilities.FactionsWar().GetByFaction(faction).investments.cooldown = Find.TickManager.TicksGame + cooldown;
+                            }
+                        },
+                        resolveTree = true
+                    });
+                }
+
+                druglabsNode.options.Add(new DiaOption("GoBack".Translate())
+                {
+                    link = mainNode
+                });
+
+                mainNode.options.Add(new DiaOption("FactionInvestmentDruglabs".Translate())
+                {
+                    link = druglabsNode
+                });
+
+
+                #endregion Drug labs
+            }
+
+            //Need Components
+            if (Utilities.FactionsWar().GetByFaction(faction).investments.Components >= 1)
+            {
+                #region Prosthetics labs
+
+                canUpgrade = FactionDialogUtilities.CanUpgradeProstheticslabs(faction, requirements, Utilities.FactionsWar().GetByFaction(faction).investments.Prosthetics);
+                DiaNode prostheticslabsNode = new DiaNode(FactionDialogUtilities.ProstheticslabsTextPerLevel(faction, requirements));
+                if (Utilities.FactionsWar().GetByFaction(faction).investments.Prosthetics >= 4)
+                {
+                    prostheticslabsNode.options.Add(new DiaOption("FactionInvestmentProstheticslabsUpgrade".Translate())
+                    {
+                        disabled = true,
+                        disabledReason = "FactionInvestmentMaxed".Translate()
+                    });
+                }
+                else if (Find.TickManager.TicksGame < Utilities.FactionsWar().GetByFaction(faction).investments.cooldown)
+                {
+                    prostheticslabsNode.options.Add(new DiaOption("FactionInvestmentProstheticslabsUpgrade".Translate())
+                    {
+                        disabled = true,
+                        disabledReason = "FactionInvestmentCoolDown".Translate()
+                    });
+                }
+                else if (!canUpgrade)
+                {
+                    prostheticslabsNode.options.Add(new DiaOption("FactionInvestmentProstheticslabsUpgrade".Translate())
+                    {
+                        disabled = true,
+                        disabledReason = "FactionInvestmentNoPrice".Translate()
+                    });
+                }
+                else
+                {
+                    prostheticslabsNode.options.Add(new DiaOption("FactionInvestmentProstheticslabsUpgrade".Translate())
+                    {
+                        action = () =>
+                        {
+                            if (Utilities.FactionsWar().GetByFaction(faction).investments.Prosthetics < 4)
+                            {
+                                Utilities.FactionsWar().GetByFaction(faction).investments.Prosthetics++;
+                                prostheticslabsNode.text = FactionDialogUtilities.ProstheticslabsTextPerLevel(faction, requirements);
+                                Utilities.FactionsWar().GetByFaction(faction).investments.cooldown = Find.TickManager.TicksGame + cooldown;
+                            }
+                        },
+                        resolveTree = true
+                    });
+                }
+
+                prostheticslabsNode.options.Add(new DiaOption("GoBack".Translate())
+                {
+                    link = mainNode
+                });
+
+                mainNode.options.Add(new DiaOption("FactionInvestmentProstheticslabs".Translate())
+                {
+                    link = prostheticslabsNode
+                });
+
+                #endregion Prosthetics labs
+            }
+
+            #region Food
+            canUpgrade = FactionDialogUtilities.CanUpgradeFood(faction, requirements, Utilities.FactionsWar().GetByFaction(faction).investments.Food);
+            DiaNode foodNode = new DiaNode(FactionDialogUtilities.FoodTextPerLevel(faction, requirements));
+
+            if (Utilities.FactionsWar().GetByFaction(faction).investments.Food >= 3)
+            {
+                foodNode.options.Add(new DiaOption("FactionInvestmentFoodUpgrade".Translate())
+                {
+                    disabled = true,
+                    disabledReason = "FactionInvestmentMaxed".Translate()
+                });
+            }
+            else if (Find.TickManager.TicksGame < Utilities.FactionsWar().GetByFaction(faction).investments.cooldown)
+            {
+                foodNode.options.Add(new DiaOption("FactionInvestmentFoodUpgrade".Translate())
+                {
+                    disabled = true,
+                    disabledReason = "FactionInvestmentCoolDown".Translate()
+                });
+            } 
+            else if (!canUpgrade)
+            {
+                foodNode.options.Add(new DiaOption("FactionInvestmentDruglabsUpgrade".Translate())
+                {
+                    disabled = true,
+                    disabledReason = "FactionInvestmentNoPrice".Translate()
+                });
+            }
+            else
+            {
+                foodNode.options.Add(new DiaOption("FactionInvestmentFoodUpgrade".Translate())
+                {
+                    action = () =>
+                    {
+                        if (Utilities.FactionsWar().GetByFaction(faction).investments.Food < 3)
+                        {
+                            Utilities.FactionsWar().GetByFaction(faction).investments.Food++;
+                            foodNode.text = FactionDialogUtilities.FoodTextPerLevel(faction, requirements);
+                            Utilities.FactionsWar().GetByFaction(faction).investments.cooldown = Find.TickManager.TicksGame + cooldown;
+                        }
+                    }
+                });
+            }
+
+            foodNode.options.Add(new DiaOption("GoBack".Translate())
+            {
+                link = mainNode
+            });
+
+            mainNode.options.Add(new DiaOption("FactionInvestmentFood".Translate())
+            {
+                link = foodNode
+            });
+            #endregion Food
+
+            
+            // Need Steel
+            if (Utilities.FactionsWar().GetByFaction(faction).investments.Mining >= 2)
+            {
+                canUpgrade = FactionDialogUtilities.CanUpgradeArmoryNWeaponry(faction, requirements, Utilities.FactionsWar().GetByFaction(faction).investments.Armory);
+
+                #region Armory
+
+                DiaNode armoryNode = new DiaNode(FactionDialogUtilities.ArmoryTextPerLevel(faction, requirements));
+                if (Utilities.FactionsWar().GetByFaction(faction).investments.Armory >= 4)
+                {
+                    armoryNode.options.Add(new DiaOption("FactionInvestmentArmoryUpgrade".Translate())
+                    {
+                        disabled = true,
+                        disabledReason = "FactionInvestmentMaxed".Translate()
+                    });
+                }
+                else if (Find.TickManager.TicksGame < Utilities.FactionsWar().GetByFaction(faction).investments.cooldown)
+                {
+                    armoryNode.options.Add(new DiaOption("FactionInvestmentArmoryUpgrade".Translate())
+                    {
+                        disabled = true,
+                        disabledReason = "FactionInvestmentCoolDown".Translate()
+                    });
+                }
+                else if (!canUpgrade)
+                {
+                    armoryNode.options.Add(new DiaOption("FactionInvestmentArmoryUpgrade".Translate())
+                    {
+                        disabled = true,
+                        disabledReason = "FactionInvestmentNoPrice".Translate()
+                    });
+                }
+                else
+                {
+                    armoryNode.options.Add(new DiaOption("FactionInvestmentArmoryUpgrade".Translate())
+                    {
+                        action = () =>
+                        {
+                            if (Utilities.FactionsWar().GetByFaction(faction).investments.Armory < 4)
+                            {
+                                Utilities.FactionsWar().GetByFaction(faction).investments.Armory++;
+                                armoryNode.text = FactionDialogUtilities.ArmoryTextPerLevel(faction, requirements);
+                                Utilities.FactionsWar().GetByFaction(faction).investments.cooldown = Find.TickManager.TicksGame + cooldown;
+                            }
+                        },
+                        resolveTree = true
+                    });
+                }
+
+                armoryNode.options.Add(new DiaOption("GoBack".Translate())
+                {
+                    link = mainNode
+                });
+
+                mainNode.options.Add(new DiaOption("FactionInvestmentArmory".Translate())
+                {
+                    link = armoryNode
+                });
+
+                #endregion Armory
+
+                canUpgrade = FactionDialogUtilities.CanUpgradeArmoryNWeaponry(faction, requirements, Utilities.FactionsWar().GetByFaction(faction).investments.Weaponry);
+
+                #region Weaponry
+
+                DiaNode weaponryNode = new DiaNode(FactionDialogUtilities.WeaponryTextPerLevel(faction, requirements));
+
+                if(Utilities.FactionsWar().GetByFaction(faction).investments.Weaponry >= 4)
+                {
+                    weaponryNode.options.Add(new DiaOption("FactionInvestmentWeaponryUpgrade".Translate())
+                    {
+                        disabled = true,
+                        disabledReason = "FactionInvestmentMaxed".Translate()
+                    });
+                }
+                else if (Find.TickManager.TicksGame < Utilities.FactionsWar().GetByFaction(faction).investments.cooldown)
+                {
+                    weaponryNode.options.Add(new DiaOption("FactionInvestmentWeaponryUpgrade".Translate())
+                    {
+                        disabled = true,
+                        disabledReason = "FactionInvestmentCoolDown".Translate()
+                    });
+                }
+                else if (!canUpgrade)
+                {
+                    weaponryNode.options.Add(new DiaOption("FactionInvestmentWeaponryUpgrade".Translate())
+                    {
+                        disabled = true,
+                        disabledReason = "FactionInvestmentNoPrice".Translate()
+                    });
+                }
+                else
+                {
+                    weaponryNode.options.Add(new DiaOption("FactionInvestmentWeaponryUpgrade".Translate())
+                    {
+                        action = () =>
+                        {
+                            if (Utilities.FactionsWar().GetByFaction(faction).investments.Weaponry < 4)
+                            {
+                                Utilities.FactionsWar().GetByFaction(faction).investments.Weaponry++;
+                                weaponryNode.text = FactionDialogUtilities.WeaponryTextPerLevel(faction, requirements);
+                                Utilities.FactionsWar().GetByFaction(faction).investments.cooldown = Find.TickManager.TicksGame + cooldown;
+                            }
+                        },
+                        resolveTree = true
+                    });
+                }
+
+                weaponryNode.options.Add(new DiaOption("GoBack".Translate())
+                {
+                    link = mainNode
+                });
+
+                mainNode.options.Add(new DiaOption("FactionInvestmentWeaponry".Translate())
+                {
+                    link = weaponryNode
+                });
+
+                #endregion Weaponry
+
+                #region Components
+                canUpgrade = FactionDialogUtilities.CanUpgradeComponents(faction, requirements, Utilities.FactionsWar().GetByFaction(faction).investments.Components);
+                DiaNode componentsNode = new DiaNode(FactionDialogUtilities.ComponentsTextPerLevel(faction, requirements));
+
+                if (Utilities.FactionsWar().GetByFaction(faction).investments.Components >= 3)
+                {
+                    componentsNode.options.Add(new DiaOption("FactionInvestmentComponentsUpgrade".Translate())
+                    {
+                        disabled = true,
+                        disabledReason = "FactionInvestmentMaxed".Translate()
+                    });
+                }
+                else if (Find.TickManager.TicksGame < Utilities.FactionsWar().GetByFaction(faction).investments.cooldown)
+                {
+                    componentsNode.options.Add(new DiaOption("FactionInvestmentComponentsUpgrade".Translate())
+                    {
+                        disabled = true,
+                        disabledReason = "FactionInvestmentCoolDown".Translate()
+                    });
+                }
+                else if(!canUpgrade)
+                {
+                    componentsNode.options.Add(new DiaOption("FactionInvestmentComponentsUpgrade".Translate())
+                    {
+                        disabled = true,
+                        disabledReason = "FactionInvestmentNoPrice".Translate()
+                    });
+                }
+                else
+                { 
+                    componentsNode.options.Add(new DiaOption("FactionInvestmentComponentsUpgrade".Translate())
+                    {
+                        action = () =>
+                        {
+                            if (Utilities.FactionsWar().GetByFaction(faction).investments.Components < 3)
+                            {
+                                Utilities.FactionsWar().GetByFaction(faction).investments.Components++;
+                                componentsNode.text = FactionDialogUtilities.ComponentsTextPerLevel(faction, requirements);
+                                Utilities.FactionsWar().GetByFaction(faction).investments.cooldown = Find.TickManager.TicksGame + cooldown;
+                            }
+                        },
+                        resolveTree = true
+                    });
+                }
+
+                componentsNode.options.Add(new DiaOption("GoBack".Translate())
+                {
+                    link = mainNode
+                });
+
+                mainNode.options.Add(new DiaOption("FactionInvestmentComponents".Translate())
+                {
+                    link = componentsNode
+                });
+                #endregion Components
+            }
+
+            #region Trade
+
+            canUpgrade = FactionDialogUtilities.CanUpgradeTrade(faction, requirements, Utilities.FactionsWar().GetByFaction(faction).investments.Trade);
+            DiaNode tradeNode = new DiaNode(FactionDialogUtilities.TradeTextPerLevel(faction, requirements));
+
+            if (Utilities.FactionsWar().GetByFaction(faction).investments.Trade >= 3)
+            {
+                tradeNode.options.Add(new DiaOption("FactionInvestmentTradeUpgrade".Translate())
+                {
+                    disabled = true,
+                    disabledReason = "FactionInvestmentMaxed".Translate()
+                });
+            }
+            else if (Find.TickManager.TicksGame < Utilities.FactionsWar().GetByFaction(faction).investments.cooldown)
+            {
+                tradeNode.options.Add(new DiaOption("FactionInvestmentTradeUpgrade".Translate())
+                {
+                    disabled = true,
+                    disabledReason = "FactionInvestmentCoolDown".Translate()
+                });
+            }
+            else if (!canUpgrade)
+            {
+                tradeNode.options.Add(new DiaOption("FactionInvestmentTradeUpgrade".Translate())
+                {
+                    disabled = true,
+                    disabledReason = "FactionInvestmentNoPrice".Translate()
+                });
+            } else
+            { 
+                tradeNode.options.Add(new DiaOption("FactionInvestmentTradeUpgrade".Translate())
+                {
+                    action = () =>
+                    {
+                        if (Utilities.FactionsWar().GetByFaction(faction).investments.Trade < 3)
+                        {
+                            Utilities.FactionsWar().GetByFaction(faction).investments.Trade++;
+                            tradeNode.text = FactionDialogUtilities.TradeTextPerLevel(faction, requirements);
+                            Utilities.FactionsWar().GetByFaction(faction).investments.cooldown = Find.TickManager.TicksGame + cooldown;
+                        }
+                    },
+                    resolveTree = true
+                });
+            }
+
+            tradeNode.options.Add(new DiaOption("GoBack".Translate())
+            {
+                link = mainNode
+            });
+
+            mainNode.options.Add(new DiaOption("FactionInvestmentTrade".Translate())
+            {
+                link = tradeNode
+            });
+            #endregion Trade
+
+            #region Relations
+
+            canUpgrade = FactionDialogUtilities.CanUpgradeRelations(faction, requirements, Utilities.FactionsWar().GetByFaction(faction).investments.Relations);
+            DiaNode relationsNode = new DiaNode(FactionDialogUtilities.RelationsTextPerLevel(faction, requirements));
+
+            if (Utilities.FactionsWar().GetByFaction(faction).investments.Relations >= 3)
+            {
+                relationsNode.options.Add(new DiaOption("FactionInvestmentRelationsUpgrade".Translate())
+                {
+                    disabled = true,
+                    disabledReason = "FactionInvestmentMaxed".Translate()
+                });
+            }
+            else if (Find.TickManager.TicksGame < Utilities.FactionsWar().GetByFaction(faction).investments.cooldown)
+            {
+                relationsNode.options.Add(new DiaOption("FactionInvestmentRelationsUpgrade".Translate())
+                {
+                    disabled = true,
+                    disabledReason = "FactionInvestmentCoolDown".Translate()
+                });
+            }
+            else if(!canUpgrade)
+            {
+                relationsNode.options.Add(new DiaOption("FactionInvestmentRelationsUpgrade".Translate())
+                {
+                    disabled = true,
+                    disabledReason = "FactionInvestmentNoPrice".Translate()
+                });
+            }
+            else
+            {
+
+                relationsNode.options.Add(new DiaOption("FactionInvestmentRelationsUpgrade".Translate())
+                {
+                    action = () =>
+                    {
+                        if (Utilities.FactionsWar().GetByFaction(faction).investments.Relations < 3)
+                        {
+                            Utilities.FactionsWar().GetByFaction(faction).investments.Relations++;
+                            relationsNode.text = FactionDialogUtilities.RelationsTextPerLevel(faction, requirements);
+                            Utilities.FactionsWar().GetByFaction(faction).investments.cooldown = Find.TickManager.TicksGame + cooldown;
+                        }
+                    },
+                    resolveTree = true
+                    
+                });
+            }
+
+            relationsNode.options.Add(new DiaOption("GoBack".Translate())
+            {
+                link = mainNode
+            });
+
+            mainNode.options.Add(new DiaOption("FactionInvestmentRelations".Translate())
+            {
+                link = relationsNode
+            });
+            #endregion Relations
+
+            //------------------------------------------------------------------------------\\
+            mainNode.options.Add(new DiaOption("GoBack".Translate())
+            {
+                link = diaNode1
+            });
+
+            diaNode1.options.Add(new DiaOption("FactionInvestment".Translate())
+            {
+                link=mainNode
+            });
+
+
         }
     };
+
     
-
-
     class HistoryDialogDataBase
     {
-        private readonly List<string> HistoryOptions2 = new List<string>();
-        private readonly IntRange leapInYears2 = new IntRange(7, 50);
 
         public HistoryDialogDataBase()
         {

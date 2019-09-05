@@ -10,7 +10,7 @@ namespace Flavor_Expansion
         private Settlement bomber;
         private int length=0;
         private int startTimer=0;
-        private IntVec3 direction;
+        private IntVec3 direction = new IntVec3();
         
         private static readonly IntRange bombardmentDamage = new IntRange(10, 20);
         private static readonly IntRange cellVariation = new IntRange(-20, 20);
@@ -92,7 +92,7 @@ namespace Flavor_Expansion
             Scribe_References.Look(ref bomber, "bomber");
             Scribe_Values.Look(ref length, "length", defaultValue : 0);
             Scribe_Values.Look(ref startTimer, "startTimer", defaultValue : 0);
-            Scribe_Deep.Look(ref direction, "direction");
+            Scribe_Values.Look(ref direction, "direction", defaultValue: new IntVec3());
         }
 
 

@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CaravanArrivalActions.cs" />
+    <Compile Include="FactionDialogUtilities.cs" />
     <Compile Include="FactionHistoryDialog.cs" />
     <Compile Include="Incidents\FE_IncidentWorker_Advancement.cs" />
     <Compile Include="Incidents\FE_IncidentWorker_Aid.cs" />
