@@ -32,7 +32,7 @@ namespace Flavor_Expansion
             for (int j = 0; j < 10; j++)
             {
                 //Medicine
-                if (Rand.Chance(MedicineChance) && (totalMarketValue - collectiveMarketValue) > 400f * (1 - (0.025)))
+                if (Rand.Chance(MedicineChance) && (totalMarketValue - collectiveMarketValue) > 100)
                 {
                     IEnumerable<ThingDef> enumerable = from def in DefDatabase<ThingDef>.AllDefs
                                                        where def.IsMedicine
@@ -56,13 +56,13 @@ namespace Flavor_Expansion
                 
                 }
                 //Food
-                if (Rand.Chance(FoodChance) && (totalMarketValue - collectiveMarketValue) > 400f * (1 - (0.025)))
+                if (Rand.Chance(FoodChance) && (totalMarketValue - collectiveMarketValue) > 100)
                 {
                     IEnumerable<ThingDef> enumerable = from def in DefDatabase<ThingDef>.AllDefs
-                                                       where def.IsNutritionGivingIngestible && def.PlayerAcquirable && def.CountAsResource && !def.label.Contains("Human")
+                                                       where def.IsNutritionGivingIngestible && def.PlayerAcquirable && def.CountAsResource && def.BaseMarketValue < 15 && !def.label.Contains("Human")
                                                        select def;
                     int randomInRange = FoodCountRange.RandomInRange;
-                    ThingDef thingDef = enumerable.ToList().RandomElement();
+                    ThingDef thingDef = enumerable.RandomElement();
                     Thing thing = ThingMaker.MakeThing(thingDef, null);
                     thing.stackCount = 0;
                     for (int i = 0; i < randomInRange; i++)
@@ -79,7 +79,7 @@ namespace Flavor_Expansion
 
                 }
                 //Armor
-                if (Rand.Chance(ArmorChance) && (totalMarketValue - collectiveMarketValue) > 400f * (1 - (0.025)))
+                if (Rand.Chance(ArmorChance) && (totalMarketValue - collectiveMarketValue) > 100)
                 {
                     IEnumerable<ThingDef> enumerable = from def in DefDatabase<ThingDef>.AllDefs
                                                        where def.IsApparel && def.BaseMarketValue> 100
@@ -97,7 +97,7 @@ namespace Flavor_Expansion
                     }
                 }
                 //Weapons
-                if (Rand.Chance(WeaponsChance) && (totalMarketValue - collectiveMarketValue) > 400f * (1 - (0.025)))
+                if (Rand.Chance(WeaponsChance) && (totalMarketValue - collectiveMarketValue) > 100)
                 {
                     IEnumerable<ThingDef> enumerable = from def in DefDatabase<ThingDef>.AllDefs
                                                        where def.IsWeapon && def.BaseMarketValue > 20 && !def.label.Contains("tornado") && !def.label.Contains("orbital")
@@ -115,7 +115,7 @@ namespace Flavor_Expansion
                     }
                 }
                 //Misc
-                if (Rand.Chance(MiscChance) && (totalMarketValue - collectiveMarketValue) > 400f * (1 - (0.025)))
+                if (Rand.Chance(MiscChance) && (totalMarketValue - collectiveMarketValue) > 100)
                 {
                     IEnumerable<ThingDef> enumerable = from def in DefDatabase<ThingDef>.AllDefs
                                                        where def.PlayerAcquirable && def.CountAsResource && !def.IsNutritionGivingIngestible

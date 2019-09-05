@@ -110,6 +110,7 @@ namespace Flavor_Expansion
         }
         public override void ExposeData()
         {
+            base.ExposeData();
             Scribe_Values.Look(ref extorted, "extorted");
         }
         public override IEnumerable<FloatMenuOption> GetFloatMenuOptions(Caravan caravan)

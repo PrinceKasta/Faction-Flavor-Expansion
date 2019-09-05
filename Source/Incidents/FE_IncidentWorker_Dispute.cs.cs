@@ -34,8 +34,8 @@ namespace Flavor_Expansion
             WorldObject_Dispute dispute = (WorldObject_Dispute)WorldObjectMaker.MakeWorldObject(EndGameDefOf.Dispute_Camp);
             dispute.GetComponent<TimeoutComp>().StartTimeout(Global.DayInTicks);
             dispute.Tile = tile;
-            dispute.set1 = set1;
-            dispute.set2 = set2;
+            dispute.Set1 = set1;
+            dispute.Set2 = set2;
             dispute.SetFaction(set1.Faction);
             Find.WorldObjects.Add(dispute);
 

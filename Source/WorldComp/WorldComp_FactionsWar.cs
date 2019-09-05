@@ -17,12 +17,12 @@ namespace Flavor_Expansion
     public class FE_WorldComp_FactionsWar : WorldComponent
     {
         #region vars
-        public const int SETTLEMENT_RESOURCE_VALUE = 500, TECHLEVEL_RESOURCE_VALUE = 1000, LARGE_EVENT_Cache_RESOURCE_VALUE = 1350, MEDIUM_EVENT_RESOURCE_VALUE = 675, MINOR_EVENT_RESOURCE_VALUE = 337;
+        public const int SETTLEMENT_RESOURCE_VALUE = 500, TECHLEVEL_RESOURCE_VALUE = 1000, LARGE_EVENT_Cache_RESOURCE_VALUE = 750, MEDIUM_EVENT_RESOURCE_VALUE = 375, MINOR_EVENT_RESOURCE_VALUE = 160;
         
         private static readonly IntRange daysToDeclareWar = new IntRange(14, 18);
         private static readonly IntRange settlementGroupCount = new IntRange(7, 13);
         private static readonly IntRange PeaceEventChance = new IntRange(1, 100000);
-        private static readonly IntRange WarEventChance = new IntRange(1, 10000);
+        private static readonly IntRange WarEventChance = new IntRange(1, 100000);
         private int currentDaysToDeclareWar = -1;
         private List<War> Wars = new List<War>();
         public List<LE_FactionInfo> factionInfo = new List<LE_FactionInfo>();
@@ -90,13 +90,12 @@ namespace Flavor_Expansion
                
                 ManageHiddenFaction();
             }
-
             WarEnd();
 
-            if (Find.TickManager.TicksGame % (Global.DayInTicks * currentDaysToDeclareWar) == 0 || (Prefs.DevMode && Find.TickManager.TicksGame % 300 == 0))
+            if (Find.TickManager.TicksGame>= currentDaysToDeclareWar || (Prefs.DevMode && Find.TickManager.TicksGame % 300 == 0))
             {
                 TryDeclareWar();
-                currentDaysToDeclareWar = daysToDeclareWar.RandomInRange;
+                currentDaysToDeclareWar = Global.DayInTicks * daysToDeclareWar.RandomInRange + Find.TickManager.TicksGame;
             }
 
         }
@@ -261,9 +260,9 @@ namespace Flavor_Expansion
          */
         private void UpdatefactionInfo()
         {
-            foreach (Faction f in Find.FactionManager.AllFactions.Where(x => !x.def.hidden && !x.IsPlayer && factionInfo.Count(fac=> fac.faction==x) == 0))
+            foreach (Faction f in Find.FactionManager.AllFactions.Where(x => !x.def.hidden && !x.defeated && !x.IsPlayer && factionInfo.Count(fac=> fac.faction==x) == 0))
             {
-                factionInfo.Add( new LE_FactionInfo(f, Find.WorldObjects.Settlements.Where(x => x.Faction == f).Count() * SETTLEMENT_RESOURCE_VALUE + (int)f.def.techLevel * TECHLEVEL_RESOURCE_VALUE));
+                factionInfo.Add( new LE_FactionInfo(f, Math.Max(Find.WorldObjects.Settlements.Count(x => x.Faction == f) , 1) * SETTLEMENT_RESOURCE_VALUE + (int)f.def.techLevel * TECHLEVEL_RESOURCE_VALUE));
             }
             foreach (LE_FactionInfo info in factionInfo.ToList())
             {
@@ -299,7 +298,7 @@ namespace Flavor_Expansion
         private bool TryDeclareWar()
         {
             //if(Rand.Chance(0.1f))
-            if (Wars.Count > 2)
+            if (Wars.Count > 3)
                 return false;
             foreach (LE_FactionInfo attacker in factionInfo.Where(f => !Wars.Where(war => (war.DefenderFaction() == f.faction)).Any()).InRandomOrder())
             {
@@ -310,7 +309,8 @@ namespace Flavor_Expansion
                     
                     int uniqueId = !this.Wars.Any<War>() ? 1 : this.Wars.Max<War>((Func<War, int>)(o => o.uniqueId)) + 1;
                     War war = new War(uniqueId, attacker.faction, defender.faction);
-                    Log.Warning("add war, " + attacker.faction + " attacker, " + defender.faction + " defender," + attacker.faction.HostileTo(defender.faction) + " hostile,  " + defender.faction.HostileTo(defender.faction) +", " + attacker.faction.GoodwillWith(defender.faction));
+                    if(Prefs.DevMode)
+                        Log.Warning("add war, " + attacker.faction + " attacker, " + defender.faction + " defender," + attacker.faction.HostileTo(defender.faction) + " hostile,  " + defender.faction.HostileTo(defender.faction) +", " + attacker.faction.GoodwillWith(defender.faction));
                     
                     if(defender.vassalage!=0)
                     {
@@ -333,9 +333,9 @@ namespace Flavor_Expansion
             // Settlement conqured
             int chance = WarEventChance.RandomInRange;
 
-            // Event Chance - 0.00695% every 600 ticks
+            // Event Chance - 0.000675% every 600 ticks
 
-            // Settlement Conqoured 0.0005%
+            // Settlement Conqoured 0.00005%
             if (chance<5)
             {
                 Settlement settlement;
@@ -367,8 +367,8 @@ namespace Flavor_Expansion
                 
                 return;
             }
-            // Settlement raided 0.0025%
-            if (chance < 30)
+            // Settlement raided 0.00005%
+            if (chance < 10)
             {
                 Settlement settlement;
                 // if f1 
@@ -389,8 +389,8 @@ namespace Flavor_Expansion
                 war.warHistory+=("HistoryDate".Translate(5500 + Find.TickManager.TicksGame / Global.YearInTicks) + "MessageFactionWarSettlementRaid".Translate(settlement.Faction == f1 ? f2 : f1, settlement, settlement.Faction) + "\n\n");
                 return;
             }
-            // Artifact cache - Background 0.007%
-            if (chance < 100)
+            // Artifact cache - Background 0.0007%
+            if (chance < 80)
             {
                 if (Rand.Chance(0.5f))
                 {
@@ -404,8 +404,8 @@ namespace Flavor_Expansion
                 }
                 return;
             }
-            // Farms burned - Background 0.01%
-            if (chance < 200)
+            // Farms burned - Background 0.001%
+            if (chance < 180)
             {
                 if (Rand.Chance(0.5f))
                 {
@@ -419,10 +419,11 @@ namespace Flavor_Expansion
                 }
                 return;
             }
-            // SupplyDepot 0.0025%
-            if (chance < 225)
+            // SupplyDepot 0.00025%
+            if (chance < 205)
             {
-                Settlement settlement = Find.WorldObjects.Settlements.Where(x => x.Faction == f1 || x.Faction == f2).RandomElement();
+                if (!Find.WorldObjects.Settlements.Where(x => (x.Faction == f1 && GetByFaction(f1).resources >= MEDIUM_EVENT_RESOURCE_VALUE * 2) || (x.Faction == f2 && GetByFaction(f1).resources >= MEDIUM_EVENT_RESOURCE_VALUE * 2)).TryRandomElement(out Settlement settlement))
+                    return;
                 if (!TileFinder.TryFindPassableTileWithTraversalDistance(settlement.Tile, 5, 25, out int tile))
                     return;
                 if (settlement.Faction.HostileTo(Faction.OfPlayer))
@@ -446,8 +447,8 @@ namespace Flavor_Expansion
                 war.warHistory += "HistoryDate".Translate(5500 + Find.TickManager.TicksGame / Global.YearInTicks) + "MessageFactionWarSupply".Translate(settlement.Faction) + "\n\n";
                 return;
             }
-            // Caravan ambushed - Background 0.0125%
-            if (chance < 375)
+            // Caravan ambushed - Background 0.00125%
+            if (chance < 355)
             {
                 Faction ambusher = Rand.Chance(0.5f) ? f2 : f1;
 
@@ -455,8 +456,8 @@ namespace Flavor_Expansion
                 war.warHistory += "HistoryDate".Translate(5500 + Find.TickManager.TicksGame / Global.YearInTicks) + "MessageFactionWarCaravanAmbush".Translate(ambusher, ambusher == f1 ? f2 : f1) + "\n\n";
                 return;
             }
-            // Minor Outpost raided - Background 0.01%
-            if (chance < 475)
+            // Minor Outpost raided - Background 0.001%
+            if (chance < 455)
             {
                 Faction raider = Rand.Chance(0.5f) ? f2 : f1;
 
@@ -465,8 +466,8 @@ namespace Flavor_Expansion
                 war.warHistory += "HistoryDate".Translate(5500 + Find.TickManager.TicksGame / Global.YearInTicks) + "MessageFactionWarMinorOutpostRaid".Translate(raider, raider == f1 ? f2 : f1)+"\n\n";
                 return;
             }
-            // Failed Settlement raid - Background 0.01%
-            if (chance<575)
+            // Failed Settlement raid - Background 0.001%
+            if (chance<555)
             {
                 Settlement settlement;
                 // if f1 
@@ -487,8 +488,8 @@ namespace Flavor_Expansion
                 return;
             }
 
-            // settlement Nuked - toxic fallout 0.002%
-            if (chance < 595 && Find.TickManager.TicksGame > Global.DayInTicks * 20 && Find.Storyteller.difficulty.difficulty >= 2 && !Find.AnyPlayerHomeMap.GameConditionManager.ConditionIsActive(GameConditionDefOf.ToxicFallout))
+            // settlement Nuked - toxic fallout 0.0002%
+            if (chance < 575 && Find.TickManager.TicksGame > Global.DayInTicks * 20 && Find.Storyteller.difficulty.difficulty >= 2 && !Find.AnyPlayerHomeMap.GameConditionManager.ConditionIsActive(GameConditionDefOf.ToxicFallout))
             {
                 if (!(Rand.Chance(0.5f + GetByFaction(f2).resources == GetByFaction(f1).resources ? GetByFaction(f2).resources / GetByFaction(f1).resources < 1 ? (0.5f - (GetByFaction(f2).resources / GetByFaction(f1).resources) / 2f) : -(0.5f - (GetByFaction(f2).resources / GetByFaction(f1).resources) / 2f) : 0) && (f1.def.techLevel == TechLevel.Industrial || f1.def.techLevel == TechLevel.Spacer) &&
                     Find.WorldObjects.Settlements.Where(x => x.Faction == f2 && Utilities.Reachable(Find.AnyPlayerHomeMap.Tile, x.Tile, 30)).TryRandomElement(out Settlement ruin)))
@@ -514,8 +515,8 @@ namespace Flavor_Expansion
                 war.warHistory += "HistoryDate".Translate(5500 + Find.TickManager.TicksGame / Global.YearInTicks) + "MessageFactionWarSettlementNukedHistory".Translate(ruin.Faction == f1 ? f2 : f1, ruin, ruin.Faction) + "\n\n";
                 return;
             }
-            // Factories sabotaged - background - 0.01%
-            if(chance<695)
+            // Factories sabotaged - background - 0.001%
+            if(chance<675)
             {
                 Faction spy = Rand.Chance(0.5f) ? f2 : f1;
 
@@ -530,12 +531,16 @@ namespace Flavor_Expansion
         {
             foreach(War war in Wars.ToList())
             {
-                
+                if (war.DefenderFaction().defeated || war.AttackerFaction().defeated)
+                {
+                    Wars.Remove(war);
+                    continue;
+                }
                 if (GetByFaction(war.AttackerFaction()).resources<= 1)
                 {
                     Wars.Remove(war);
                     WarAftermath(war.AttackerFaction(), war.DefenderFaction());
-
+                    return;
                 }
                 if (GetByFaction(war.DefenderFaction()).resources<= 1)
                 {
@@ -549,7 +554,7 @@ namespace Flavor_Expansion
         {
             if (loser == null || winner == null)
                 return;
-            if (GetByFaction(winner).resources < 100)
+            if (GetByFaction(winner)?.resources < 100)
             {
                 Messages.Message("MessageFactionWarWhitePeace".Translate(loser, winner), MessageTypeDefOf.SituationResolved);
                 GetByFaction(loser).resources += (int)loser.def.techLevel * TECHLEVEL_RESOURCE_VALUE;
@@ -566,45 +571,51 @@ namespace Flavor_Expansion
 
                 IEnumerable<Settlement> settlements = Find.WorldObjects.Settlements.Where(x => x.Faction == loser);
                 int groupSize = 0;
+                int groupMax = settlements.Count()/2+1;
                 Faction splinterFaction = new Faction();
 
                 foreach (Settlement s in settlements.ToList())
                 {
                     if (groupSize == 0)
                     {
-                        groupSize = settlementGroupCount.RandomInRange;
                         splinterFaction = FactionGenerator.NewGeneratedFaction(loser.def);
-                        splinterFaction.colorFromSpectrum = new FloatRange(0, 1).RandomInRange;
-                        splinterFaction.centralMelanin = Rand.Value;
-
-                        Find.WorldObjects.Remove(Find.WorldObjects.Settlements.Where(x => x.Faction == splinterFaction).First());
+                        splinterFaction.colorFromSpectrum =FactionGenerator.NewRandomColorFromSpectrum(splinterFaction);
+                        
+                        Find.WorldObjects.Remove(Find.WorldObjects.Settlements.Where(x=> x.Faction == splinterFaction).RandomElement());
                     }
 
                     Settlement replace = (Settlement)WorldObjectMaker.MakeWorldObject(WorldObjectDefOf.Settlement);
                     replace.Tile = s.Tile;
                     replace.SetFaction(splinterFaction);
                     replace.Name = s.Name;
-
                     Find.WorldObjects.Remove(s);
                     Find.WorldObjects.Add(replace);
-                    groupSize--;
-                    if (groupSize == 0)
+                    groupSize++;
+                    if (groupSize == groupMax)
                     {
                         Find.FactionManager.Add(splinterFaction);
+                        Find.Maps.ForEach((x) => { x.pawnDestinationReservationManager.RegisterFaction(splinterFaction); });
+                        groupSize = 0;
                     }
                 }
-                if (groupSize > 0)
+                if (groupSize < groupMax)
+                {
+                    
                     Find.FactionManager.Add(splinterFaction);
+                    Find.CurrentMap.pawnDestinationReservationManager.RegisterFaction(splinterFaction);
+                }
+
                 foreach (WorldObject ob in Find.WorldObjects.AllWorldObjects.Where(x => x.Faction == loser).ToList())
                 {
                     Find.WorldObjects.Remove(ob);
                 }
                 loser.defeated = true;
+                Wars.RemoveAll(war => war.DefenderFaction() == loser || war.AttackerFaction() == loser);
                 factionInfo.Remove(GetByFaction(loser));
                 return;
             }
 
-            //if(resourcePool[winner] + allyResources < 7000) if another case is added later.
+            //if(GetByFaction(winner).resources < 7000) //if another case is added later.
             {
                 Messages.Message("MessageFactionWarFactionConquered".Translate(loser, winner), MessageTypeDefOf.SituationResolved);
                 GetByFaction(loser).history += "HistoryDate".Translate(5500 + Find.TickManager.TicksGame / Global.YearInTicks) + "MessageFactionWarFactionConquered".Translate(loser, winner) + "\n\n";
@@ -625,6 +636,7 @@ namespace Flavor_Expansion
                 }
                 GetByFaction(winner).resources = Find.WorldObjects.Settlements.Count(x => x.Faction == winner) * SETTLEMENT_RESOURCE_VALUE + (int)winner.def.techLevel * TECHLEVEL_RESOURCE_VALUE;
                 loser.defeated = true;
+                Wars.RemoveAll(war => war.DefenderFaction() == loser || war.AttackerFaction() == loser);
                 factionInfo.Remove(GetByFaction(loser));
                 return;
             }
@@ -663,12 +675,16 @@ namespace Flavor_Expansion
 
         public LE_FactionInfo(Faction faction, int resources)
         {
+            vassalage = 0;
             this.faction = faction;
-            this.ancientHistory = HistoryDialogDataBase.GenerateHistory(faction, ref disposition);
+            disposition = 0;
             if (faction.def.permanentEnemy)
-                disposition -= 4;
+                disposition += 8;
+            this.ancientHistory = HistoryDialogDataBase.GenerateHistory(faction, ref disposition);
+            
             this.resources = resources;
             expansionCoolddown = Find.TickManager.TicksGame + (int)FE_WorldComp_FactionsWar.daysToExpansion.Evaluate(Find.WorldObjects.Settlements.Count(x => x.Faction == faction));
+            vassalageResourseCooldown = 0;
         }
 
         public void ExposeData()

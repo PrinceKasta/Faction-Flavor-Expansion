@@ -64,7 +64,7 @@ namespace Flavor_Expansion
         private bool TryFindFactions(out Faction alliedFaction)
         {
             if ((from x in Find.FactionManager.AllFactions
-                 where !x.IsPlayer && x.PlayerRelationKind== FactionRelationKind.Ally && !x.def.techLevel.IsNeolithicOrWorse()
+                 where !x.IsPlayer && !x.def.hidden && x.PlayerRelationKind== FactionRelationKind.Ally && !x.def.techLevel.IsNeolithicOrWorse()
                  select x).TryRandomElement(out alliedFaction))
             {
                 return true;

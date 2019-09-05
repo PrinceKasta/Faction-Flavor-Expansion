@@ -12,7 +12,7 @@
 		<minRefireDays>2</minRefireDays>
 		<baseChance>1.4</baseChance>
 		<letterLabel>Gift from {0}</letterLabel>
-		<letterText>{0}, {1} of {2} has sent you a gift as a gesture to hopefully improve relations between your colony and theirs.\n\nThe gift is worth {3} and consists of: {4}</letterText>
+		<letterText>{0}, {1} of {2} has sent you a gift as a gesture to hopefully improve relations between your colony and theirs.\n\nThe gift is worth {3}:\n\n{4}</letterText>
 		<letterDef>PositiveEvent</letterDef>
 		<chanceFactorByPopulationCurve>
 			<points>

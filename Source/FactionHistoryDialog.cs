@@ -857,7 +857,6 @@ namespace Flavor_Expansion
         }
         public static string GenerateHistory(Faction subject, ref int disposition)
         {
-            
             IntRange leapInYears = new IntRange(7, 40);
             List<string> HistoryOptions = GetOptions();
 
@@ -880,7 +879,6 @@ namespace Flavor_Expansion
                 if (option.Contains("HistoryFactions"))
                 {
                     HistoryOptions.Remove(option);
-
                     if (option.Contains("DeadFaction"))
                     {
                         List<string> extantNames = new List<string>();
@@ -892,7 +890,7 @@ namespace Flavor_Expansion
                 if(option.Contains("HistoryTown"))
                 {
                     HistoryOptions.Remove(option);
-                    text += TrimKeys(option.Translate(option.Contains("Destroyed") ? SettlementNameGenerator.GenerateSettlementName(Find.WorldObjects.Settlements.FindAll(x => x.Faction == subject).RandomElement()) : Find.WorldObjects.Settlements.FindAll(x => x.Faction == subject).RandomElement().Name), subject, ref disposition);
+                    text += TrimKeys(option.Translate(option.Contains("Destroyed") ?  SettlementNameGenerator.GenerateSettlementName(null, subject.def.settlementNameMaker) : Find.WorldObjects.Settlements.FindAll(x => x.Faction == subject).RandomElement().Name), subject, ref disposition);
                 }
                 if (option.Contains("HistoryPolitic"))
                 {

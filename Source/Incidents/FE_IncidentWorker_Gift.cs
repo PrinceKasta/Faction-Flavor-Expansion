@@ -26,7 +26,7 @@ namespace Flavor_Expansion
                 return false;
 
             Map target = (Map)parms.target;
-            List<Thing> thingList = GenerateRewards(faction, parms);
+            List<Thing> thingList = GenerateRewards(faction);
             IntVec3 intVec3 = DropCellFinder.TradeDropSpot(target);
             DropPodUtility.DropThingsNear(intVec3, target, (IEnumerable<Thing>)thingList, 110, false, true, true);
             faction.TryAffectGoodwillWith(Faction.OfPlayer, 10, false, true);
@@ -35,11 +35,13 @@ namespace Flavor_Expansion
 
             return true;
         }
-        private List<Thing> GenerateRewards(Faction alliedFaction, IncidentParms parms)
+        private List<Thing> GenerateRewards(Faction alliedFaction)
         {
-            if (Utilities.FactionsWar().GetByFaction(parms.faction) == null)
+            if (Utilities.FactionsWar().GetByFaction(alliedFaction) == null)
+            {
                 return new List<Thing>();
-            int totalMarketValue = (int)Mathf.Clamp(valueRange.RandomInRange * (1f + 0.01f * -Utilities.FactionsWar().GetByFaction(parms.faction).disposition), 200, 2000);
+            }
+            int totalMarketValue = (int)Mathf.Clamp(valueRange.RandomInRange * (1f + 0.01f * -Utilities.FactionsWar().GetByFaction(alliedFaction).disposition), 200, 2000);
             List<Thing> list = new List<Thing>();
             Gift_RewardGeneratorBasedTMagic itc_ia = new Gift_RewardGeneratorBasedTMagic();
             return itc_ia.Generate(totalMarketValue, list);
@@ -47,7 +49,7 @@ namespace Flavor_Expansion
         private bool TryFindFactions(out Faction alliedFaction)
         {
             if ((from x in Find.FactionManager.AllFactions
-                 where !x.IsPlayer  && x.PlayerGoodwill>=0 && !x.defeated
+                 where !x.IsPlayer && !x.def.hidden && x.PlayerGoodwill>=0 && !x.defeated
                  select x).TryRandomElement(out alliedFaction))
             {
                 return true;

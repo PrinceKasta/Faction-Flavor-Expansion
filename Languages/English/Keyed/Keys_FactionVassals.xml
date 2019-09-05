@@ -108,7 +108,7 @@
 	<FactionInvestmentRelations>Relations</FactionInvestmentRelations>
 	<FactionInvestmentRelationsUpgrade>Upgrade Relations</FactionInvestmentRelationsUpgrade>
 	<FE_RelationsLevel0>We have no connections with any political figures in {0}, as their subjugator local rumors and opinions on us tend to be negative\n\nResource needed for next upgrade:\n\n{1}\n\nInvesting in relations will stop the natural goodwill lose from being a vassal.</FE_RelationsLevel0>
-	<FE_RelationsLevel1>With a few high ranking politicians supporting us, {0} are not actively campaign against us and are more indifferent to our rule.\n\nResource needed for next upgrade:\n\n{1}\n\nInvesting in relations will let us regularly gain +10 goodwill with the faction every week.</FE_RelationsLevel1>
+	<FE_RelationsLevel1>With a few high ranking politicians supporting us, {0} are not actively campaigning against us and are more indifferent to our rule.\n\nResource needed for next upgrade:\n\n{1}\n\nInvesting in relations will let us regularly gain +10 goodwill with the faction every week.</FE_RelationsLevel1>
 	<FE_RelationsLevel2>All important politician are praising and keep our agenda while law-making, while there are a minority of dissenters their powers in growing more limited by the day.\n\nWe currently gain +10 goodwill with the vassal every week.\n\nResource needed for next upgrade:\n\n{1}\n\nInvesting in relations will let us regularly gain +15 goodwill with the faction every week.</FE_RelationsLevel2>
 	<FE_RelationsLevel3>Every decision in {0} is made with our well-being in mind, propaganda explaining the benefits of being our vassal is a common sight throughout the vassal's settlements\n\nWe currently gain +15 goodwill with the vassal every week.</FE_RelationsLevel3>
 	
