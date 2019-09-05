@@ -51,7 +51,7 @@ namespace Flavor_Expansion
                             continue;
                         outThings.Add(thing);
                         collectiveMarketValue += thing.MarketValue * thing.stackCount;
-                        Log.Warning("Medicine  " + thing.Label + "  " + thing.MarketValue * thing.stackCount + ", coll  " + collectiveMarketValue);
+                        //Log.Warning("Medicine  " + thing.Label + "  " + thing.MarketValue * thing.stackCount + ", coll  " + collectiveMarketValue);
                     }
                 
                 }
@@ -74,7 +74,7 @@ namespace Flavor_Expansion
                     }
                         outThings.Add(thing);
                         collectiveMarketValue += thing.MarketValue * thing.stackCount;
-                        Log.Warning("Food  " + thing.Label + "  " + thing.MarketValue * thing.stackCount + ", coll  " + collectiveMarketValue);
+                        //Log.Warning("Food  " + thing.Label + "  " + thing.MarketValue * thing.stackCount + ", coll  " + collectiveMarketValue);
                     
 
                 }
@@ -93,7 +93,7 @@ namespace Flavor_Expansion
                             continue;
                         outThings.Add(thing);
                         collectiveMarketValue += thing.MarketValue;
-                        Log.Warning("Armor  " + thing.Label + "  " + thing.MarketValue + ", coll  " + collectiveMarketValue);
+                       // Log.Warning("Armor  " + thing.Label + "  " + thing.MarketValue + ", coll  " + collectiveMarketValue);
                     }
                 }
                 //Weapons
@@ -111,7 +111,7 @@ namespace Flavor_Expansion
                             continue;
                         outThings.Add(thing);
                         collectiveMarketValue += thing.MarketValue;
-                        Log.Warning("Weapons  " + thing.Label + "  " + thing.MarketValue + ", coll  " + collectiveMarketValue);
+                        //Log.Warning("Weapons  " + thing.Label + "  " + thing.MarketValue + ", coll  " + collectiveMarketValue);
                     }
                 }
                 //Misc
@@ -132,11 +132,11 @@ namespace Flavor_Expansion
                             continue;
                         outThings.Add(thing);
                         collectiveMarketValue += thing.MarketValue * thing.stackCount;
-                        Log.Warning("Misc  " + thing.Label+"  "+ thing.MarketValue * thing.stackCount+", coll  "+ collectiveMarketValue);
+                       // Log.Warning("Misc  " + thing.Label+"  "+ thing.MarketValue * thing.stackCount+", coll  "+ collectiveMarketValue);
                     }
                 }
             }
-            Log.Message("TotalMarketValue:  " + collectiveMarketValue);
+            //Log.Message("TotalMarketValue:  " + collectiveMarketValue);
             return outThings;
         }
     }

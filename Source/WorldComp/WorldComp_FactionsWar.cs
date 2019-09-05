@@ -79,7 +79,7 @@ namespace Flavor_Expansion
                 foreach (LE_FactionInfo f in factionInfo.ToList())
                 {
                     if (f.resources < Find.WorldObjects.Settlements.Count(x => x.Faction == f.faction) * SETTLEMENT_RESOURCE_VALUE + (int)f.faction.def.techLevel * TECHLEVEL_RESOURCE_VALUE)
-                        f.resources += 0.1f + f.SupplyDepots.Count/10 + Find.WorldObjects.AllWorldObjects.Count(x=> x.GetComponent<WorldObjectComp_SupplyDepot>() != null && x.GetComponent<WorldObjectComp_SupplyDepot>().IsActive())/10;
+                        f.resources += 0.1f + f.SupplyDepots.Count + Find.WorldObjects.AllWorldObjects.Count(x=> x.GetComponent<WorldObjectComp_SupplyDepot>() != null && x.GetComponent<WorldObjectComp_SupplyDepot>().IsActive()) + f.vassalage != 0 ? 500 : 0;
 
                     if (TryUseResourcesAtPeace(f.faction))
                         break;
@@ -150,7 +150,7 @@ namespace Flavor_Expansion
                 if (info.expansionCoolddown > Find.TickManager.TicksGame)
                     return;
                 
-                info.expansionCoolddown = Find.TickManager.TicksGame + (int)daysToExpansion.Evaluate(Find.WorldObjects.Settlements.Count(s => s.Faction == info.faction));
+                info.expansionCoolddown = Find.TickManager.TicksGame + (int)daysToExpansion.Evaluate(Find.WorldObjects.Settlements.Count(s => s.Faction == info.faction)) + new IntRange(1,40000).RandomInRange;
                 if (!Find.WorldObjects.Settlements.Where(x => x.Faction == info.faction).TryRandomElement(out Settlement origin))
                     continue;
                 Settlement expand = (Settlement)WorldObjectMaker.MakeWorldObject(WorldObjectDefOf.Settlement);

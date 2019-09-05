@@ -33,7 +33,22 @@
 		
 Vassals and Tributaries:
 
-	- Vassal: The player can force faction with low resource pool to become a vassal, the player can then demand resources every few days and will receive a payment at the first day of th year.
+	- Vassal: The player can force faction with low resource pool to become a vassal, the player can then demand resources every few days and will receive a payment at the first day of the year.
+	
+	Vassal Investments:
+	After subjugating a faction you can invest in different categories. Each upgrade will guarantee a return payment at the start of the month. A vassal turning hostile will stop the payments until you get them back under control.
+{
+	- Armory {Poor=> Normal=> Good=> Excellent}
+	- Weaponry {Poor=> Normal=> Good=> Excellent}
+	- Mining {Wood, Stone => Wood, Stone, Steel => Wood, Stone, Steel, Jade, Gold => Wood, Stone, Steel, Jade, Gold, Plasteel, Uranium}
+	- Medicine {Herbal => Regular Medicine=> Glitterworld Medicine}
+	- Druglabs {Beer, Smokeleaf => Beer, Smokeleaf, Penoxycyline, Psychite Tea => Last items, Flake, Yayo, Wake-up, Go-juice => last items,Luciferium}
+	- Prostheticslabs {Prosthetic leg, Prosthetic arm => Bionic leg, Bionic arm=> Bionic leg, Bionic arm, Bionic eye, Bionic ear => Bionic leg, Bionic arm, Bionic eye, Bionic ear, Bionic spine, Bionic stomach}
+	- Food {Stack of plant matter=> 2 stacks, Stack of meat=> 5 stacks}
+	- Components { Components 30 => Components 60 => Components 60, Advanced component 10}
+	- Trade {Silver, More silver, even more silver}
+	- Relations {0, +5, +10}
+}
 	
 	- Tributaries: A tributary is like a vassal that will pay monthly instead of yearly but won't agree to hand over rare resource for free.
 	
