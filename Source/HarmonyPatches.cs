@@ -154,7 +154,7 @@ namespace Flavor_Expansion
         {
             public static void Postfix(Pawn __instance)
             {
-                if (!__instance.NonHumanlikeOrWildMan() && !__instance.Faction.IsPlayer && __instance.Faction.PlayerGoodwill < 0 && Utilities.FactionsWar().GetByFaction(__instance.Faction) != null)
+                if (Faction.OfPlayer != null && !__instance.NonHumanlikeOrWildMan() && !__instance.Faction.IsPlayer && __instance.Faction.PlayerGoodwill < 0 && Utilities.FactionsWar().GetByFaction(__instance.Faction) != null)
                 {
                     Utilities.FactionsWar().GetByFaction(__instance.Faction).resources -= 100;
                 }

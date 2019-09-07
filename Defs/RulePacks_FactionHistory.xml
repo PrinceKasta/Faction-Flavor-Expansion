@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+		
+  <RulePackDef>
+    <defName>FE_History</defName>
+    <rulePack>
+      <rulesStrings>
+	    <li>r_history_faction->[ancient_faction]</li>
+	    <li>ancient_faction->[prefix_ancient_faction] after numerous causalities from both sides the war ended with a white peace as war weariness peaked in both factions.</li>
+		<li>ancient_faction->[prefix_ancient_faction] after several talks the war ended when a political marriage between two prominent figures made a peace treaty possible._Peacelike</li>
+		<li>ancient_faction->[prefix_ancient_faction] after a few bloody battles the war ended when both were forced to cease hostilities to deal with a unusually strong mechanoids invasion.</li>
+		<li>ancient_faction->An initiative led by [FACTION1_name] and [FACTION2_name] started after putting aside differences to push back the mechanoid invasion of the planet as both factions suffered severe damage from the continuous attack.</li>
+		
+		
+		<li>prefix_ancient_faction->[FACTION1_name] has declared war against [FACTION2_name],</li>
+		<li>prefix_ancient_faction->[FACTION2_name] has declared war against [FACTION1_name],</li>
+		
+		<li>r_history_factiondead->[prefix_ancient_faction] [start_ancient_factiondead] [order_ancient_factiondead] [ancient_factiondead]</li>
+		
+		<li>start_ancient_factiondead->after many long sieges</li>
+		<li>start_ancient_factiondead->after countless raids</li>
+		<li>start_ancient_factiondead->after an intense cold war</li>
+		
+		<li>order_ancient_factiondead->[FACTION1_name] and [FACTION2_name]'s</li>
+		<li>order_ancient_factiondead->[FACTION2_name] and [FACTION1_name]'s</li>
+		
+	    <li>ancient_factiondead->conflict ended when [FACTION1_name] conquered [FACTION2_name]'s last stronghold._Warlike</li>
+		<li>ancient_factiondead->war ended when [FACTION1_name] raised [FACTION2_name]'s last town to the ground._Warlike</li>
+		<li>ancient_factiondead->war ended when [FACTION1_name]'s nukes obliterated all of [FACTION2_name]'s territories._Warlike</li>
+		
+		
+        <li>r_history_pawn->[ancient_pawn]</li>
+		
+		<li>ancient_pawn->[Pawn_nameFull], an human right activist, found dead just before [Pawn_possessive] highly anticipated list of offenses by the [Pawn_factionName]. The official investigation found no leads._Warlike</li>
+		<li>ancient_pawn->[Pawn_nameFull], a citizen, who was from humble origins, rose to be a high ranked politician after [Pawn_possessive] call to increase the faction's financial support of table's manufactures</li>
+		<li>ancient_pawn->The faction leader, [Pawn_nameFull], was arrested after [Pawn_possessive] cannibalism habits were discovered. Their defense that space refugees are technically aliens and so aren't humans was not accepted._Peacelike</li>
+		<li>ancient_pawn->[Pawn_nameFull], a former prisoner and current whistle-blower, details the inhuman conditions in the prison [Pawn_pronoun] was serving [Pawn_possessive] sentence in. Highlights of the report featured organ harvesting, rampant abuse and butchering of those who died from the abuse._Warlike</li>
+		<li>ancient_pawn->After [Pawn_nameFull], a pyromaniac, almost caused the destruction of [Pawn_possessive] village a new policy passed disallowing giving in to any known pyromaniac wishes to use fire based weaponry.</li>
+		<li>ancient_pawn->[Pawn_nameFull], the former leader, had a mental breakdown following [Pawn_possessive] lover rejection of [Pawn_possessive] advances to further their relationship. Their lover's statement was that they thought [Pawn_labelShort] was mocking them because [Pawn_labelShort], just an hour before, reject their own advances.</li>
+		<li>ancient_pawn->Following the ransom demand for the life of [Pawn_nameFull], a world renowned animal handler, leadership responded with "Meh".</li>
+		<li>ancient_pawn->[Pawn_nameFull], a beloved artist throughout the faction], died when a random crashed ship's part landed on [Pawn_possessive] room with [Pawn_objective] in it sleeping.</li>
+		<li>ancient_pawn->[Pawn_nameFull], a leader of a town, put a request for 6Pawn wooden pegs citing an upcoming pirate cosplay festival and offering a sizable offer for it. critics point out that the only town capable of completing the task in time is led by [Pawn_labelShort]'s relatives.</li>
+		<li>ancient_pawn->The celebrations after the return of kidnapped member [Pawn_nameFull], a legendary war hero, were cut short because after [Pawn_pronoun] arrived back to [Pawn_possessive] home town murdered a former friend. When asked for [Pawn_possessive] reason to do that [Pawn_labelShort] claimed that the deceased watched them get kidnapped and did nothing because of their pacifistic vows.</li>
+		<li>ancient_pawn->A tribunal sentenced a coroner name [Pawn_nameFull] and several others to death for the crime of using Resurrector mech serums gotten from a still unknown source to revive important recently deceased figures then sell them to slavery for profit._!tribal</li>
+		<li>ancient_pawn->Controversy surrounding the classical artist [Pawn_nameFull] after historians find documents suggesting the artist's talent and skill in [Pawn_possessive] craft was gained through neurotrainer mech serums rather than hard work or his own talent. Some in the industry however question if it even really matters._Peacelike_!tribal</li>
+		<li>ancient_pawn->The scientist [Pawn_nameFull] was one of the heads of research who secured a rare techprof subpersona core and who disclosed to a few family members to have discovered a loophole in the mysterious tech's limitations, disappeared after a loud "otherworldly" noise and a flash manifested in [Pawn_possessive] private lab. Official claim the cause was a workplace accident but some of the following restrictions imposed on the artifact's usage made people speculate that [Pawn_labelShort] was very successful._!tribal</li>
+		<li>ancient_pawn->Calls to arrest [Pawn_nameFull] increased the pressure on the faction's leadership after the wanderer returned to the colony already aware that [Pawn_possessive] partner was murdered, accusations of [Pawn_objective] arranging the death were common.</li>
+		<li>ancient_pawn->The elite soldier, [Pawn_nameFull], has mastered the legendary shooting technique called 'Run and Gun' which allows the shooter to move while he shoots. None of the hundreds of soldiers and ranged weaponry enthusiasts who flocked to [Pawn_objective] succeeded in mastering it as well.</li>
+		<li>ancient_pawn->A controversial new company is established which manufactures guns that use 'ammo' a name of projectile that the gun is rendered useless without. The CEO [Pawn_nameFull] promises that in exchange the gun's damage output is increased significantly._!tribal</li>
+		<li>ancient_pawn->Olympic athletic [Pawn_nameFull] disqualified when a drug test found him positive for Go-Juice. [Pawn_possessive] agent requests the decision would be reconsidered as [Pawn_labelShort] used the drug when a raid on [Pawn_possessive] town endangered [Pawn_possessive] family's life.</li>
+		<li>ancient_pawn->A rich transhumanist named [Pawn_nameFull] successfully gathers and installs into [Pawn_objective]self a full set of Archotech limbs and eyes, becoming both the most dangerous and valuable [Pawn_gender] alive at the time._!tribal</li>
+		<li>ancient_pawn->A doctor named [Pawn_nameFull] singlehandedly and successfully defended [Pawn_objective]self and two kids against several mechanoids who crashed into the nursery they were in when [Pawn_pronoun] only had a sword as means of defense. Although [Pawn_pronoun] received nearly fatal injuries [Pawn_objective]self the heroic event went viral and a from donations [Pawn_labelShort] was able to get expensive medicine and surgeries to survive [Pawn_possessive] stay in medical care._Peacelike_!tribal</li>
+		
+		<li>r_history_town->[ancient_town]</li>
+		
+		<li>ancient_town->Pioneers from settled a previously thought to be uninhabitable land, after an hidden water source was found, and named the young town [AffectedTown_name].</li>
+		<li>ancient_town->Separatists wandered for months after a major disagreement with their town's leadership until they settled in the abandoned ancient city [AffectedTown_name].</li>
+		<li>ancient_town->A pilgrim found an hidden ancient religious site and established the town of [AffectedTown_name] after an large influx of pilgrims settled with him._Peacelike</li>
+		<li>ancient_town->Tensions spiked after a mysterious tree appeared in the town of [AffectedTown_name] and rumors of a evil cult practice by the town's members, the town leaders firmly denied any wrong doing in their community._Warlike</li>
+		<li>ancient_town->Mayhem in erupted after [AffectedTown_name]'s famous line of hats was discovered to be made from worked human leather made from the less skilled members of their town._Warlike</li>
+		<li>ancient_town->A gold rush started in after a rumor started that the reason pirates keep attacking the town of [AffectedTown_name] even when they are being slaughtered before reaching its gates is that there is an ancient pirate treasure chest near the town.</li>
+		<li>ancient_town->[AffectedTown_name] becomes the first town in the faction to manage to safely farm a colony of the genetically modified insect's jelly opening the market to the lower classes who unlike the rich couldn't afford it before._Peacelike</li>
+		<li>ancient_town->[AffectedTown_name] becomes the foremost tourist attraction in the faction after they not only managed to tame a herd of thrumbos but could afford to feed them._Peacelike</li>
+		<li>ancient_town->[AffectedTown_name]'s leadership were put on trial for the sacrilege of building a two story house, blatantly disregarding the world's decency code.</li>
+		<li>ancient_town->[AffectedTown_name] becomes the most feared city among it's faction's enemies as a full scale raid led by two expert pirate generals is slaughter by a calvary with thrumbos as the mounts._Warlike</li>
+		<li>ancient_town->Protests in the streets of [AffectedTown_name] demanding that the town's wardens will stop feeding the prisoners lavish meals when there aren't enough to feed the law-abiding citizens._Peacelike</li>
+		<li>ancient_town->Citizens of [AffectedTown_name] gained the reputation of prudes following adopting an exotic custom from a trade ships that designates specific closed off spots for hygiene called 'showers' and 'toilets'._Peacelike</li>
+		<li>ancient_town->The cat possession plague in [AffectedTown_name] was solved when a storage worker caught one of the cats in the Yayo warehouse covering in the drug._Peacelike</li>
+		<li>ancient_town->[AffectedTown_name]'s leader discontinued the policy of providing luciferium for addicts prisoners resulting in several political rivals dying in agony in their prison beds.</li>
+		<li>ancient_town->A siege of [AffectedTown_name] went comically bad as the tornado generated from the attacker's generator in hopes of bringing the walls down, turns around and wipes them out while leaving the town unscratched.</li>
+		<li>ancient_town->The town of [AffectedTown_name] faced an economical crisis as their investment on exotic and expensive materials for statues, which they hope the local nation famous artist will turn the town a sizable profit from selling, was wasted when an amateur town member decided to use the materials for their own project and by the time anyone noticed that access to the stuff wasn't exclusive to the intended worker, much of the material was unusable.</li>
+		
+		
+		<li>r_history_townDestroyed->[ancient_town_destroyed]</li>
+		
+		<li>ancient_town_destroyed->Outrage throughout the faction after the town of [AffectedTown_name] was discovered with all it's inhabitants murdered by human like foes, the case is still remain unsolved.</li>
+		<li>ancient_town_destroyed->The town [AffectedTown_name] was destroyed after a miner opened a wall to an ancient structure and waking up ancient mechanoids who proceeded to slaughter the town, conspiracy theories today still believe that the story was a cover up as nobody can be this stupid.</li>
+		<li>ancient_town_destroyed->A professional guild of exterminators were hired to sweep the town of [AffectedTown_name] after it was overrun by a sudden massive infestation of genetically modified insects._Warlike</li>
+		<li>ancient_town_destroyed->A call for the ban and culling of dogs rose in popularity after a self tamed pack of Yorkshire terriers caused the town of [AffectedTown_name] to starve when they ate the entire food stored there before anyone noticed they arrived.</li>
+		<li>ancient_town_destroyed->Discussion about the dangers of prosthetic limbs and organs was brought to attention after a the town of [AffectedTown_name] was massacred by their own super soldier when a negative psychic wave hit the town's area._Peacelike_!tribal</li>
+		<li>ancient_town_destroyed->The settlement [AffectedTown_name] was decimated by a horde of man-hunter tortoises, the few survivors who fled are reported to be traumatized and currently feared to be beyond available means of treatment._Warlike</li>
+		<li>ancient_town_destroyed->A poison ship crashed near the town of [AffectedTown_name] but instead of calling for reinforcements the simple farming town's inhabitants tried to build a shire to offer appeasement for the machines inside but only succeeded in waking them dooming themselves. The efforts to inform the populace to not try and negotiate with death bots doubled in response._Warlike</li>
+		<li>ancient_town_destroyed->Relief efforts to help the city of [AffectedTown_name] which was struggling to fed its inhabitants in the aftermath of a massive fire cause by a faulty wire, mechanics were dumb founded by how the well maintained system "just did that"._Peacelike</li>
+		<li>ancient_town_destroyed->A mysterious ancient town name [AffectedTown_name] was discovered with doors that can't be opened, the mechanism that causes that was named 'Locks' by the expedition._Peacelike</li>
+		<li>ancient_town_destroyed->[AffectedTown_name] the home settlement of the cult of "Randy Random" died under the combined effects of a cold snap, flash-storm, toxic fallout and a solar flare.</li>
+		
+		
+		<li>r_history_generic->[ancient_generic]</li>
+		
+		<li>ancient_generic->A religious movement that believes the Resurrector mech serums to be a work of dark necromantic magic set out to destroy any serums they can come across and any kill any person revived by it.</li>
+		<li>ancient_generic->The church of the Thrumbo and environmentalists feuded over culling policies of wild Thrumbos, while the former believed the thrumbo are sentient creatures and so shouldn't be killed the latter disagreed and pointed to the massive amount of unrepairable damage to forest and jungles world wide that the thrumbo cause to show why reducing their numbers is necessary. The feud escalated when a member of the church ignited a fire in nearby large forest as a challenge to the environmentalists._Peacelike</li>
+		<li>ancient_generic->A drug crisis spread throughout the faction because that every captured soldier were returned with A luciferium addiction following a new policy of an hostile faction. The rising demand for the drug caused others to be exposed to it and tempted by it.</li>
+		<li>ancient_generic->[ancient_generic_start]</li>
+		
+		<li>ancient_generic_start->The faction[ancient_generic_faction]</li>
+		<li>ancient_generic_faction-> saw a boom in crops growth, [ancient_generic_faction_approval]</li>
+		<li>ancient_generic_faction-> experienced a severe case of blight in most of their towns</li>
+		<li>ancient_generic_faction->'s most prestigious mine dried out</li>
+		<li>ancient_generic_faction->'s economy bloomed in a previously unprecedented growth, [ancient_generic_faction_approval]</li>
+		<li>ancient_generic_faction-> has seen a raise in xenophobic views following a series of attacks from</li>
+		<li>ancient_generic_faction->'s crime rate spiked resulting in the leader resigning</li>
+		<li>ancient_generic_faction-> dealt with several pirate outposts in numerous strikes in a single day, [ancient_generic_faction_approval]</li>
+		<li>ancient_generic_faction-> had an uprising as the result of [ancient_generic_faction_uprising] and it ended when [ancient_generic_faction_uprising_end]</li>
+		<li>ancient_generic_faction-> has discovered abandoned [ancient_generic_faction_ruins] [ancient_generic_faction_ruins_found]</li>
+		<!--<li>ancient_generic_faction-></li>-->
+		
+		<li>ancient_generic_faction_approval->giving the leader enough public approval to get away with passing controversial laws._Warlike</li>
+		<li>ancient_generic_faction_approval->raising moral in the populace despite being downtrodden._Warlike</li>
+		<li>ancient_generic_faction_approval->allowing for scientific and cultural advancement._Peacelike</li>
+		<li>ancient_generic_faction_approval->which caused a raise in nationalism throughout their populace as they accredited the success to their allegedly superior way of life._Warlike</li>
+		
+		<li>ancient_generic_faction_uprising->high taxes driving the majority of citizens to poverty</li>
+		<li>ancient_generic_faction_uprising->the oligarchy living lavishly while everyone else suffered from starvation</li>
+		<li>ancient_generic_faction_uprising->the leadership's harsh methods of maintaining control over the population</li>
+		
+		<li>ancient_generic_faction_uprising_end->a general seized power of the army and eliminated any other contender to leadership._Warlike</li>
+		
+		<li>ancient_generic_faction_ruins->ruins</li>
+		<li>ancient_generic_faction_ruins->settlement</li>
+		<li>ancient_generic_faction_ruins->town</li>
+		<li>ancient_generic_faction_ruins->ship crash</li>
+		<li>ancient_generic_faction_ruins->city</li>
+		<li>ancient_generic_faction_ruins->temple</li>
+		<li>ancient_generic_faction_ruins->caravan equipment</li>
+		<li>ancient_generic_faction_ruins->mineshaft</li>
+		
+		<li>ancient_generic_faction_ruins_found->and found ancient tablets in an unknown language.</li>
+		
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+  
+  
+</Defs>

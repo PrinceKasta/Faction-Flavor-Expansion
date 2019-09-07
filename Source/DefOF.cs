@@ -16,7 +16,9 @@ namespace Flavor_Expansion
         {
             DefOfHelper.EnsureInitializedInCtor(typeof(EndGameDefOf));
         }
-
+        public static RulePackDef FE_History;
+        public static RulePackDef FE_WarEvent_ArtifactCache;
+        public static RulePackDef FE_WarEvent_RaidSuccess;
         public static WorldObjectDef Site_opbase;
         public static WorldObjectDef Dispute_Camp;
         public static WorldObjectDef Dispute_FOB;

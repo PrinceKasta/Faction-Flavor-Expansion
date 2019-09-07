@@ -78,9 +78,10 @@ namespace Flavor_Expansion
             {
                 foreach (LE_FactionInfo f in factionInfo.ToList())
                 {
-                    if (f.resources < Find.WorldObjects.Settlements.Count(x => x.Faction == f.faction) * SETTLEMENT_RESOURCE_VALUE + (int)f.faction.def.techLevel * TECHLEVEL_RESOURCE_VALUE)
-                        f.resources += 0.1f + f.SupplyDepots.Count + Find.WorldObjects.AllWorldObjects.Count(x=> x.GetComponent<WorldObjectComp_SupplyDepot>() != null && x.GetComponent<WorldObjectComp_SupplyDepot>().IsActive()) + f.vassalage != 0 ? 500 : 0;
-
+                   if (f.resources < MaxResourcesForFaction(f.faction))
+                    {
+                        f.resources += 0.1f + f.SupplyDepots.Count + Find.WorldObjects.AllWorldObjects.Count(x => x.GetComponent<WorldObjectComp_SupplyDepot>() != null && x.GetComponent<WorldObjectComp_SupplyDepot>().IsActive()) + (f.vassalage != 0 ? 100 : 0);
+                    }
                     if (TryUseResourcesAtPeace(f.faction))
                         break;
 
@@ -385,8 +386,8 @@ namespace Flavor_Expansion
 
                 GetByFaction(settlement.Faction == f1 ? f2 : f1).resources += SETTLEMENT_RESOURCE_VALUE / 2;
                 GetByFaction(settlement.Faction).resources -= SETTLEMENT_RESOURCE_VALUE * 5;
-                Messages.Message("MessageFactionWarSettlementRaid".Translate(settlement.Faction == f1 ? f2 : f1, settlement, settlement.Faction), MessageTypeDefOf.NeutralEvent);
-                war.warHistory+=("HistoryDate".Translate(5500 + Find.TickManager.TicksGame / Global.YearInTicks) + "MessageFactionWarSettlementRaid".Translate(settlement.Faction == f1 ? f2 : f1, settlement, settlement.Faction) + "\n\n");
+                Messages.Message(FE_GrammarUtility.WarEvent(settlement.Faction == f1 ? f2 : f1, settlement.Faction, settlement), MessageTypeDefOf.NeutralEvent);
+                war.warHistory+=("HistoryDate".Translate(5500 + Find.TickManager.TicksGame / Global.YearInTicks) + FE_GrammarUtility.WarEvent(settlement.Faction == f1 ? f2 : f1, settlement.Faction, settlement) + "\n\n");
                 return;
             }
             // Artifact cache - Background 0.0007%
@@ -395,12 +396,12 @@ namespace Flavor_Expansion
                 if (Rand.Chance(0.5f))
                 {
                     GetByFaction(f1).resources += LARGE_EVENT_Cache_RESOURCE_VALUE;
-                    war.warHistory += "HistoryDate".Translate(5500 + Find.TickManager.TicksGame / Global.YearInTicks) + "MessageFactionWarArtifactCache".Translate(f1) + "\n\n";
+                    war.warHistory += "HistoryDate".Translate(5500 + Find.TickManager.TicksGame / Global.YearInTicks) + FE_GrammarUtility.WarEvent(f1) + "\n\n";
                 }
                 else
                 {
                     GetByFaction(f2).resources += LARGE_EVENT_Cache_RESOURCE_VALUE;
-                    war.warHistory += "HistoryDate".Translate(5500 + Find.TickManager.TicksGame / Global.YearInTicks) + "MessageFactionWarArtifactCache".Translate(f1) + "\n\n";
+                    war.warHistory += "HistoryDate".Translate(5500 + Find.TickManager.TicksGame / Global.YearInTicks) + FE_GrammarUtility.WarEvent(f2) + "\n\n";
                 }
                 return;
             }
@@ -488,8 +489,8 @@ namespace Flavor_Expansion
                 return;
             }
 
-            // settlement Nuked - toxic fallout 0.0002%
-            if (chance < 575 && Find.TickManager.TicksGame > Global.DayInTicks * 20 && Find.Storyteller.difficulty.difficulty >= 2 && !Find.AnyPlayerHomeMap.GameConditionManager.ConditionIsActive(GameConditionDefOf.ToxicFallout))
+            // settlement Nuked - toxic fallout 0.00005%
+            if (chance < 560 && Find.TickManager.TicksGame > Global.DayInTicks * 20 && Find.Storyteller.difficulty.difficulty >= 2 && !Find.AnyPlayerHomeMap.GameConditionManager.ConditionIsActive(GameConditionDefOf.ToxicFallout))
             {
                 if (!(Rand.Chance(0.5f + GetByFaction(f2).resources == GetByFaction(f1).resources ? GetByFaction(f2).resources / GetByFaction(f1).resources < 1 ? (0.5f - (GetByFaction(f2).resources / GetByFaction(f1).resources) / 2f) : -(0.5f - (GetByFaction(f2).resources / GetByFaction(f1).resources) / 2f) : 0) && (f1.def.techLevel == TechLevel.Industrial || f1.def.techLevel == TechLevel.Spacer) &&
                     Find.WorldObjects.Settlements.Where(x => x.Faction == f2 && Utilities.Reachable(Find.AnyPlayerHomeMap.Tile, x.Tile, 30)).TryRandomElement(out Settlement ruin)))
@@ -516,7 +517,7 @@ namespace Flavor_Expansion
                 return;
             }
             // Factories sabotaged - background - 0.001%
-            if(chance<675)
+            if(chance<660)
             {
                 Faction spy = Rand.Chance(0.5f) ? f2 : f1;
 

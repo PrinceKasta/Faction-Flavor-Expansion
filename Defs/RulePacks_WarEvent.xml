@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+	<RulePackDef>
+	  <defName>FE_WarEvent_RaidSuccess</defName>
+		<rulePack>
+		<rulesStrings>
+			<li>FE_RaidSuccess->[FACTION1_name] has [raid_objective] [AffectedTown_name] of [FACTION2_name]</li>
+			
+			<li>raid_objective->raided and destroyed</li>
+			<li>raid_objective->looted and razed</li>
+			<li>raid_objective->pillaged and kidnapped the inhabitants living in</li>
+			<li>raid_objective->killed everyone in</li>
+			<li>raid_objective->detonated a chemical bomb that made quick work of all life in</li>
+			<li>raid_objective->sieged and starved</li>
+			
+		</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+	
+	<RulePackDef>
+	  <defName>FE_WarEvent_ArtifactCache</defName>
+		<rulePack>
+		<rulesStrings>
+			<li>FE_ArtifactCache->[FACTION1_name] [artifactCache_desc]</li>
+			
+			<li>artifactCache_desc->has recovered a cache of valuable artifacts, revitalizing their war effort.</li>
+			<li>artifactCache_desc->scouts found ruins holding a cache of high tech weaponry.</li>
+			<li>artifactCache_desc->salvaged from a crashed trade ship several advanced armory.</li>
+			<li>artifactCache_desc->has received large amount of silver from a hyper-wealthy donor.</li>
+			<li>artifactCache_desc->has uncovered a precious gold mine, refilling their war chest.</li>
+			<li>artifactCache_desc->has made a deal with a mercenary outfit, enlarging their troop numbers</li>
+			
+		</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+
+</Defs>

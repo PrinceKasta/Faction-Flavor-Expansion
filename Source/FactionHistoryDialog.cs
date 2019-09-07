@@ -19,7 +19,7 @@ namespace Flavor_Expansion
             DiaOption diaOption1 = new DiaOption(text);
 
             int disposition = Utilities.FactionsWar().GetByFaction(faction).disposition;
-            DiaNode diaNode1 = new DiaNode("FactionChose".Translate(disposition == 0 ? "FactionNeutral".Translate() : disposition > 0 ? (disposition> 4 ? "FactionGenocidal".Translate() : "FactionWarlike".Translate()) : disposition<-4 ? "FactionPacifistic".Translate() : "FactionPeacelike".Translate()) + (Prefs.DevMode ? " (Debug): (" + disposition + ")\n" : "\n") + "FactionDispositionInfo".Translate()+ "FactionResourcesInfo".Translate(faction,Math.Floor(Utilities.FactionsWar().GetByFaction(faction).resources/Utilities.FactionsWar().MaxResourcesForFaction(faction) * 100))+(Prefs.DevMode ? ("(DevMode) resources:"+ Utilities.FactionsWar().GetByFaction(faction).resources)+", Total Capacity: "+ Utilities.FactionsWar().MaxResourcesForFaction(faction) : ""));
+            DiaNode diaNode1 = new DiaNode("FactionChose".Translate(disposition == 0 ? "FactionNeutral".Translate() : disposition > 0 ? (disposition> 4 ? "FactionGenocidal".Translate() : "FactionWarlike".Translate()) : disposition<-4 ? "FactionPacifistic".Translate() : "FactionPeacelike".Translate()) + (Prefs.DevMode ? " (Debug): (" + disposition + ")\n" : "\n") + "FactionDispositionInfo".Translate()+ "FactionResourcesInfo".Translate(faction,Math.Floor(Utilities.FactionsWar().GetByFaction(faction).resources/Utilities.FactionsWar().MaxResourcesForFaction(faction) * 100))+(Prefs.DevMode ? (" (DevMode) resources:"+ Utilities.FactionsWar().GetByFaction(faction).resources)+", Total Capacity: "+ Utilities.FactionsWar().MaxResourcesForFaction(faction) : ""));
             
             #region History
             // Faction History
@@ -62,11 +62,9 @@ namespace Flavor_Expansion
             }
             #endregion War
 
-
-
+            
             #region Vassal
-
-
+            
             RequestVassalOptions(faction, diaNode1);
             
             #endregion Vassal
@@ -83,6 +81,7 @@ namespace Flavor_Expansion
 
         public static void RequestVassalOptions(Faction faction, DiaNode diaNode1)
         {
+            
             DiaNode vassalInfo = new DiaNode("FactionVasalageInfo".Translate(faction));
 
             vassalInfo.options.Add(new DiaOption("Disconnect".Translate())
@@ -178,6 +177,8 @@ namespace Flavor_Expansion
                     vassalage.Disable("FactionVassalDemandResourcesDisabled".Translate());
                     diaNode1.options.Add(vassalage);
                 }
+                if (faction.def.techLevel < TechLevel.Industrial)
+                    return;
                 RequestInvestmentsNode(faction, diaNode1);
             }
         }
@@ -790,128 +791,82 @@ namespace Flavor_Expansion
     
     class HistoryDialogDataBase
     {
+        private static readonly IntRange leapInYears = new IntRange(7, 40);
+        private static readonly IntRange startingYear = new IntRange(300, 400);
+
+        private class weightedString
+        {
+            public string option;
+            public int weight;
+
+            public weightedString(string option, int weight)
+            {
+                this.option = option;
+                this.weight = weight;
+            }
+        }
 
         public HistoryDialogDataBase()
         {
 
         }
-        public static List<string> GetOptions()
-        {
-            List<string> HistoryOptions = new List<string>();
-
-            if ("HistoryFactions".TryTranslate(out string text))
-            {
-                HistoryOptions.Add("HistoryFactions");
-                int y = 2;
-                while (("HistoryFactions" + y).TryTranslate(out text))
-                {
-                    HistoryOptions.Add("HistoryFactions" + y);
-                    y++;
-                }
-                y = 1;
-                while (("HistoryFactions" + y + "_Dead").TryTranslate(out text))
-                {
-                    HistoryOptions.Add("HistoryFactions" + y + "_Dead");
-                    y++;
-                }
-            }
-            if ("HistoryTown".TryTranslate(out text))
-            {
-                HistoryOptions.Add("HistoryTown");
-                int y = 2;
-                while (("HistoryTown" + y).TryTranslate(out text))
-                {
-                    HistoryOptions.Add("HistoryTown" + y);
-                    y++;
-                }
-                y = 2;
-                while (("HistoryTown" + y + "_Destroyed").TryTranslate(out text))
-                {
-                    HistoryOptions.Add("HistoryTown" + y + "_Destroyed");
-                    y++;
-                }
-            }
-            if ("HistoryPolitic".TryTranslate(out text))
-            {
-                HistoryOptions.Add("HistoryPolitic");
-                int y = 2;
-                while (("HistoryPolitic" + y).TryTranslate(out text))
-                {
-                    HistoryOptions.Add("HistoryPolitic" + y);
-                    y++;
-                }
-            }
-
-            if ("HistoryGeneric".TryTranslate(out text))
-            {
-                HistoryOptions.Add("HistoryGeneric");
-                int y = 2;
-                while (("HistoryGeneric" + y).TryTranslate(out text))
-                {
-                    HistoryOptions.Add("HistoryGeneric" + y);
-                    y++;
-                }
-            }
-
-            return HistoryOptions;
-        }
         public static string GenerateHistory(Faction subject, ref int disposition)
         {
-            IntRange leapInYears = new IntRange(7, 40);
-            List<string> HistoryOptions = GetOptions();
-
-            if (HistoryOptions.NullOrEmpty())
-            {
-                Log.Error("HistoryDialogDataBase not constracted correctly, HistoryOptions count: " + HistoryOptions.Count());
-                return "";
-            }
-            string text = "";
             
-            int year = Find.TickManager.StartingYear-300;
-            while(year< Find.TickManager.StartingYear)
+            List<weightedString> HistoryOptions = new List<weightedString>();
+            List<string> history = new List<string>();
+            string text = "";
+
+            int year = Find.TickManager.StartingYear - startingYear.RandomInRange;
+            while (year < Find.TickManager.StartingYear)
             {
-                if (!HistoryOptions.TryRandomElement(out string option))
+                HistoryOptions.Clear();
+                
+                HistoryOptions.Add(new weightedString(FE_GrammarUtility.History(null, null, null, PawnGenerator.GeneratePawn(subject.RandomPawnKind(), subject)), 12));
+                HistoryOptions.Add(new weightedString(FE_GrammarUtility.History(subject), 4));
+                HistoryOptions.Add(new weightedString(FE_GrammarUtility.History(subject, Find.FactionManager.AllFactionsVisible.Where(fac => !fac.IsPlayer && fac != subject && !fac.def.hidden).RandomElement()), 3));
+                HistoryOptions.Add(new weightedString(FE_GrammarUtility.History(null, null, Find.WorldObjects.Settlements.FindAll(x => x.Faction == subject).RandomElement(), null), 16));
+                HistoryOptions.Add(new weightedString(FE_GrammarUtility.History(null, null, null, null, SettlementNameGenerator.GenerateSettlementName(null, subject.def.settlementNameMaker)), 10));
+                HistoryOptions.Add(new weightedString(FE_GrammarUtility.History(), 9));
+                
+                if (!HistoryOptions.TryRandomElementByWeight(x => x.weight, out weightedString option))
                 {
                     return "";
                 }
-                text += "HistoryDate".Translate(year);
+                if (!CompareAlmostEqual(option.option, history))
+                {
+                    history.Add("HistoryDate".Translate(year));
+                    history.Add(option.option + "\n\n");
+                    year += leapInYears.RandomInRange;
+                }
 
-                if (option.Contains("HistoryFactions"))
-                {
-                    HistoryOptions.Remove(option);
-                    if (option.Contains("DeadFaction"))
-                    {
-                        List<string> extantNames = new List<string>();
-                         
-                        text += TrimKeys(option.Translate(subject, NameGenerator.GenerateName(subject.def.factionNameMaker, Find.FactionManager.AllFactionsVisible.Select<Faction, string>((Func<Faction, string>)(fac => fac.Name)))), subject, ref disposition);
-                    }
-                    else text += TrimKeys( option.Translate(subject, Find.FactionManager.AllFactionsVisible.Where(fac=> fac!=subject && !fac.def.hidden).RandomElement().Name),subject, ref disposition);
-                }
-                if(option.Contains("HistoryTown"))
-                {
-                    HistoryOptions.Remove(option);
-                    text += TrimKeys(option.Translate(option.Contains("Destroyed") ?  SettlementNameGenerator.GenerateSettlementName(null, subject.def.settlementNameMaker) : Find.WorldObjects.Settlements.FindAll(x => x.Faction == subject).RandomElement().Name), subject, ref disposition);
-                }
-                if (option.Contains("HistoryPolitic"))
-                {
-                    HistoryOptions.Remove(option);
-                    text += TrimKeys( TranslatorFormattedStringExtensions.Translate(option,PawnGenerator.GeneratePawn(subject.RandomPawnKind(), subject)), subject,ref disposition);
-                }
-                if (option.Contains("HistoryGeneric"))
-                {
-                    HistoryOptions.Remove(option);
-                    text += TrimKeys(option.Translate(), subject, ref disposition);
-                }
-                year += leapInYears.RandomInRange;
             }
+            for (int i = 0; i < history.Count - 1; i+=2)
+            {
+                text+=TrimKeys(history[i]+history[i+1], subject, ref disposition);
+        
+            }
+            
             return text;
+        }
+
+        private static bool CompareAlmostEqual(string text, List<string> history)
+        {
+            foreach(string t in history)
+            {
+                if(FactionDialogUtilities.LevenshteinDistance.Calculate(text,t)<40)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private static string TrimKeys(string option, Faction subject, ref int disposition)
         {
             if (option.NullOrEmpty() || option == "")
             {
-                Log.Warning("null");
+                Log.Error("History option is null.");
                 return "";
             }
             if (option.Contains("_!Tribal"))
@@ -960,4 +915,6 @@ namespace Flavor_Expansion
             return text;
         }
     };
+
+    
 }
