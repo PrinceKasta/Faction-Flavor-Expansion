@@ -1,16 +1,9 @@
-﻿using Harmony;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Verse;
-using Verse.Sound;
-using System.Reflection;
 using RimWorld;
 using RimWorld.Planet;
 using UnityEngine;
-using System.Diagnostics;
-using Verse.AI.Group;
 
 namespace Flavor_Expansion
 {
@@ -47,31 +40,29 @@ namespace Flavor_Expansion
         {
             get
             {
-                if ((UnityEngine.Object)this.cachedMat == (UnityEngine.Object)null)
+                if (cachedMat == null)
                 {
-                    Color color = this.Faction == null ? Color.white : this.Faction.Color;
-                    this.cachedMat = MaterialPool.MatFrom(this.def.texture, ShaderDatabase.WorldOverlayTransparentLit, color, WorldMaterials.WorldObjectRenderQueue);
+                    Color color = Faction == null ? Color.white : Faction.Color;
+                    cachedMat = MaterialPool.MatFrom(def.texture, ShaderDatabase.WorldOverlayTransparentLit, color, WorldMaterials.WorldObjectRenderQueue);
                 }
-                return this.cachedMat;
+                return cachedMat;
             }
         }
         public void Notify_CaravanArrived(Caravan caravan)
         {
-            Pawn bestDiplomant = BestCaravanPawnUtility.FindBestNegotiator(caravan);
             Thing silver = ThingMaker.MakeThing(DefDatabase<ThingDef>.GetNamed("Silver"));
             silver.stackCount = (int)silverCurve.Evaluate(Math.Min(Find.AnyPlayerHomeMap.wealthWatcher.WealthTotal / 2, 10000) / Utilities.FactionsWar().GetByFaction(Faction).resources);
 
-            string text = "RoadsCampRequest".Translate(caravan.Name, Faction);
-            DiaNode nodeRoot = new DiaNode(text);
+            DiaNode nodeRoot = new DiaNode("RoadsCampRequest".Translate(caravan.Name, Faction));
             nodeRoot.options.Add(new DiaOption("RoadsCampRequest_Attack".Translate())
             {
 
-                action = (Action)(() =>
+                action = () =>
                 {
-                    Faction.TrySetRelationKind(Faction.OfPlayer, FactionRelationKind.Hostile,true, "RoadsCampRequest_AttackReason".Translate(Faction));
+                    Faction.TrySetRelationKind(Faction.OfPlayer, FactionRelationKind.Hostile, true, "RoadsCampRequest_AttackReason".Translate(Faction));
                     Utilities.FactionsWar().GetByFaction(Faction).resources -= FE_WorldComp_FactionsWar.MEDIUM_EVENT_RESOURCE_VALUE;
                     Find.WorldObjects.Remove(this);
-                }),
+                },
                 link = new DiaNode(TranslatorFormattedStringExtensions.Translate("RoadsCampRequestAttack", caravan, Faction.leader))
                 {
                     options = {
@@ -81,13 +72,13 @@ namespace Flavor_Expansion
             });
             DiaOption bribe= new DiaOption("RoadsCampRequest_Bribe".Translate(silver.stackCount))
             {
-                action = (Action)(() =>
+                action = () =>
                 {
                     Faction.TryAffectGoodwillWith(Faction.OfPlayer, -20);
-                    caravan.GiveSoldThingToPlayer(silver, silver.stackCount, bestDiplomant);
-                    this.extorted = true;
-                }),
-                link = new DiaNode(TranslatorFormattedStringExtensions.Translate("RoadsCampRequestBribe",silver.stackCount, caravan))
+                    caravan.GiveSoldThingToPlayer(silver, silver.stackCount, BestCaravanPawnUtility.FindBestNegotiator(caravan));
+                    extorted = true;
+                },
+                link = new DiaNode(TranslatorFormattedStringExtensions.Translate("RoadsCampRequestBribe", silver.stackCount, caravan))
                 {
                     options = {
                          new DiaOption("OK".Translate()) { resolveTree = true }
@@ -104,18 +95,14 @@ namespace Flavor_Expansion
 
                 resolveTree = true
             });
-            string title = "RoadsCampRequestTitle".Translate(this.Faction);
-            Find.WindowStack.Add((Window)new Dialog_NodeTreeWithFactionInfo(nodeRoot, this.Faction, true, true, title));
-            Find.Archive.Add((IArchivable)new ArchivedDialog(nodeRoot.text, title, this.Faction));
+            Find.WindowStack.Add(new Dialog_NodeTreeWithFactionInfo(nodeRoot, Faction, true, true, "RoadsCampRequestTitle".Translate(Faction)));
+            Find.Archive.Add(new ArchivedDialog(nodeRoot.text, "RoadsCampRequestTitle".Translate(Faction), Faction));
         }
         public override void ExposeData()
         {
             base.ExposeData();
             Scribe_Values.Look(ref extorted, "extorted");
         }
-        public override IEnumerable<FloatMenuOption> GetFloatMenuOptions(Caravan caravan)
-        {
-            return CaravanArrivalAction_RoadCamp.GetFloatMenuOptions(caravan,this);
-        }
+        public override IEnumerable<FloatMenuOption> GetFloatMenuOptions(Caravan caravan) => CaravanArrivalAction_RoadCamp.GetFloatMenuOptions(caravan, this);
     }
 }

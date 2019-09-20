@@ -7,7 +7,8 @@
 	
 	<MessageExpanded>{0} from {1} founded a new settlement called {2}.</MessageExpanded>
 	
-	<MessageFactionWarWhitePeace>{0} and {1}'s war has reached a stalemate and a white peace has been achieved.</MessageFactionWarWhitePeace>
+	<LetterLabelWarOutcome>War conclusion</LetterLabelWarOutcome>
+	<MessageFactionWarWhitePeace>{0} and {1} have reached a stalemate and a white peace has been achieved as both factions can't continue to support their war efforts.</MessageFactionWarWhitePeace>
 	<MessageFactionWarFactionDestoryed>{0} and {1}'s war has ended and {0} has agreed to disband.</MessageFactionWarFactionDestoryed>
 	<MessageFactionWarFactionConquered>{0} and {1}'s war has ended and {1} has successfully conquered {0}. </MessageFactionWarFactionConquered>
 	
@@ -24,8 +25,6 @@
 	
 	<MessageFactionWarSupply>{0} has created a supply depot to support their war effort.</MessageFactionWarSupply>
 	
-	<MessageFactionWarFactory>A spy hired by {0} has sabotaged a factory owned by {1}.</MessageFactionWarFactory>
-	
 	<MessageFactionWarHiddenRaid>{0} has swarmed and destroyed the {1} settlement of {2}.</MessageFactionWarHiddenRaid>
 	
 	<MessageFactionWarCaravanAmbush>{0} has ambushed and destroyed a caravan of {1}.</MessageFactionWarCaravanAmbush>
@@ -34,9 +33,7 @@
 	
 	<MessageFactionRoads>{0} has established a site to work on an upgrade to the road between the settlements of {1} and {2}.</MessageFactionRoads>
 	
-	<MessageFactionWarFailRaid>{0}'s raid of {1} of {2} failed and {0} suffered heavy loses.</MessageFactionWarFailRaid>
-	
-	<LetterLabelFactionWarSubject>Subject Attacked</LetterLabelFactionWarSubject>
+	<LetterLabelFactionWarSubject>Subject under attack</LetterLabelFactionWarSubject>
     <FactionWarSubject>{1} has declared war on our subject faction, {0}, if they are defeated we risk losing their payments and any of our investments.\n\nWe might want to support them in the war by weakening their enemies and gifting them resources..</FactionWarSubject>
   
 	

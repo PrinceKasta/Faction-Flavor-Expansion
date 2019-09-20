@@ -1,14 +1,8 @@
-﻿using Harmony;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Verse;
-using Verse.Sound;
-using System.Reflection;
 using RimWorld;
 using RimWorld.Planet;
-using UnityEngine;
 
 namespace Flavor_Expansion
 {
@@ -24,7 +18,7 @@ namespace Flavor_Expansion
             if (!FindSettlements(out Settlement set1, out Settlement set2))
                 return false;
             int tile;
-            //WorldPathFinder
+
             using (WorldPath path = Find.World.pathFinder.FindPath(set1.Tile, set2.Tile, null))
             {
                 List<int> p = path.NodesReversed;
@@ -38,18 +32,16 @@ namespace Flavor_Expansion
             dispute.Set2 = set2;
             dispute.SetFaction(set1.Faction);
             Find.WorldObjects.Add(dispute);
-
             Find.LetterStack.ReceiveLetter("LetterLabelDispute".Translate(), "Dispute".Translate(set1,set2, set1.Faction)
-                    , LetterDefOf.PositiveEvent, (LookTargets)dispute, null, (string)null);
+                    , LetterDefOf.PositiveEvent, dispute, null, null);
             return true;
 
         }
 
         private bool FindSettlements(out Settlement set1, out Settlement set2)
         {
-            List<Settlement> list = (from s in Find.WorldObjects.Settlements
-                                     where !s.Faction.IsPlayer && s.Faction.PlayerRelationKind == FactionRelationKind.Ally && Utilities.Reachable(s.Tile, Find.AnyPlayerHomeMap.Tile,75)
-                                     select s).ToList();
+            List<Settlement> list = Find.WorldObjects.Settlements.Where(s => !s.Faction.IsPlayer && s.Faction.PlayerRelationKind == FactionRelationKind.Ally && Utilities.Reachable(s.Tile, Find.AnyPlayerHomeMap.Tile, 75)).ToList();
+                                     
             if (list.NullOrEmpty())
             {
                 set1 = null;
@@ -59,7 +51,7 @@ namespace Flavor_Expansion
             
             foreach(Settlement s in list.InRandomOrder())
             {
-                set1=list.Find(x => x != s && Utilities.Reachable(x, s, 50) && !RoadAlreadyExists(x, s));
+                set1=list.Find(x => x != s && Utilities.Reachable(x, s, 100) && !RoadAlreadyExists(x, s));
                 if (set1 != null)
                 {
                     set2 = s;

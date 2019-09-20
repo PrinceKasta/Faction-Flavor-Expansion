@@ -1,17 +1,10 @@
-﻿using Harmony;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Verse;
-using Verse.AI;
-using Verse.Sound;
 using Verse.AI.Group;
-using System.Reflection;
 using RimWorld;
 using RimWorld.Planet;
-using UnityEngine;
-using RimWorld.BaseGen;
 
 namespace Flavor_Expansion
 {
@@ -29,16 +22,17 @@ namespace Flavor_Expansion
             if (!active)
                 return;
             if (!enemy.HostileTo(ally) && !ParentHasMap)
+            {
                 active = false;
-            MapParent map = (MapParent)this.parent;
+            }
+
+            MapParent map = (MapParent)parent;
 
             if (!ParentHasMap)
             {
                 if (timeOut <= 0)
                 {
                     active = false;
-                    int tile = parent.Tile;
-                    int ID = parent.ID;
                     Find.WorldObjects.Remove(parent);
                     Utilities.FactionsWar().GetByFaction(ally).resources -= FE_WorldComp_FactionsWar.SETTLEMENT_RESOURCE_VALUE;
 
@@ -46,18 +40,18 @@ namespace Flavor_Expansion
                           where f.Faction == parent.Faction
                           select f).Any())
                     {
-                        Find.LetterStack.ReceiveLetter("FactionDestroyed".Translate(), "LetterFactionBaseDefeated_FactionDestroyed".Translate((NamedArgument)parent.Faction.Name), LetterDefOf.PositiveEvent, null, parent.Faction, (string)null);
+                        Find.LetterStack.ReceiveLetter("FactionDestroyed".Translate(), "LetterFactionBaseDefeated_FactionDestroyed".Translate(parent.Faction.Name), LetterDefOf.PositiveEvent, null, parent.Faction, null);
                         parent.Faction.defeated = true;
                         return;
                     }
 
-                    Site resuce = SiteMaker.MakeSite(SiteCoreDefOf.Nothing, EndGameDefOf.Outpost_SiteResuce, tile, enemy, true, StorytellerUtility.DefaultSiteThreatPointsNow());
+                    Site resuce = SiteMaker.MakeSite(SiteCoreDefOf.Nothing, EndGameDefOf.Outpost_SiteResuce, parent.Tile, enemy, true, StorytellerUtility.DefaultSiteThreatPointsNow());
                     
-                    resuce.GetComponent<WorldComp_SettlementResuce>().StartComp(ID, ally);
+                    resuce.GetComponent<WorldComp_SettlementResuce>().StartComp(parent.ID, ally);
                     resuce.GetComponent<TimeoutComp>().StartTimeout(6000);
                     Find.WorldObjects.Add(resuce);
-                    Find.LetterStack.ReceiveLetter("LetterLabelSettlementDefenderIgnored".Translate(), TranslatorFormattedStringExtensions.Translate("SettlementDefenderIgnored", this.parent, this.parent.Faction.leader),
-                            LetterDefOf.ThreatBig, new LookTargets(parent.Tile), (Faction)null, (string)null);
+                    Find.LetterStack.ReceiveLetter("LetterLabelSettlementDefenderIgnored".Translate(), TranslatorFormattedStringExtensions.Translate("SettlementDefenderIgnored", parent, parent.Faction.leader),
+                            LetterDefOf.ThreatBig, new LookTargets(parent.Tile), null, null);
                     return;
                 }
                 timeOut--;
@@ -83,16 +77,13 @@ namespace Flavor_Expansion
         public void StartComp(Faction enemy, Faction ally, int timeout, List<Thing> rewards)
         {
             this.rewards = rewards;
-            this.timeOut = timeout;
-            this.active = true;
+            timeOut = timeout;
+            active = true;
             this.enemy = enemy;
             this.ally = ally;
         }
 
-        public bool IsActive()
-        {
-            return active;
-        }
+        public bool IsActive => active;
 
         public override void PostMyMapRemoved()
         {
@@ -118,15 +109,16 @@ namespace Flavor_Expansion
                     FactionThings.Add(thing);
                 }
             }
-            PawnGroupMakerParms parms = new PawnGroupMakerParms();
-            parms.faction = enemy;
-            parms.points = Math.Max(StorytellerUtility.DefaultThreatPointsNow(parent.Map)* 30 , 2500);
-            parms.groupKind = PawnGroupKindDefOf.Combat;
-            parms.generateFightersOnly = true;
+            PawnGroupMakerParms parms = new PawnGroupMakerParms
+            {
+                faction = enemy,
+                points = Math.Max(StorytellerUtility.DefaultThreatPointsNow(parent.Map) * 30, 2500),
+                groupKind = PawnGroupKindDefOf.Combat,
+                generateFightersOnly = true
+            };
             IEnumerable<Pawn> pawns= PawnGroupMakerUtility.GeneratePawns(parms);
-            IntVec3 vec3;
             
-            if (!RCellFinder.TryFindRandomPawnEntryCell(out vec3, parent.Map, 0f,false,x=> x.Standable(parent.Map) && x.Walkable(parent.Map)))
+            if (!RCellFinder.TryFindRandomPawnEntryCell(out IntVec3 vec3, parent.Map, 0f,false,x=> x.Standable(parent.Map) && x.Walkable(parent.Map)))
                 return;
             Lord lord = LordMaker.MakeNewLord(enemy, new LordJob_AssaultColony(enemy,true,true), parent.Map);
             foreach (Pawn p in pawns)
@@ -143,17 +135,15 @@ namespace Flavor_Expansion
             {
                 return false;
             }
-            MapParent map = (MapParent)this.parent;
+            MapParent map = (MapParent)parent;
             if (map.HasMap && map.Faction == ally && survivors
                 && !GenHostility.AnyHostileActiveThreatTo(map.Map, map.Faction))
             {
-                this.parent.Faction.TryAffectGoodwillWith(Faction.OfPlayer, 12);
-                Map target = Find.AnyPlayerHomeMap;
-                IntVec3 intVec3 = DropCellFinder.TradeDropSpot(target);
-                DropPodUtility.DropThingsNear(intVec3, target, (IEnumerable<Thing>)rewards, 110, false, true, true);
-                string text = "" + TranslatorFormattedStringExtensions.Translate("SettlementDefenderWon", this.parent, (NamedArgument)TimedForcedExit.GetForceExitAndRemoveMapCountdownTimeLeftString(Global.DayInTicks), this.parent.Faction.leader) + GenLabel.ThingsLabel(rewards, string.Empty);
-                GenThing.TryAppendSingleRewardInfo(ref text, (IList<Thing>)rewards);
-                Find.LetterStack.ReceiveLetter("LetterLabelSettlementDefenderWon".Translate(), text, LetterDefOf.PositiveEvent, (LookTargets)((WorldObject)this.parent), (Faction)null, (string)null);
+                parent.Faction.TryAffectGoodwillWith(Faction.OfPlayer, 12);
+                DropPodUtility.DropThingsNear(DropCellFinder.TradeDropSpot(Find.AnyPlayerHomeMap), Find.AnyPlayerHomeMap, rewards, 110, false, true, true);
+                string text = "" + TranslatorFormattedStringExtensions.Translate("SettlementDefenderWon", parent, TimedForcedExit.GetForceExitAndRemoveMapCountdownTimeLeftString(Global.DayInTicks), parent.Faction.leader) + GenLabel.ThingsLabel(rewards, string.Empty);
+                GenThing.TryAppendSingleRewardInfo(ref text, rewards);
+                Find.LetterStack.ReceiveLetter("LetterLabelSettlementDefenderWon".Translate(), text, LetterDefOf.PositiveEvent, parent, null, null);
                 map.Map.Parent.GetComponent<TimedForcedExit>().StartForceExitAndRemoveMapCountdown(Global.DayInTicks);
 
                 return true;
@@ -164,29 +154,27 @@ namespace Flavor_Expansion
 
         private bool FriendliesDead()
         {
-            MapParent map = (MapParent)this.parent;
+            MapParent map = (MapParent)parent;
             if (map.Map.mapPawns.FreeHumanlikesSpawnedOfFaction(map.Map.ParentFaction).Count(p=> !p.Downed && !p.Dead && p.RaceProps.Humanlike)==0)
             {
                 DestroyedSettlement destroyedSettlement = (DestroyedSettlement)WorldObjectMaker.MakeWorldObject(WorldObjectDefOf.DestroyedSettlement);
                 destroyedSettlement.Tile = parent.Tile;
-                Find.WorldObjects.Add((WorldObject)destroyedSettlement);
-                map.Map.info.parent = (MapParent)destroyedSettlement;
-                Find.WorldObjects.Remove((WorldObject)parent);
+                Find.WorldObjects.Add(destroyedSettlement);
+                map.Map.info.parent = destroyedSettlement;
+                Find.WorldObjects.Remove(parent);
                 destroyedSettlement.GetComponent<TimedForcedExit>().StartForceExitAndRemoveMapCountdown();
                 survivors = false;
-                this.parent.GetComponent<TimedForcedExit>().StartForceExitAndRemoveMapCountdown(Global.DayInTicks);
-                Find.LetterStack.ReceiveLetter("LetterLabelSettlementDefenderLost".Translate(), TranslatorFormattedStringExtensions.Translate("SettlementDefenderLost", this.parent, (NamedArgument)TimedForcedExit.GetForceExitAndRemoveMapCountdownTimeLeftString(Global.DayInTicks), this.parent.Faction.leader)
-                    , LetterDefOf.NegativeEvent, new LookTargets(parent.Tile), (Faction)null, (string)null);
+                parent.GetComponent<TimedForcedExit>().StartForceExitAndRemoveMapCountdown(Global.DayInTicks);
+                Find.LetterStack.ReceiveLetter("LetterLabelSettlementDefenderLost".Translate(), TranslatorFormattedStringExtensions.Translate("SettlementDefenderLost", parent, TimedForcedExit.GetForceExitAndRemoveMapCountdownTimeLeftString(Global.DayInTicks), parent.Faction.leader)
+                    , LetterDefOf.NegativeEvent, new LookTargets(parent.Tile), null, null);
                 return true;
             }
             return false;
         }
-        public override string CompInspectStringExtra()
-        {
-            if(active)
-                return base.CompInspectStringExtra() + "ExtraCompString_SettlementDefense".Translate(timeOut.ToStringTicksToPeriod());
-            return base.CompInspectStringExtra();
-        }
+        public override string CompInspectStringExtra() => active
+                ? base.CompInspectStringExtra() + "ExtraCompString_SettlementDefense".Translate(timeOut.ToStringTicksToPeriod())
+                : base.CompInspectStringExtra();
+
         public override void PostExposeData()
         {
             Scribe_Values.Look(ref active, "SettlementDefender_Active", defaultValue: false);
@@ -194,15 +182,14 @@ namespace Flavor_Expansion
             Scribe_References.Look(ref enemy, "SettlementDefender_Enemy");
             Scribe_Values.Look(ref survivors, "SettlementDefender_survivors", defaultValue: true);
             Scribe_Values.Look(ref timeOut, "SettlementDefender_timeOut", defaultValue: 0);
+            Scribe_Collections.Look(ref rewards, "SettlementDefender_rewards",LookMode.Deep);
+            Scribe_Collections.Look(ref FactionThings, "SettlementDefender_Factionthings",LookMode.Reference);
         }
-        public WorldObjectCompProperties_SettlementDefender Props => (WorldObjectCompProperties_SettlementDefender)this.props;
+        public WorldObjectCompProperties_SettlementDefender Props => (WorldObjectCompProperties_SettlementDefender)props;
         
     }
     public class WorldObjectCompProperties_SettlementDefender : WorldObjectCompProperties
     {
-        public WorldObjectCompProperties_SettlementDefender()
-        {
-            this.compClass = typeof(WorldComp_SettlementDefender);
-        }
+        public WorldObjectCompProperties_SettlementDefender() => compClass = typeof(WorldComp_SettlementDefender);
     }
 }

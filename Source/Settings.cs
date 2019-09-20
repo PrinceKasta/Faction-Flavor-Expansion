@@ -1,12 +1,10 @@
-﻿using RimWorld;
-using UnityEngine;
+﻿using UnityEngine;
 using Verse;
 
 
 namespace Flavor_Expansion
 {
-    using JetBrains.Annotations;
-    
+
     class EndGame_Settings : ModSettings
     {
         public static bool FactionWar = true;
@@ -20,6 +18,7 @@ namespace Flavor_Expansion
         public static bool Advancement = true;
         public static bool Aid = true;
         public static bool Gift = true;
+        public static bool WarAftermath = true;
         public static float MassiveBattles = 0;
 
         public void DoWindowContents(Rect rect)
@@ -28,6 +27,9 @@ namespace Flavor_Expansion
             options.Begin(rect: rect);
             options.Gap();
             options.CheckboxLabeled("FE_WarCheckBox".Translate(), ref FactionWar);
+            options.Gap();
+            if(FactionWar)
+                options.CheckboxLabeled("FE_WarCheckBoxAfterman".Translate(), ref WarAftermath);
             options.Gap();
             options.CheckboxLabeled("FE_ServitudeCheckBox".Translate(), ref FactionServitude);
             options.Gap();
@@ -56,11 +58,12 @@ namespace Flavor_Expansion
                 MassiveBattles = options.Slider(MassiveBattles, 0, 10000);
             }
             
-            this.Mod.GetSettings<EndGame_Settings>().Write();
+            Mod.GetSettings<EndGame_Settings>().Write();
         }
         public override void ExposeData()
         {
             Scribe_Values.Look(value: ref FactionHistory, label: "FactionHistory", defaultValue: true);
+            Scribe_Values.Look(value: ref WarAftermath, label: "WarAftermath", defaultValue: true);
             Scribe_Values.Look(value: ref FactionWar, label: "FactionWar", defaultValue: true);
             Scribe_Values.Look(value: ref FactionServitude, label: "FactionServitude", defaultValue: true);
             Scribe_Values.Look(value: ref FactionExpansion, label: "FactionExpansion", defaultValue: true);

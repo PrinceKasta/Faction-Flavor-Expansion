@@ -6,7 +6,7 @@
 	<FactionVassalageDisabled>They are not weak enough</FactionVassalageDisabled>
 	<FactionVassalageGoodWillDecay>Unrest about being a subject to a foreign faction slowly lowers goodwill</FactionVassalageGoodWillDecay>
 	<FactionVassalageDisabledEnemy>Permanent Enemy</FactionVassalageDisabledEnemy>
-	<FactionVasalageInfo>{0}'s leader agreed to the demand and now the faction is your vassal. They will pay silver at the start of a year and will be forced to comply to demands for rare resources every couple of days.</FactionVasalageInfo>
+	<FactionVasalageInfo>{0}'s leader agreed to your demands and now the faction is your vassal. They will pay in silver at the start of a year and will be forced to comply to demands for rare resources every couple of days.\n\nBy investing resources you are able to increase the payment to gain resources and gain other benefits.</FactionVasalageInfo>
 	<FactionVassalDemandResources>Demand Resources</FactionVassalDemandResources>
 	<FactionVassalDemandResourcesDisabled>Already demanded recently</FactionVassalDemandResourcesDisabled>
 	<LetterFactionVassalSilverRecived>Payment from vassal</LetterFactionVassalSilverRecived>
@@ -16,7 +16,7 @@
 	
 	
 	<FactionTributary>Demand they agree to become a tributary</FactionTributary>
-	<FactionTributaryInfo>{0}'s leader have agree to submit to you and now they are a tributary under you. They will pay 850 to 1350 silver every month to be under your protection, they will break off if goodwill falls below -75 and they became hostile.</FactionTributaryInfo>
+	<FactionTributaryInfo>{0}'s leader has agreed to submit to you and now they are a tributary under you. They will pay 850 to 1350 silver every month to be under your protection, they will break off if goodwill falls below -75 and they became hostile.</FactionTributaryInfo>
 	<FactionTributaryDisabledEnemy>Permanent Enemy</FactionTributaryDisabledEnemy>
 	<FactionTributaryDisabled>They are not weak enough</FactionTributaryDisabled>
 	
@@ -57,7 +57,7 @@
 	<!--Medicine 0-3-->
 	<FactionInvestmentMedicine>Medicine</FactionInvestmentMedicine>
 	<FactionInvestmentMedicineUpgrade>Upgrade Medicine</FactionInvestmentMedicineUpgrade>
-	<FE_MedicineLevel0>{0} have a few herbal medicine plant fields and traded medicine the are enough only for faction members' use.\n\nResource needed for the next upgrade:\n\n{1}\n\nInvesting in trade will give us a return of  at the start of each month.</FE_MedicineLevel0>
+	<FE_MedicineLevel0>{0} have a few herbal medicine plant fields and traded medicine in quantities that are enough only for faction members' use.\n\nResource needed for the next upgrade:\n\n{1}\n\nInvesting in trade will give us a return of  at the start of each month.</FE_MedicineLevel0>
 	<FE_MedicineLevel1>{0} have dedicated herbal medicine farms to mass produce herbal medicine for trade.\n\nWe are receiving a stack of herbal medicine at the start of each month.\n\nResource needed for the next upgrade:\n\n{1}\n\nInvesting in trade will give us a return of o at the start of each month.</FE_MedicineLevel1>
 	<FE_MedicineLevel2>{0} have the infrastructure to produce from their herbal medicine farms' products large amounts of industrial medicine for export.\n\nWe are receiving a stack of herbal medicine and industrial medicine at the start of each month.\n\nResource needed for the next upgrade:\n\n{1}\n\nInvesting in trade will give us a return of o at the start of each month.</FE_MedicineLevel2>
 	<FE_MedicineLevel3>{0} have the infrastructure to produce from their herbal medicine farms' products large amounts of industrial medicine and Neutroamine for export.\n\nWe are receiving a stack of herbal medicine, industrial medicine and half a stack of glitterworld medicine at the start of each month.</FE_MedicineLevel3>

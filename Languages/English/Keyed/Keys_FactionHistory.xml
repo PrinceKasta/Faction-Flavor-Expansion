@@ -3,7 +3,7 @@
 
 	<FactionInfo>More Options</FactionInfo>
 	
-	
+	<FactionWars>Faction Wars</FactionWars>
 	
 	<!-- Faction disposition-->
 	<FactionChose>This faction's disposition to conflict is {0}</FactionChose>
@@ -16,14 +16,14 @@
 	<FactionPacifistic>Pacifistic</FactionPacifistic>
 	
 	<!-- War Status-->
-	<FactionWarInfo>{0} and {1} are currently at war, {2} is the aggressor: {3} is on the offensive with {4}% more resources at their disposal\n\n</FactionWarInfo>
-	<FactionWarInfoSettlemate>{0} and {1} are currently in war, {2} is the aggressor: Currently neither of the factions are ahead of each other\n\n</FactionWarInfoSettlemate>
-	<FactionAtPeace>{0} is currently, at least officially, at peace</FactionAtPeace>
-	<FactionHistory>Faction History</FactionHistory>
-	<FactionWar>War With {0}</FactionWar>
+	<LetterLabelFactionWarDeclared>War declaration</LetterLabelFactionWarDeclared>
+	<FactionWarDeclared>Tensions between {0} and their neighboring faction of {1} took a turn for the worst.\n\n{0} announced their declaration of war, promising to end the conflict with {1} by use of force.\n\nOur colonists will track events during this war and present the estimated strength of each side in the "Faction" tab.\n\nWe can support a faction by gifting them or attacking their enemy.</FactionWarDeclared>
 	
+	<HistoryDate>Year {0}: </HistoryDate>
 	
-	<HistoryDate>The year {0}: </HistoryDate>
+	<HistoryDateRecent>Day {1} of the year {0}: </HistoryDateRecent>
+	
+	<WindowWarOverview>War Overview: {0} vs {1}</WindowWarOverview>
 	
 	<HistoryTribalFallback>The faction's lack of written language or technological communication led to this year becoming a hole in the faction's history.\n\n</HistoryTribalFallback>
     

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Verse;
 using RimWorld.Planet;
 using RimWorld;
@@ -21,53 +20,41 @@ namespace Flavor_Expansion
             this.dispute = dispute;
         }
 
-        public override string Label
-        {
-            get
-            {
-                return "VisitDispute".Translate((NamedArgument)this.dispute.Label);
-            }
-        }
+        public override string Label => "VisitDispute".Translate(dispute.Label);
 
-        public override string ReportString
-        {
-            get
-            {
-                return "CaravanVisiting".Translate((NamedArgument)this.dispute.Label);
-            }
-        }
+        public override string ReportString => "CaravanVisiting".Translate(dispute.Label);
+
         public override void Arrived(Caravan caravan)
         {
-            this.dispute.Notify_CaravanArrived(caravan);
+            dispute.Notify_CaravanArrived(caravan);
         }
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_References.Look<WorldObject_Dispute>(ref this.dispute, "dispute", false);
+            Scribe_References.Look(ref dispute, "dispute", false);
         }
         public static FloatMenuAcceptanceReport CanVisit(
         Caravan caravan,
         WorldObject_Dispute dispute)
         {
-            return (FloatMenuAcceptanceReport)(dispute != null && dispute.Spawned);
+            return dispute != null && dispute.Spawned;
         }
 
         public override FloatMenuAcceptanceReport StillValid(
         Caravan caravan,
         int destinationTile)
         {
-            FloatMenuAcceptanceReport acceptanceReport = base.StillValid(caravan, destinationTile);
-            if (!(bool)acceptanceReport)
-                return acceptanceReport;
-            if (this.dispute != null && this.dispute.Tile != destinationTile)
-                return (FloatMenuAcceptanceReport)false;
-            return CaravanArrivalAction_VisitDispute.CanVisit(caravan, this.dispute);
+            if (!(bool)base.StillValid(caravan, destinationTile))
+                return base.StillValid(caravan, destinationTile);
+            if (dispute != null && dispute.Tile != destinationTile)
+                return false;
+            return CanVisit(caravan, dispute);
         }
         public static IEnumerable<FloatMenuOption> GetFloatMenuOptions(
         Caravan caravan,
         WorldObject_Dispute dispute)
         {
-            return CaravanArrivalActionUtility.GetFloatMenuOptions<CaravanArrivalAction_VisitDispute>((Func<FloatMenuAcceptanceReport>)(() => CaravanArrivalAction_VisitDispute.CanVisit(caravan, dispute)), (Func<CaravanArrivalAction_VisitDispute>)(() => new CaravanArrivalAction_VisitDispute(dispute)), "VisitDispute".Translate((NamedArgument)dispute.Label), caravan, dispute.Tile, (WorldObject)dispute);
+            return CaravanArrivalActionUtility.GetFloatMenuOptions(() => CanVisit(caravan, dispute), () => new CaravanArrivalAction_VisitDispute(dispute), "VisitDispute".Translate(dispute.Label), caravan, dispute.Tile, dispute);
         }
     }
 
@@ -92,7 +79,7 @@ namespace Flavor_Expansion
         {
             get
             {
-                return ("DefendArrival".Translate((NamedArgument)this.friendly.Label));
+                return ("DefendArrival".Translate(friendly.Label));
             }
         }
 
@@ -100,15 +87,14 @@ namespace Flavor_Expansion
         {
             get
             {
-                return "CaravanVisiting".Translate((NamedArgument)this.friendly.Label);
+                return "CaravanVisiting".Translate(friendly.Label);
             }
         }
         public override void Arrived(Caravan caravan)
         {
-            Settlement ally;
             if (!(from s in Find.WorldObjects.Settlements
                   where s.Tile == caravan.Tile
-                  select s).TryRandomElement(out ally))
+                  select s).TryRandomElement(out Settlement ally))
             {
                 Log.Error("Ally null");
                 return;
@@ -120,13 +106,13 @@ namespace Flavor_Expansion
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_References.Look<Settlement>(ref this.friendly, "dispute", false);
+            Scribe_References.Look(ref friendly, "dispute", false);
         }
         public static FloatMenuAcceptanceReport CanVisit(
         Caravan caravan,
         Settlement friendly)
         {
-            return (FloatMenuAcceptanceReport)(friendly != null && friendly.Spawned);
+            return friendly != null && friendly.Spawned;
         }
 
         public override FloatMenuAcceptanceReport StillValid(
@@ -136,21 +122,22 @@ namespace Flavor_Expansion
             FloatMenuAcceptanceReport acceptanceReport = base.StillValid(caravan, destinationTile);
             if (!(bool)acceptanceReport)
                 return acceptanceReport;
-            if (this.friendly != null && this.friendly.Tile != destinationTile)
-                return (FloatMenuAcceptanceReport)false;
-            return CaravanArrivalAction_Defend.CanVisit(caravan, this.friendly);
+            if (friendly != null && friendly.Tile != destinationTile)
+                return false;
+            return CanVisit(caravan, friendly);
         }
         public static IEnumerable<FloatMenuOption> GetFloatMenuOptions(
         Caravan caravan,
         Settlement friendly)
         {
-            return CaravanArrivalActionUtility.GetFloatMenuOptions((Func<FloatMenuAcceptanceReport>)(() => CaravanArrivalAction_Defend.CanVisit(caravan, friendly)), (Func<CaravanArrivalAction_Defend>)(() => new CaravanArrivalAction_Defend(friendly)),"DefendArrival".Translate((NamedArgument)friendly), caravan, friendly.Tile, friendly);
+            return CaravanArrivalActionUtility.GetFloatMenuOptions(() => CanVisit(caravan, friendly), () => new CaravanArrivalAction_Defend(friendly), "DefendArrival".Translate(friendly), caravan, friendly.Tile, friendly);
         }
     }
 
     class CaravanArrivalAction_RoadCamp : CaravanArrivalAction
     {
         private WorldObject_RoadsCamp camp;
+
         public CaravanArrivalAction_RoadCamp()
         {
 
@@ -159,43 +146,32 @@ namespace Flavor_Expansion
         {
             this.camp = camp;
         }
-        public override string Label
-        {
-            get
-            {
-                return ("RoadsCampRequestArrive".Translate((NamedArgument)this.camp.Label));
-            }
-        }
+        public override string Label => "RoadsCampRequestArrive".Translate(camp.Label);
 
-        public override string ReportString
-        {
-            get
-            {
-                return "CaravanVisiting".Translate((NamedArgument)this.camp.Label);
-            }
-        }
+        public override string ReportString => "CaravanVisiting".Translate(camp.Label);
+
         public override void Arrived(Caravan caravan)
         {
-            this.camp.Notify_CaravanArrived(caravan);
+            camp.Notify_CaravanArrived(caravan);
         }
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_References.Look<WorldObject_RoadsCamp>(ref this.camp, "camp", false);
+            Scribe_References.Look(ref camp, "camp", false);
         }
 
         public static FloatMenuAcceptanceReport CanVisit(
         Caravan caravan,
         WorldObject_RoadsCamp camp)
         {
-            return (FloatMenuAcceptanceReport)(camp != null && camp.Spawned);
+            return camp != null && camp.Spawned;
         }
 
         public static IEnumerable<FloatMenuOption> GetFloatMenuOptions(
         Caravan caravan,
         WorldObject_RoadsCamp camp)
         {
-            return CaravanArrivalActionUtility.GetFloatMenuOptions((Func<FloatMenuAcceptanceReport>)(() => CaravanArrivalAction_RoadCamp.CanVisit(caravan, camp)), (Func<CaravanArrivalAction_RoadCamp>)(() => new CaravanArrivalAction_RoadCamp(camp)), "RoadsCampRequestArrive".Translate((NamedArgument)camp), caravan, camp.Tile, camp);
+            return CaravanArrivalActionUtility.GetFloatMenuOptions(() => CanVisit(caravan, camp), () => new CaravanArrivalAction_RoadCamp(camp), "RoadsCampRequestArrive".Translate(camp), caravan, camp.Tile, camp);
         }
     }
 }

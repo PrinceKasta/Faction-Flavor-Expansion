@@ -1,24 +1,15 @@
-﻿using Harmony;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using Verse;
-using Verse.AI;
-using Verse.Sound;
-using Verse.AI.Group;
-using System.Reflection;
 using RimWorld;
 using RimWorld.Planet;
-using RimWorld.BaseGen;
-using UnityEngine;
 
 namespace Flavor_Expansion
 {
     class WorldObjectComp_SupplyDepot : WorldObjectComp
     {
         public enum Type { Undefined,Weapons, Food};
-        Type type= Type.Undefined;
+
+        private Type type = Type.Undefined;
         private bool active = false;
         public WorldObjectComp_SupplyDepot()
         {
@@ -26,7 +17,7 @@ namespace Flavor_Expansion
         }
         public void StartComp(Type type)
         {
-            if(type== Type.Undefined)
+            if(type == Type.Undefined)
             {
                 Log.Error("Type undefined");
                 return;
@@ -35,14 +26,10 @@ namespace Flavor_Expansion
             active = true;
         }
 
-        public bool IsActive()
-        {
-            return active;
-        }
+        public bool IsActive => active;
 
         public override void CompTick()
         {
-            base.CompTick();
             if (!active)
                 return;
             if (type == Type.Undefined)
@@ -58,25 +45,18 @@ namespace Flavor_Expansion
 
             if (type == Type.Undefined)
                 return;
-            MapParent parent = (MapParent)this.parent;
-            if (!parent.HasMap)
-            {
-                Log.Warning("No map");
-                return;
-            }
+
             int thingCount = 0;
-            foreach(Thing t in parent.Map.listerThings.AllThings.Where(t=> t.def.PlayerAcquirable && t.def.CountAsResource && !(t.def.category== ThingCategory.Building)).ToList())
+            foreach(Thing t in ((MapParent)this.parent).Map.listerThings.AllThings.Where(t=> t.def.PlayerAcquirable && t.def.CountAsResource && !(t.def.category== ThingCategory.Building)).ToList())
             {
                 if ( type == Type.Weapons && !t.def.IsWeapon && Rand.Chance(0.8f))
-                {
-                    Log.Warning("swap weapon" + t.Label + ", " + t.InteractionCell.ToString());
+                {;
                     GenerateWeapons(t.InteractionCell);
                     t.Destroy();
                     thingCount += 2;
                 }
                 else if(type == Type.Food && !t.def.IsNutritionGivingIngestible && Rand.Chance(0.8f))
                 {
-                    Log.Warning("swap food, "+t.Label+", "+t.InteractionCell.ToString());
                     GenerateFood(t.InteractionCell);
                     t.Destroy();
                     thingCount += 2;
@@ -100,12 +80,11 @@ namespace Flavor_Expansion
         private void GenerateWeapons(IntVec3 t)
         {
             MapParent parent = (MapParent)this.parent;
-            ThingDef thingDef;
             if(!(from def in DefDatabase<ThingDef>.AllDefs
                                  where def.IsWeapon && def.BaseMarketValue > 20 && def.techLevel <= parent.Faction.def.techLevel && !def.label.Contains("tornado") && !def.label.Contains("orbital")
-                                 select def).TryRandomElement(out thingDef))
+                                 select def).TryRandomElement(out ThingDef thingDef))
             {
-                Log.Error("Didn't find a sutiable weapon def for supplydepot which shouldn't happed");
+                Log.Error("Didn't find a sutiable weapon def for supplydepot which shouldn't happen");
                 return;
             }
             
@@ -135,30 +114,23 @@ namespace Flavor_Expansion
 
             for (int i = 0; i < 3; i++)
             {
-                Log.Warning("" + t.ToString());
                 Thing food = ThingMaker.MakeThing(thingDef, GenStuff.RandomStuffByCommonalityFor(thingDef, parent.Faction.def.techLevel));
                 food.stackCount = food.def.stackLimit;
                 if (t != new IntVec3() && !RCellFinder.TryFindRandomCellNearWith(t, x => x.Standable(parent.Map) && x.Roofed(parent.Map) && !x.Filled(parent.Map), parent.Map, out t, 1, 2))
                 {
-                    
                     Log.Error("Couldn'tfind cell near vec");
                     return;
                 }
                 if (t == new IntVec3() && !RCellFinder.TryFindRandomCellNearTheCenterOfTheMapWith(x => x.Roofed(parent.Map) && !x.Filled(parent.Map) && x.IsValid && x.Standable(parent.Map), parent.Map, out t))
                 {
-                    Log.Error("Couldn'tfind cell near center of map");
+                    Log.Error("Couldn't find cell near center of map");
                     return;
                 }
             GenSpawn.Spawn(food, t, parent.Map);
             }
 
         }
-        public override string CompInspectStringExtra()
-        {
-            if(active)
-                return base.CompInspectStringExtra()+type.ToString();
-            return base.CompInspectStringExtra();
-        }
+        public override string CompInspectStringExtra() => active ? base.CompInspectStringExtra() + type.ToString() : base.CompInspectStringExtra();
 
         public override void PostExposeData()
         {
@@ -169,9 +141,6 @@ namespace Flavor_Expansion
     }
     public class WorldObjectCompProperties_SupplyDepot : WorldObjectCompProperties
     {
-        public WorldObjectCompProperties_SupplyDepot()
-        {
-            this.compClass = typeof(WorldObjectComp_SupplyDepot);
-        }
+        public WorldObjectCompProperties_SupplyDepot() => compClass = typeof(WorldObjectComp_SupplyDepot);
     }
 }

@@ -1,12 +1,5 @@
-﻿using Harmony;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using Verse;
-using Verse.Sound;
-using Verse.AI.Group;
-using System.Reflection;
 using RimWorld;
 using RimWorld.Planet;
 using UnityEngine;
@@ -21,40 +14,31 @@ namespace Flavor_Expansion
         {
             if (!active)
                 return;
-            if (this.ShouldRemoveWorldObjectNow)
+            if (ShouldRemoveWorldObjectNow)
             {
-                var storyComp = Find.Storyteller.storytellerComps.First(x => x is StorytellerComp_OnOffCycle || x is StorytellerComp_RandomMain);
-                var threatparms = storyComp.GenerateParms(IncidentCategoryDefOf.ThreatBig, Find.AnyPlayerHomeMap);
-                threatparms.faction = this.parent.Faction;
+                var threatparms = Find.Storyteller.storytellerComps.First(x => x is StorytellerComp_OnOffCycle || x is StorytellerComp_RandomMain).GenerateParms(IncidentCategoryDefOf.ThreatBig, Find.AnyPlayerHomeMap);
+                threatparms.faction = parent.Faction;
                 threatparms.raidStrategy = DefDatabase<RaidStrategyDef>.GetRandom();
                 threatparms.raidArrivalMode = DefDatabase<PawnsArrivalModeDef>.AllDefs.First(def => def.defName.Contains("EdgeDropGroups"));
                 threatparms.points = Mathf.Clamp(StorytellerUtility.DefaultThreatPointsNow(Find.AnyPlayerHomeMap)*4,300,15000);
                 threatparms.raidNeverFleeIndividual = true;
                 IncidentDefOf.RaidEnemy.Worker.TryExecute(threatparms);
                 active = false;
-                Find.WorldObjects.Remove(this.parent);
+                Find.WorldObjects.Remove(parent);
             }
         }
 
-        public void StartComp()
-        {
-            active = true;
-        }
+        public void StartComp() => active = true;
+
         private bool ShouldRemoveWorldObjectNow
         {
             get
             {
-                if (this.parent.GetComponent<TimeoutComp>().Passed)
-                    return !this.ParentHasMap;
-                return false;
+                return parent.GetComponent<TimeoutComp>().Passed ? !ParentHasMap : false;
             }
         }
-        public override string CompInspectStringExtra()
-        {
-            if (active)
-                return "ExtraCompString_FOB".Translate((NamedArgument)this.parent.GetComponent<TimeoutComp>().TicksLeft.ToStringTicksToPeriod());
-            return (string)null;
-        }
+        public override string CompInspectStringExtra() => active ? "ExtraCompString_FOB".Translate(parent.GetComponent<TimeoutComp>().TicksLeft.ToStringTicksToPeriod()) : null;
+
         public override void PostExposeData()
         {
             Scribe_Values.Look(ref active, "opbase_active");
@@ -63,9 +47,6 @@ namespace Flavor_Expansion
     }
     public class WorldObjectCompProperties_opbase : WorldObjectCompProperties
     {
-        public WorldObjectCompProperties_opbase()
-        {
-            this.compClass = typeof(WorldComp_opbase);
-        }
+        public WorldObjectCompProperties_opbase() => compClass = typeof(WorldComp_opbase);
     }
 }

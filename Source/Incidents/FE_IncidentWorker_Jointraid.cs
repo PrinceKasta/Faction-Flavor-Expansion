@@ -1,16 +1,8 @@
-﻿using Harmony;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Verse;
-using Verse.AI;
-using Verse.Sound;
-using Verse.AI.Group;
-using System.Reflection;
 using RimWorld;
 using RimWorld.Planet;
-using UnityEngine;
 
 namespace Flavor_Expansion
 {
@@ -40,7 +32,6 @@ namespace Flavor_Expansion
         {
             if (!TryFindSettlement(out Faction ally, out Settlement Set))
             {
-                Log.Error("joinraid null");
                 return false;
             }
 
@@ -53,24 +44,20 @@ namespace Flavor_Expansion
             Thing silver = ThingMaker.MakeThing(ThingDefOf.Silver);
             silver.stackCount = (int)SilverBonusRewardCurve.Evaluate(ally.PlayerGoodwill);
             
-            int random = new IntRange(Global.DayInTicks * 5, Global.DayInTicks * 7).RandomInRange;
+            int random = new IntRange(Global.DayInTicks * 15, Global.DayInTicks * 25).RandomInRange;
             Set.GetComponent<WorldComp_JointRaid>().StartComp(random, ally ,rewards ,silver);
-            string text = this.def.letterText.Formatted((NamedArgument)ally.leader.LabelShort, (NamedArgument)ally.def.leaderTitle, (NamedArgument)ally.Name, (NamedArgument)GenLabel.ThingsLabel(rewards, string.Empty), (NamedArgument)(random/Global.DayInTicks).ToString(), (NamedArgument)GenThing.GetMarketValue((IList<Thing>)rewards).ToStringMoney((string)null), silver.stackCount.ToString()).CapitalizeFirst();
-            GenThing.TryAppendSingleRewardInfo(ref text, (IList<Thing>)rewards);
-            Find.LetterStack.ReceiveLetter(this.def.letterLabel, text, this.def.letterDef, (LookTargets)((WorldObject)Set), ally, (string)null);
+            string text = def.letterText.Formatted(ally.leader.LabelShort, ally.def.leaderTitle, ally.Name, GenLabel.ThingsLabel(rewards, string.Empty), (random / Global.DayInTicks + Find.TickManager.TicksGame).ToString(), GenThing.GetMarketValue(rewards).ToStringMoney(null), silver.stackCount.ToString()).CapitalizeFirst();
+            GenThing.TryAppendSingleRewardInfo(ref text, rewards);
+            Find.LetterStack.ReceiveLetter(def.letterLabel, text, def.letterDef, Set, ally, null);
             return true;
         }
         private bool TryFindSettlement(out Faction ally, out Settlement Set)
         {
-
-            IEnumerable<Settlement> friendly = (from f in Find.WorldObjects.Settlements
-                                   where !f.Faction.IsPlayer && !f.Faction.defeated && f.Faction.PlayerRelationKind == FactionRelationKind.Ally && Utilities.Reachable(f.Tile, Find.AnyPlayerHomeMap.Tile, 120)
-                                                select f);
-            foreach (Settlement b in friendly)
+            foreach (Settlement b in Find.WorldObjects.Settlements.Where(f=> !f.Faction.IsPlayer && !f.Faction.defeated && f.Faction.PlayerRelationKind == FactionRelationKind.Ally && Utilities.Reachable(f.Tile, Find.AnyPlayerHomeMap.Tile, 120)).InRandomOrder())
             {
                 if ((from s in Find.WorldObjects.Settlements
                      where !s.Faction.IsPlayer && !s.Faction.defeated && s.Faction.HostileTo(Faction.OfPlayer) && !s.Faction.def.hidden
-                     && Utilities.Reachable(b, s, 50) && !s.GetComponent<WorldComp_JointRaid>().IsActive()
+                     && Utilities.Reachable(b, s, 100) && !s.GetComponent<WorldComp_JointRaid>().IsActive
                      select s).TryRandomElement(out Set))
                 {
                     ally = b.Faction;

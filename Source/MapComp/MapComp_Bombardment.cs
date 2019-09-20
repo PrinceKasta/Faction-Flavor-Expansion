@@ -8,8 +8,9 @@ namespace Flavor_Expansion
     {
         // Balance
         private Settlement bomber;
-        private int length=0;
-        private int startTimer=0;
+        private float length = 0;
+        private int startTimer = 0;
+        private bool active = false;
         private IntVec3 direction = new IntVec3();
         
         private static readonly IntRange bombardmentDamage = new IntRange(10, 20);
@@ -20,45 +21,48 @@ namespace Flavor_Expansion
             
         }
 
-        public void ForceStart(int length)
+        public void ForceStart(float length)
         {
             this.length = length;
         }
 
         public override void MapComponentTick()
         {
-            if (!(map.ParentFaction == Faction.OfPlayer) || !EndGame_Settings.Bombardment || bomber == null)
+            if (!(map.ParentFaction == Faction.OfPlayer) || !EndGame_Settings.Bombardment || bomber == null || !Find.WorldObjects.Settlements.Contains(bomber))
                 return;
-            if (bomber != null && !Find.WorldObjects.Settlements.Contains(bomber))
-                bomber = null;
             if (length < 0 || Find.TickManager.TicksGame < startTimer)
             {
                 return;
             }
-            if (Find.TickManager.TicksGame == startTimer)
+            if (!active && Find.TickManager.TicksGame >= startTimer)
+            {
                 Find.LetterStack.ReceiveLetter("LetterLabelBombardmentThreatStarted".Translate(), "BombardmentThreatStarted".Translate(bomber.Name), LetterDefOf.ThreatBig,new LookTargets(direction, map) ,bomber.Faction);
-
-            length--;
-
+                active = true;
+            }
+            if (!active)
+                return;
+            Log.Warning("0");
             if (length == -1)
                 Find.LetterStack.ReceiveLetter("LetterLabelBombardmentThreatStopped".Translate(), "BombardmentThreatStopped".Translate(bomber.Name), LetterDefOf.PositiveEvent, new LookTargets(direction, map), bomber.Faction);
-
-            if ( length != 0 && length % 200==0)
+            Log.Warning("length: "+length);
+            if ( length != 0 && (int)length % 200 == 0)
             {
+                Log.Warning("h");
                 Projectile_Explosive shell = (Projectile_Explosive)ThingMaker.MakeThing(EndGameDefOf.Bullet_Shell_HighExplosive);
-                IntVec3 intVec3= CellFinder.RandomNotEdgeCell(20, map);  
                 GenSpawn.Spawn(shell, direction, map);
+                IntVec3 intVec3 = CellFinder.RandomNotEdgeCell(20, map);
                 shell.Launch(null, intVec3, intVec3, ProjectileHitFlags.IntendedTarget, shell);
-                    
+
             }
+            length--;
         }
 
-        public void StartComp(int length, Settlement bomber, int startTimer)
+        public void StartComp(float length, Settlement bomber, int startTimer)
         {
             this.startTimer = startTimer + Find.TickManager.TicksGame;
             this.bomber = bomber;
             this.length = length;
-            this.direction= GetDir(Find.WorldGrid.GetDirection8WayFromTo(map.Tile, bomber.Tile));
+            direction= GetDir(Find.WorldGrid.GetDirection8WayFromTo(map.Tile, bomber.Tile));
 
         }
 
@@ -93,8 +97,7 @@ namespace Flavor_Expansion
             Scribe_Values.Look(ref length, "length", defaultValue : 0);
             Scribe_Values.Look(ref startTimer, "startTimer", defaultValue : 0);
             Scribe_Values.Look(ref direction, "direction", defaultValue: new IntVec3());
+            Scribe_Values.Look(ref active, "active", defaultValue: false);
         }
-
-
     }
 }

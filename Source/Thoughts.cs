@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using RimWorld;
-using RimWorld.Planet;
 using Verse;
 
 namespace Flavor_Expansion
@@ -14,7 +10,7 @@ namespace Flavor_Expansion
         {
             if (p.Faction != Faction.OfPlayer)
                 return ThoughtState.Inactive;
-            int count = 0;
+            byte count = 0;
             foreach (Faction f in Find.FactionManager.AllFactionsVisible.Where(x=> !x.defeated && !x.IsPlayer && x.PlayerRelationKind == FactionRelationKind.Ally))
             {
                count++;

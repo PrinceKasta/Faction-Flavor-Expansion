@@ -1,15 +1,8 @@
-﻿using Harmony;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Verse;
-using Verse.Sound;
-using Verse.AI.Group;
-using System.Reflection;
 using RimWorld;
 using RimWorld.Planet;
-using UnityEngine;
 
 namespace Flavor_Expansion
 {
@@ -31,18 +24,20 @@ namespace Flavor_Expansion
             });
             sis.GetComponent<WorldComp_SettlementDefender>().StartComp(enemyFaction,ally, random , rewards);
             
-            string text = this.def.letterText.Formatted((NamedArgument)ally.leader.LabelShort, (NamedArgument)ally.def.leaderTitle, (NamedArgument)ally.Name, (NamedArgument)GenLabel.ThingsLabel(rewards, string.Empty), (NamedArgument)(random / Global.DayInTicks).ToString(), (NamedArgument)GenThing.GetMarketValue((IList<Thing>)rewards).ToStringMoney((string)null)).CapitalizeFirst();
-            GenThing.TryAppendSingleRewardInfo(ref text, (IList<Thing>)rewards);
-            Find.LetterStack.ReceiveLetter(this.def.letterLabel, text, this.def.letterDef, (LookTargets)((WorldObject)sis), ally, (string)null);
+            string text = def.letterText.Formatted(ally.leader.LabelShort, ally.def.leaderTitle, ally.Name, GenLabel.ThingsLabel(rewards, string.Empty), (random / Global.DayInTicks).ToString(), GenThing.GetMarketValue(rewards).ToStringMoney(null)).CapitalizeFirst();
+            GenThing.TryAppendSingleRewardInfo(ref text, rewards);
+            Find.LetterStack.ReceiveLetter(def.letterLabel, text, def.letterDef, sis, ally, null);
             return true;
 
         }
         private bool TryFindTile(Faction ally, out Settlement sis)
         {
             if ((from s in Find.WorldObjects.Settlements
-                 where s.Faction == ally && Utilities.Reachable(Find.AnyPlayerHomeMap.Tile, s.Tile, 25) && !s.GetComponent<WorldComp_SettlementDefender>().IsActive()
+                 where s.Faction == ally && Utilities.Reachable(Find.AnyPlayerHomeMap.Tile, s.Tile, 25) && !s.GetComponent<WorldComp_SettlementDefender>().IsActive
                  select s).TryRandomElement(out sis))
+            {
                 return true;
+            }
 
             sis = null;
             return false;

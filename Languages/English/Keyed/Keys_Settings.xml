@@ -2,6 +2,7 @@
 <LanguageData>
 	
 	<FE_WarCheckBox>Enable/Disable wars between NPC factions. the mod 'More Faction Interaction' also has a faction war system to try.</FE_WarCheckBox>
+	<FE_WarCheckBoxAfterman>Enable/Disable war outcome which will result in the losing faction defeated.</FE_WarCheckBoxAfterman>
 	
 	<FE_HistoryCheckBox>Enable/Disable past history for NPC factions. </FE_HistoryCheckBox>
 	<FE_HistoryCheckBoxDesc>Histories will not appear in game if disabled but will still be saved to savefile so they can appear if this is enabled again.</FE_HistoryCheckBoxDesc>

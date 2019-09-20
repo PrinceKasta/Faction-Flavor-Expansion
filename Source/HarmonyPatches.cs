@@ -7,6 +7,7 @@ using RimWorld;
 using Harmony;
 using Verse.Sound;
 using System.Reflection;
+using System.Reflection.Emit;
 using RimWorld.Planet;
 using Verse.AI.Group;
 using UnityEngine;
@@ -22,144 +23,142 @@ namespace Flavor_Expansion
         static HarmonyPatches()
         {
             HarmonyInstance harmonyInstance = HarmonyInstance.Create(id: "rimworld.Faction Expansion");
+            harmonyInstance.Patch(AccessTools.Method(typeof(IncidentWorker_RaidFriendly), "TryExecuteWorker"), null,
+                new HarmonyMethod(type: patchType, name: nameof(IncidentWorker_RaidFriendly_TryExecuteWorker_Patch)));
+            harmonyInstance.Patch(AccessTools.Method(typeof(IncidentWorker_RaidEnemy), "TryExecuteWorker"), null,
+                new HarmonyMethod(type: patchType, name: nameof(IncidentWorker_RaidEnemy_TryExecuteWorker_Patch)));
+            harmonyInstance.Patch(original: AccessTools.Method(type: typeof(MainTabWindow_Factions), name: "DoWindowContents"), prefix: null,
+                postfix: new HarmonyMethod(type: patchType, name: nameof(MainTabWindow_Factions_DoWindowContents_Patch)), transpiler: null);
+            harmonyInstance.Patch(original: AccessTools.Method(type: typeof(MainTabWindow_Factions), name: "DoWindowContents"), prefix: null,
+                postfix: new HarmonyMethod(type: patchType, name: nameof(MainTabWindow_Factions_DoWindowContents_Patch)), transpiler: null);
+            harmonyInstance.Patch(original: AccessTools.Method(type: typeof(TradeUtility), name: "GetPricePlayerBuy"), prefix: new HarmonyMethod(type: patchType, name: nameof(TradeUtility_GetPricePlayerBuy_Prefix_Patch)),
+                postfix: null, transpiler: null);
+            harmonyInstance.Patch(original: AccessTools.Method(type: typeof(TradeUtility), name: "GetPricePlayerSell"), prefix: new HarmonyMethod(type: patchType, name: nameof(TradeUtility_GetPricePlayerSell_Prefix_Patch)),
+                postfix: null, transpiler: null);
+            harmonyInstance.Patch(original: AccessTools.Method(type: typeof(Settlement), name: "GetFloatMenuOptions"), prefix: null,
+                postfix: new HarmonyMethod(type: patchType, name: nameof(Settlement_GetFloatMenuOptions_Postfix)), transpiler: null);
+            harmonyInstance.Patch(original: AccessTools.Method(type: typeof(FactionDialogMaker), name: "FactionDialogFor"), prefix: null,
+                postfix: new HarmonyMethod(type: patchType, name: nameof(FactionDialogMaker_FactionDialogFor_Postfix)), transpiler: null);
+            harmonyInstance.Patch(original: AccessTools.Method(type: typeof(SettlementDefeatUtility), name: "IsDefeated"), prefix: null,
+                postfix: new HarmonyMethod(type: patchType, name: nameof(SettlementDefeatUtility_IsDefeated_Postfix)), transpiler: null);
+            harmonyInstance.Patch(original: AccessTools.Method(type: typeof(Pawn), name: "Kill"), prefix: null,
+                postfix: new HarmonyMethod(type: patchType, name: nameof(Pawn_Kill_Postfix)), transpiler: null);
 
             harmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
         }
         //--------------------------------------------------------------------------------------------------------
-        [HarmonyPatch(typeof(IncidentWorker_RaidFriendly), "TryExecuteWorker", null)]
-        public static class IncidentWorker_RaidFriendly_TryExecuteWorker_Patch
+
+        public static void IncidentWorker_RaidFriendly_TryExecuteWorker_Patch(ref IncidentParms parms)
         {
-            public static void Postfix(ref IncidentParms parms)
+            if (parms.faction == null || parms.points <= 35)
             {
-                if (parms.faction == null)
-                {
-                    return;
-                }
-                if (Utilities.FactionsWar().GetByFaction(parms.faction) == null)
-                    return;
-                float count = Utilities.FactionsWar().GetByFaction(parms.faction).disposition * 0.01f;
-                if (parms.points * (1 + count) > 35)
-                {
-                    parms.points *= 1 + count;
-                }
-                else
-                {
-                    parms.points = 35;
-                }
+                return;
             }
+            if (Utilities.FactionsWar().GetByFaction(parms.faction) == null)
+                return;
+            
+            parms.points *= 1 + Utilities.FactionsWar().GetByFaction(parms.faction).disposition * 0.01f;
+            parms.points += Investments.InvestmentReourceWorth(Utilities.FactionsWar().GetByFaction(parms.faction));
         }
+
         //--------------------------------------------------------------------------------------------------------
-        [HarmonyPatch(typeof(IncidentWorker_RaidEnemy), "TryExecuteWorker", null)]
-        public static class IncidentWorker_RaidEnemy_TryExecuteWorker_Patch
-        {
-            public static void Prefix(ref IncidentParms parms)
-            {
-                if (Utilities.FactionsWar().GetByFaction(parms.faction) == null)
-                    return;
-                float count = Utilities.FactionsWar().GetByFaction(parms.faction).disposition * 0.1f;
 
-                if (parms.points * (1 + count) > 35)
-                {
-                    parms.points *= (1 + count);
-                }
-            }
+        public static void IncidentWorker_RaidEnemy_TryExecuteWorker_Patch(ref IncidentParms parms)
+        {
+            if (Utilities.FactionsWar().GetByFaction(parms.faction) == null || parms.points <= 35)
+                return;
+
+            parms.points *= 1 + (Utilities.FactionsWar().GetByFaction(parms.faction).disposition * 0.1f);
+
         }
+
         //--------------------------------------------------------------------------------
-        [HarmonyPatch(typeof(TradeUtility), "GetPricePlayerSell", null)]
-        public static class TradeUtility_GetPricePlayerSell_PrePostfix_Patch
+
+        public static void TradeUtility_GetPricePlayerSell_Prefix_Patch(Thing thing, ref float priceGain_FactionBase)
         {
-            public static void Prefix(Thing thing, ref float priceGain_FactionBase)
+            if (!TradeSession.Active || Utilities.FactionsWar().GetByFaction(TradeSession.trader.Faction) == null)
+                return;
+            if (Utilities.FactionsWar().GetByFaction(TradeSession.trader.Faction).investments.Relations > 0)
             {
-                if (!TradeSession.Active || Utilities.FactionsWar().GetByFaction(TradeSession.trader.Faction) == null)
-                    return;
-                if (Utilities.FactionsWar().GetByFaction(TradeSession.trader.Faction).disposition < 0)
-                {
-                    priceGain_FactionBase += Math.Abs(Utilities.FactionsWar().GetByFaction(TradeSession.trader.Faction).disposition * 0.05f);
-                    if (priceGain_FactionBase > 0.5f)
-                        priceGain_FactionBase = 0.5f;
-                }
+                priceGain_FactionBase += 0.1f * Utilities.FactionsWar().GetByFaction(TradeSession.trader.Faction).investments.Relations;
             }
-        }
-        [HarmonyPatch(typeof(TradeUtility), "GetPricePlayerBuy", null)]
-        public static class TradeUtility_GetPricePlayerBuy_PrePostfix_Patch
-        {
-            public static void Prefix(ref float priceGain_FactionBase)
+            if (Utilities.FactionsWar().GetByFaction(TradeSession.trader.Faction).disposition < 0)
             {
-                if (!TradeSession.Active || Utilities.FactionsWar().GetByFaction(TradeSession.trader.Faction) == null)
-                    return;
-                if (Utilities.FactionsWar().GetByFaction(TradeSession.trader.Faction).disposition < 0)
-                {
-                    priceGain_FactionBase += Math.Abs(Utilities.FactionsWar().GetByFaction(TradeSession.trader.Faction).disposition * 0.05f);
-                    if (priceGain_FactionBase > 0.5f)
-                        priceGain_FactionBase = 0.5f;
-                }
+                priceGain_FactionBase += Math.Abs(Utilities.FactionsWar().GetByFaction(TradeSession.trader.Faction).disposition * 0.05f);
 
             }
+            if (priceGain_FactionBase > 0.5f)
+                priceGain_FactionBase = 0.5f;
+        }
+        
+        public static void TradeUtility_GetPricePlayerBuy_Prefix_Patch(ref float priceGain_FactionBase)
+        {
+            if (!TradeSession.Active || Utilities.FactionsWar().GetByFaction(TradeSession.trader.Faction) == null)
+                return;
+            if (Utilities.FactionsWar().GetByFaction(TradeSession.trader.Faction).investments.Relations > 0)
+            {
+                priceGain_FactionBase += 0.1f * Utilities.FactionsWar().GetByFaction(TradeSession.trader.Faction).investments.Relations;
+            }
+            if (Utilities.FactionsWar().GetByFaction(TradeSession.trader.Faction).disposition < 0)
+            {
+                priceGain_FactionBase += Math.Abs(Utilities.FactionsWar().GetByFaction(TradeSession.trader.Faction).disposition * 0.05f);
+
+            }
+            if (priceGain_FactionBase > 0.5f)
+                priceGain_FactionBase = 0.5f;
+
         }
         //----------------------------------------------------------------------------------------
 
-
-
-        [HarmonyPatch(typeof(Settlement), "GetFloatMenuOptions", null)]
-        public static class Settlement_GetFloatMenuOptions_Patch
+        public static void Settlement_GetFloatMenuOptions_Postfix(Caravan caravan, Settlement __instance, ref IEnumerable<FloatMenuOption> __result)
         {
-            public static void Postfix(Caravan caravan, Settlement __instance, ref IEnumerable<FloatMenuOption> __result)
+            if (__instance.GetComponent<WorldComp_SettlementDefender>().IsActive)
             {
-                if (__instance.GetComponent<WorldComp_SettlementDefender>().IsActive())
+                List<FloatMenuOption> list = new List<FloatMenuOption>();
+
+                foreach (FloatMenuOption f in CaravanArrivalAction_Defend.GetFloatMenuOptions(caravan, __instance))
                 {
-                    List<FloatMenuOption> list = new List<FloatMenuOption>();
+                    list.Add(f);
 
-                    foreach (FloatMenuOption f in CaravanArrivalAction_Defend.GetFloatMenuOptions(caravan, __instance))
-                    {
-                        list.Add(f);
-
-                    }
-                    __result = __result.Concat((IEnumerable<FloatMenuOption>)list.AsEnumerable());
                 }
+                __result = __result.Concat(list.AsEnumerable());
             }
         }
-        [HarmonyPatch(typeof(FactionDialogMaker), "FactionDialogFor", null)]
-        public static class FactionDialogMaker_FactionDialogFor_Patch
+        public static void FactionDialogMaker_FactionDialogFor_Postfix(DiaNode __result, Pawn negotiator, Faction faction)
         {
-            public static void Postfix(DiaNode __result, Pawn negotiator, Faction faction)
+            if (EndGame_Settings.FactionHistory || EndGame_Settings.FactionHistory || EndGame_Settings.FactionServitude)
             {
-                if (EndGame_Settings.FactionHistory || EndGame_Settings.FactionHistory || EndGame_Settings.FactionServitude)
-                    __result.options.Insert(__result.options.Count - 1, (FactionHistoryDialog.RequestFactionInfoOption(faction, negotiator)));
+                __result.options.Insert(__result.options.Count - 1, FactionHistoryDialog.RequestFactionInfoOption(faction, negotiator));
             }
         }
+
         //--------------------------------------------------------------------------------
 
         /*
          * Each Worldobject defeated of a Enemy faction lowers that faction's resources.
          */
-        [HarmonyPatch(typeof(SettlementDefeatUtility), "IsDefeated", null)]
-        public static class SettlementDefeatUtility_IsDefeated_Patch
+        public static void SettlementDefeatUtility_IsDefeated_Postfix(Map map, Faction faction, ref bool __result)
         {
-            public static void Postfix(Map map, Faction faction, ref bool __result)
-            {
-                if (map.Parent.GetComponent<WorldComp_JointRaid>().IsActive() || map.Parent.GetComponent<WorldComp_SettlementDefender>().IsActive())
+            if (map.Parent.GetComponent<WorldComp_JointRaid>().IsActive || map.Parent.GetComponent<WorldComp_SettlementDefender>().IsActive)
 
-                {
-                    __result = false;
-                }
-                if (__result && Utilities.FactionsWar().GetByFaction(faction) != null)
-                    Utilities.FactionsWar().GetByFaction(faction).resources -= FE_WorldComp_FactionsWar.SETTLEMENT_RESOURCE_VALUE;
+            {
+                __result = false;
             }
+            if (__result && Utilities.FactionsWar().GetByFaction(faction) != null)
+                Utilities.FactionsWar().GetByFaction(faction).resources -= FE_WorldComp_FactionsWar.SETTLEMENT_RESOURCE_VALUE;
         }
+
         /*
          * Each Pawn killed of a faction lowers that faction's resources.
          */
-        [HarmonyPatch(typeof(Pawn), "Kill", null)]
-        public static class Pawn_Kill_Patch
+        public static void Pawn_Kill_Postfix(Pawn __instance)
         {
-            public static void Postfix(Pawn __instance)
+            if (Faction.OfPlayer != null && !__instance.NonHumanlikeOrWildMan() && !__instance.Faction.IsPlayer && __instance.Faction.PlayerGoodwill < 0 && Utilities.FactionsWar().GetByFaction(__instance.Faction) != null)
             {
-                if (Faction.OfPlayer != null && !__instance.NonHumanlikeOrWildMan() && !__instance.Faction.IsPlayer && __instance.Faction.PlayerGoodwill < 0 && Utilities.FactionsWar().GetByFaction(__instance.Faction) != null)
-                {
-                    Utilities.FactionsWar().GetByFaction(__instance.Faction).resources -= 100;
-                }
+                Utilities.FactionsWar().GetByFaction(__instance.Faction).resources -= 100;
             }
         }
+        
 
         /*
          * Each item gifted to a faction increases that faction's resources.
@@ -183,17 +182,16 @@ namespace Flavor_Expansion
         /*
          * Each item gifted by drop pods to a faction increases that faction's resources.
          */
-        [HarmonyPatch(typeof(FactionGiftUtility), "GiveGift", typeof(List < ActiveDropPodInfo >), typeof(SettlementBase))]
+        [HarmonyPatch(typeof(FactionGiftUtility), "GiveGift", typeof(List<ActiveDropPodInfo>), typeof(SettlementBase))]
         public static class FactionGiftUtility_GiveGift_Patch
         {
             public static void Prefix(List<ActiveDropPodInfo> pods, SettlementBase giveTo)
             {
-                if(Utilities.FactionsWar().GetByFaction(giveTo.Faction) != null)
+                if (Utilities.FactionsWar().GetByFaction(giveTo.Faction) != null)
                 {
                     float totalValue = 0;
                     foreach (ActiveDropPodInfo i in pods)
                     {
-                        
                         foreach (Thing t in i.innerContainer)
                         {
                             totalValue += t.MarketValue;
@@ -203,6 +201,50 @@ namespace Flavor_Expansion
                 }
             }
         }
-    };
+
+        public static void MainTabWindow_Factions_DoWindowContents_Patch(Rect fillRect)
+        {
+            List<FloatMenuOption> options = new List<FloatMenuOption>();
+            Window_Faction window = new Window_Faction();
+            foreach (War war in Utilities.FactionsWar().GetWars())
+            {
+
+                FloatMenuOption floatMenuOption = new FloatMenuOption("WindowWarOverview".Translate(war.DefenderFaction(), war.AttackerFaction()), () =>
+                 {
+                     window.war = war;
+                     Find.WindowStack.Add(window);
+                 }, MenuOptionPriority.Default, null, null);
+                options.Add(floatMenuOption);
+            }
+
+            if (Prefs.DevMode)
+            {
+                FloatMenuOption floatMenuOptionDevMode = new FloatMenuOption("(DevMode) Make War", () =>
+                {
+                    Utilities.FactionsWar().TryDeclareWar();
+                }, MenuOptionPriority.Default, null, null
+                );
+                options.Add(floatMenuOptionDevMode);
+            }
+            if (options.NullOrEmpty())
+            {
+                return;
+            }
+
+            FloatMenu floatMenu = new FloatMenu(options, "FactionWars".Translate(), true);
+
+
+            if (GUI.Button(new Rect(0, 6, 90, 30), ""))
+            {
+                Find.WindowStack.Add(new FloatMenu(options));
+
+            }
+            Text.Font = GameFont.Tiny;
+            Text.Anchor = TextAnchor.MiddleCenter;
+            Widgets.Label(new Rect(0, 6, 90, 30), "FactionWars".Translate());
+            Text.Anchor = TextAnchor.UpperLeft;
+        }
+
+    }
 
 }

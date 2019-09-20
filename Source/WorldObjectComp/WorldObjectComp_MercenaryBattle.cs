@@ -1,12 +1,8 @@
-﻿using Harmony;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Verse;
-using Verse.Sound;
 using Verse.AI.Group;
-using System.Reflection;
 using RimWorld;
 using RimWorld.Planet;
 using UnityEngine;
@@ -32,33 +28,30 @@ namespace Flavor_Expansion
                 return;
             if (!ParentHasMap && this.parent.GetComponent<TimeoutComp>().Passed)
             {
-                
                 askingFaction.TryAffectGoodwillWith(Faction.OfPlayer, -50);
                 Utilities.FactionsWar().GetByFaction(askingFaction).resources -= Utilities.FactionsWar().GetByFaction(askingFaction).resources * (3/ 4);
             }
-            if ((Utilities.FactionsWar().GetWars().Where(w=> w.AttackerFaction() ==war.AttackerFaction() && w.DefenderFaction() == war.DefenderFaction()).Count()==0))
+            if (Utilities.FactionsWar().GetWars().Where(w=> w.AttackerFaction() ==war.AttackerFaction() && w.DefenderFaction() == war.DefenderFaction()).Count()==0)
             {
                 Find.WorldObjects.Remove(this.parent);
                 MercenaryBattle_Active = false;
                 return;
             }
-            Faction f;
+
             MapParent parent = (MapParent)this.parent;
 
             if (!parent.HasMap)
                 return;
             for (int i=0;i<2;i++)
             {
-                if (i == 1)
-                    f = war.AttackerFaction();
-                else f = war.DefenderFaction();
-                if (parent.Map.mapPawns.SpawnedPawnsInFaction(f).Where(p=> !p.Dead && !p.Downed).Count()==0)
+                Faction f = i == 1 ? war.AttackerFaction() : war.DefenderFaction();
+
+                if (parent.Map.mapPawns.SpawnedPawnsInFaction(f).Count(p=> GenHostility.IsActiveThreatTo(p, f== war.AttackerFaction() ? war.DefenderFaction() : war.AttackerFaction())) == 0)
                 {
                     BattleEnd(f, war.AttackerFaction() == f ? war.DefenderFaction() : war.AttackerFaction());
                     break;
                 }
             }
-            base.CompTick();
         }
 
         private void BattleEnd(Faction loser, Faction winner)
@@ -69,7 +62,7 @@ namespace Flavor_Expansion
             {
                 loser.TryAffectGoodwillWith(Faction.OfPlayer, 5);
                 Find.LetterStack.ReceiveLetter("LetterLabelMercenaryBattleRequestOutcomeLose".Translate(), TranslatorFormattedStringExtensions.Translate("MercenaryBattleRequestOutcomeLose",loser.leader)
-                    , LetterDefOf.NegativeEvent, null, parent.Faction, (string)null);
+                    , LetterDefOf.NegativeEvent, null, parent.Faction, null);
 
             }
             else
@@ -77,35 +70,44 @@ namespace Flavor_Expansion
                 loser.TryAffectGoodwillWith(Faction.OfPlayer, -10);
                 winner.TryAffectGoodwillWith(Faction.OfPlayer, 25);
                 Find.LetterStack.ReceiveLetter("LetterLabelMercenaryBattleRequestOutcomeWin".Translate(), TranslatorFormattedStringExtensions.Translate("MercenaryBattleRequestOutcomeWin",winner.leader)
-                    , LetterDefOf.PositiveEvent, null, parent.Faction, (string)null);
+                    , LetterDefOf.PositiveEvent, null, parent.Faction, null);
             }
             
         }
 
         public override void PostMapGenerate()
         {
-            Faction f;
-            MapParent parent = (MapParent)this.parent;
-            if(!MercenaryBattle_Active || !parent.HasMap)
+            if (!MercenaryBattle_Active)
                 return;
+            MapParent parent = (MapParent)this.parent;
             foreach (Pawn p in parent.Map.mapPawns.SpawnedPawnsInFaction(this.parent.Faction).ToList())
                 p.Destroy();
             List<PawnKindDef> kindDefs = new List<PawnKindDef>();
             IntVec3 vec3 = new IntVec3();
+            int side = Rand.Chance(0.5f) ? 0 : 1;
+
             for (int i = 0; i < 2; i++)
             {
+                Faction f;
                 if (i == 1)
+                {
                     f = war.AttackerFaction();
-                else f=war.DefenderFaction();
+                    side = side == 0 ? 1 : 0;
+                }
+                else
+                {
+                    f = war.DefenderFaction();
+                }
 
                 kindDefs = Utilities.GeneratePawnKindDef(65,f);
                 Lord lord = LordMaker.MakeNewLord(f, new LordJob_AssaultColony(f,true,false,true), parent.Map);
-                int side = (Rand.Chance(0.5f) ? 0 : 1);
-                if (!RCellFinder.TryFindRandomPawnEntryCell(out vec3, parent.Map, 0, false, x=> (x.Standable(parent.Map)) && (i== 0 ? (x.x == (side==0 ? 0 : parent.Map.Size.x - 1)) : x.x==(side==0 ? parent.Map.Size.x-1: 0))))
-                    return;
-                Utilities.GenerateFighter(Mathf.Clamp(Utilities.FactionsWar().GetByFaction(f).resources/10+Flavor_Expansion.EndGame_Settings.MassiveBattles+ StorytellerUtility.DefaultThreatPointsNow(parms), 1000,10000), lord, kindDefs, parent.Map, f, vec3);
+
+                if (!RCellFinder.TryFindRandomPawnEntryCell(out vec3, parent.Map, 0, false, x => x.Standable(parent.Map) && (x.x == (side == 0 ? 0 : parent.Map.Size.x - 1))))
+                {
+                    vec3 = DropCellFinder.FindRaidDropCenterDistant(parent.Map);
+                }
+                Utilities.GenerateFighter(Mathf.Clamp((Utilities.FactionsWar().GetByFaction(f).resources/10)+ EndGame_Settings.MassiveBattles+ StorytellerUtility.DefaultThreatPointsNow(parms), 1000,10000), lord, kindDefs, parent.Map, f, vec3);
             }
-            base.PostMapGenerate();
         }
 
         public void StartComp(War war, Faction askingFaction ,IncidentParms parms)
@@ -122,15 +124,11 @@ namespace Flavor_Expansion
             Scribe_References.Look(ref askingFaction, "askingFaction");
             Scribe_References.Look(ref parms, "prams");
             Scribe_Values.Look(ref MercenaryBattle_Active, "MercenaryBattle_Active");
-            base.PostExposeData();
         }
     }
 
     public class WorldObjectCompProperties_MercenaryBattle : WorldObjectCompProperties
     {
-        public WorldObjectCompProperties_MercenaryBattle()
-        {
-            this.compClass = typeof(WorldObjectComp_MercenaryBattle);
-        }
+        public WorldObjectCompProperties_MercenaryBattle() => compClass = typeof(WorldObjectComp_MercenaryBattle);
     }
 }

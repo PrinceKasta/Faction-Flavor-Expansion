@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Verse;
-using Verse.AI;
-using Verse.Sound;
-using Verse.AI.Group;
-using System.Reflection;
 using RimWorld;
 using RimWorld.Planet;
-using UnityEngine;
 
 namespace Flavor_Expansion
 {

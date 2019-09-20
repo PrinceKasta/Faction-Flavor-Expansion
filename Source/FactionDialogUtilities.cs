@@ -1,14 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Verse;
-using Verse.Sound;
-using Verse.AI.Group;
-using System.Reflection;
 using RimWorld;
-using RimWorld.Planet;
-using UnityEngine;
+
 namespace Flavor_Expansion
 {
     class FactionDialogUtilities
@@ -33,7 +28,7 @@ namespace Flavor_Expansion
                     steel.stackCount = 150;
                     requirements.Add(silver);
                     requirements.Add(steel);
-                    if (TradeUtility.ColonyHasEnoughSilver(Find.AnyPlayerHomeMap, silver.stackCount) && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where((t => t.def == steel.def)).Sum((t => t.stackCount)) >= steel.stackCount)
+                    if (TradeUtility.ColonyHasEnoughSilver(Find.AnyPlayerHomeMap, silver.stackCount) && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where(t => t.def == steel.def).Sum(t => t.stackCount) >= steel.stackCount)
                     {
                         return true;
                     }
@@ -44,7 +39,7 @@ namespace Flavor_Expansion
                     steel.stackCount = 300;
                     requirements.Add(silver);
                     requirements.Add(steel);
-                    if (TradeUtility.ColonyHasEnoughSilver(Find.AnyPlayerHomeMap, silver.stackCount) && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where((t => t.def == steel.def)).Sum((t => t.stackCount)) >= steel.stackCount)
+                    if (TradeUtility.ColonyHasEnoughSilver(Find.AnyPlayerHomeMap, silver.stackCount) && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where(t => t.def == steel.def).Sum(t => t.stackCount) >= steel.stackCount)
                     {
                         return true;
                     }
@@ -55,7 +50,7 @@ namespace Flavor_Expansion
                     steel.stackCount = 500;
                     requirements.Add(silver);
                     requirements.Add(steel);
-                    if (TradeUtility.ColonyHasEnoughSilver(Find.AnyPlayerHomeMap, silver.stackCount) && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where((t => t.def == steel.def)).Sum((t => t.stackCount)) >= steel.stackCount)
+                    if (TradeUtility.ColonyHasEnoughSilver(Find.AnyPlayerHomeMap, silver.stackCount) && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where(t => t.def == steel.def).Sum(t => t.stackCount) >= steel.stackCount)
                     {
                         return true;
                     }
@@ -68,7 +63,7 @@ namespace Flavor_Expansion
                     requirements.Add(silver);
                     requirements.Add(steel);
                     requirements.Add(plasteel);
-                    if (TradeUtility.ColonyHasEnoughSilver(Find.AnyPlayerHomeMap, silver.stackCount) && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where((t => t.def == steel.def)).Sum((t => t.stackCount)) >= steel.stackCount && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where((t => t.def == plasteel.def)).Sum((t => t.stackCount)) >= plasteel.stackCount)
+                    if (TradeUtility.ColonyHasEnoughSilver(Find.AnyPlayerHomeMap, silver.stackCount) && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where(t => t.def == steel.def).Sum(t => t.stackCount) >= steel.stackCount && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where(t => t.def == plasteel.def).Sum(t => t.stackCount) >= plasteel.stackCount)
                         {
                         return true;
                     }
@@ -157,7 +152,7 @@ namespace Flavor_Expansion
                     cloth.stackCount = 300;
                     requirements.Add(silver);
                     requirements.Add(cloth);
-                    if (TradeUtility.ColonyHasEnoughSilver(Find.AnyPlayerHomeMap, silver.stackCount) && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where((t => t.def == cloth.def)).Sum((t => t.stackCount)) >= cloth.stackCount)
+                    if (TradeUtility.ColonyHasEnoughSilver(Find.AnyPlayerHomeMap, silver.stackCount) && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where(t => t.def == cloth.def).Sum(t => t.stackCount) >= cloth.stackCount)
                     {
                         return true;
                     }
@@ -167,7 +162,7 @@ namespace Flavor_Expansion
                     cloth.stackCount = 600;
                     requirements.Add(silver);
                     requirements.Add(cloth);
-                    if (TradeUtility.ColonyHasEnoughSilver(Find.AnyPlayerHomeMap, silver.stackCount) && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where((t => t.def == cloth.def)).Sum((t => t.stackCount)) >= cloth.stackCount)
+                    if (TradeUtility.ColonyHasEnoughSilver(Find.AnyPlayerHomeMap, silver.stackCount) && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where(t => t.def == cloth.def).Sum(t => t.stackCount) >= cloth.stackCount)
                     {
                         return true;
                     }
@@ -198,7 +193,7 @@ namespace Flavor_Expansion
                     requirements.Add(hops);
                     smokeleaf.stackCount = 200;
                     requirements.Add(smokeleaf);
-                    if (TradeUtility.ColonyHasEnoughSilver(Find.AnyPlayerHomeMap, silver.stackCount) && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where((t => t.def == hops.def)).Sum((t => t.stackCount)) >= hops.stackCount && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where((t => t.def == smokeleaf.def)).Sum((t => t.stackCount)) >= smokeleaf.stackCount)
+                    if (TradeUtility.ColonyHasEnoughSilver(Find.AnyPlayerHomeMap, silver.stackCount) && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where(t => t.def == hops.def).Sum(t => t.stackCount) >= hops.stackCount && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where(t => t.def == smokeleaf.def).Sum(t => t.stackCount) >= smokeleaf.stackCount)
                     {
                         return true;
                     }
@@ -208,7 +203,7 @@ namespace Flavor_Expansion
                     requirements.Add(silver);
                     psyLeaves.stackCount = 150;
                     requirements.Add(psyLeaves);
-                    if (TradeUtility.ColonyHasEnoughSilver(Find.AnyPlayerHomeMap, silver.stackCount) && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where((t => t.def == psyLeaves.def)).Sum((t => t.stackCount)) >= psyLeaves.stackCount)
+                    if (TradeUtility.ColonyHasEnoughSilver(Find.AnyPlayerHomeMap, silver.stackCount) && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where(t => t.def == psyLeaves.def).Sum(t => t.stackCount) >= psyLeaves.stackCount)
                     {
                         return true;
                     }
@@ -218,7 +213,7 @@ namespace Flavor_Expansion
                     requirements.Add(silver);
                     psyLeaves.stackCount = 500;
                     requirements.Add(psyLeaves);
-                    if (TradeUtility.ColonyHasEnoughSilver(Find.AnyPlayerHomeMap, silver.stackCount) && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where((t => t.def == psyLeaves.def)).Sum((t => t.stackCount)) >= psyLeaves.stackCount)
+                    if (TradeUtility.ColonyHasEnoughSilver(Find.AnyPlayerHomeMap, silver.stackCount) && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where(t => t.def == psyLeaves.def).Sum(t => t.stackCount) >= psyLeaves.stackCount)
                     {
                         return true;
                     }
@@ -258,7 +253,7 @@ namespace Flavor_Expansion
                     requirements.Add(steel);
                     comp.stackCount = 30;
                     requirements.Add(comp);
-                    if (TradeUtility.ColonyHasEnoughSilver(Find.AnyPlayerHomeMap, silver.stackCount) && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where((t => t.def == steel.def)).Sum((t => t.stackCount)) >= steel.stackCount && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where((t => t.def == comp.def)).Sum((t => t.stackCount)) >= comp.stackCount)
+                    if (TradeUtility.ColonyHasEnoughSilver(Find.AnyPlayerHomeMap, silver.stackCount) && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where(t => t.def == steel.def).Sum(t => t.stackCount) >= steel.stackCount && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where(t => t.def == comp.def).Sum(t => t.stackCount) >= comp.stackCount)
                     {
                         return true;
                     }
@@ -270,7 +265,7 @@ namespace Flavor_Expansion
                     requirements.Add(steel);
                     compAdvence.stackCount = 15;
                     requirements.Add(comp);
-                    if (TradeUtility.ColonyHasEnoughSilver(Find.AnyPlayerHomeMap, silver.stackCount) && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where((t => t.def == steel.def)).Sum((t => t.stackCount)) >= steel.stackCount && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where((t => t.def == compAdvence.def)).Sum((t => t.stackCount)) >= compAdvence.stackCount)
+                    if (TradeUtility.ColonyHasEnoughSilver(Find.AnyPlayerHomeMap, silver.stackCount) && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where(t => t.def == steel.def).Sum(t => t.stackCount) >= steel.stackCount && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where(t => t.def == compAdvence.def).Sum(t => t.stackCount) >= compAdvence.stackCount)
                     {
                         return true;
                     }
@@ -282,7 +277,7 @@ namespace Flavor_Expansion
                     requirements.Add(steel);
                     compAdvence.stackCount = 30;
                     requirements.Add(comp);
-                    if (TradeUtility.ColonyHasEnoughSilver(Find.AnyPlayerHomeMap, silver.stackCount) && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where((t => t.def == steel.def)).Sum((t => t.stackCount)) >= steel.stackCount && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where((t => t.def == compAdvence.def)).Sum((t => t.stackCount)) >= compAdvence.stackCount)
+                    if (TradeUtility.ColonyHasEnoughSilver(Find.AnyPlayerHomeMap, silver.stackCount) && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where(t => t.def == steel.def).Sum(t => t.stackCount) >= steel.stackCount && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where(t => t.def == compAdvence.def).Sum(t => t.stackCount) >= compAdvence.stackCount)
                     {
                         return true;
                     }
@@ -294,7 +289,7 @@ namespace Flavor_Expansion
                     requirements.Add(steel);
                     compAdvence.stackCount = 50;
                     requirements.Add(comp);
-                    if (TradeUtility.ColonyHasEnoughSilver(Find.AnyPlayerHomeMap, silver.stackCount) && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where((t => t.def == steel.def)).Sum((t => t.stackCount)) >= steel.stackCount && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where((t => t.def == compAdvence.def)).Sum((t => t.stackCount)) >= compAdvence.stackCount)
+                    if (TradeUtility.ColonyHasEnoughSilver(Find.AnyPlayerHomeMap, silver.stackCount) && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where(t => t.def == steel.def).Sum(t => t.stackCount) >= steel.stackCount && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where(t => t.def == compAdvence.def).Sum(t => t.stackCount) >= compAdvence.stackCount)
                     {
                         return true;
                     }
@@ -330,7 +325,7 @@ namespace Flavor_Expansion
                     requirements.Add(silver);
                     hay.stackCount = 300;
                     requirements.Add(hay);
-                    if (TradeUtility.ColonyHasEnoughSilver(Find.AnyPlayerHomeMap, silver.stackCount) && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where((t => t.def == hay.def)).Sum((t => t.stackCount)) >= hay.stackCount)
+                    if (TradeUtility.ColonyHasEnoughSilver(Find.AnyPlayerHomeMap, silver.stackCount) && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where(t => t.def == hay.def).Sum(t => t.stackCount) >= hay.stackCount)
                     {
                         return true;
                     }
@@ -366,7 +361,7 @@ namespace Flavor_Expansion
                     requirements.Add(silver);
                     steel.stackCount = 1600;
                     requirements.Add(steel);
-                    if (TradeUtility.ColonyHasEnoughSilver(Find.AnyPlayerHomeMap, silver.stackCount) && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where((t => t.def == steel.def)).Sum((t => t.stackCount)) >= steel.stackCount)
+                    if (TradeUtility.ColonyHasEnoughSilver(Find.AnyPlayerHomeMap, silver.stackCount) && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where(t => t.def == steel.def).Sum(t => t.stackCount) >= steel.stackCount)
                     {
                         return true;
                     }
@@ -376,7 +371,7 @@ namespace Flavor_Expansion
                     requirements.Add(silver);
                     steel.stackCount = 2500;
                     requirements.Add(steel);
-                    if (TradeUtility.ColonyHasEnoughSilver(Find.AnyPlayerHomeMap, silver.stackCount) && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where((t => t.def == steel.def)).Sum((t => t.stackCount)) >= steel.stackCount)
+                    if (TradeUtility.ColonyHasEnoughSilver(Find.AnyPlayerHomeMap, silver.stackCount) && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where(t => t.def == steel.def).Sum(t => t.stackCount) >= steel.stackCount)
                     {
                         return true;
                     }
@@ -386,7 +381,7 @@ namespace Flavor_Expansion
                     requirements.Add(silver);
                     steel.stackCount = 4000;
                     requirements.Add(steel);
-                    if (TradeUtility.ColonyHasEnoughSilver(Find.AnyPlayerHomeMap, silver.stackCount) && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where((t => t.def == steel.def)).Sum((t => t.stackCount)) >= steel.stackCount)
+                    if (TradeUtility.ColonyHasEnoughSilver(Find.AnyPlayerHomeMap, silver.stackCount) && TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where(t => t.def == steel.def).Sum(t => t.stackCount) >= steel.stackCount)
                     {
                         return true;
                     }
@@ -453,7 +448,7 @@ namespace Flavor_Expansion
                     gold.stackCount = 375;
                     requirements.Add(gold);
                     
-                    if (TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where<Thing>((Func<Thing, bool>)(t => t.def == gold.def)).Sum<Thing>((Func<Thing, int>)(t => t.stackCount)) >= gold.stackCount)
+                    if (TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where<Thing>(t => t.def == gold.def).Sum<Thing>(t => t.stackCount) >= gold.stackCount)
                     {
                         return true;
                     }
@@ -461,7 +456,7 @@ namespace Flavor_Expansion
                 case 1:
                     gold.stackCount = 500;
                     requirements.Add(gold);
-                    if (TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where<Thing>((Func<Thing, bool>)(t => t.def == gold.def)).Sum<Thing>((Func<Thing, int>)(t => t.stackCount)) >= gold.stackCount)
+                    if (TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where(t => t.def == gold.def).Sum(t => t.stackCount) >= gold.stackCount)
                     {
                         return true;
                     }
@@ -469,7 +464,7 @@ namespace Flavor_Expansion
                 case 2:
                     gold.stackCount = 1000;
                     requirements.Add(gold);
-                    if (TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where<Thing>((Func<Thing, bool>)(t => t.def == gold.def)).Sum<Thing>((Func<Thing, int>)(t => t.stackCount)) >= gold.stackCount)
+                    if (TradeUtility.AllLaunchableThingsForTrade(Find.AnyPlayerHomeMap).Where(t => t.def == gold.def).Sum(t => t.stackCount) >= gold.stackCount)
                     {
                         return true;
                     }

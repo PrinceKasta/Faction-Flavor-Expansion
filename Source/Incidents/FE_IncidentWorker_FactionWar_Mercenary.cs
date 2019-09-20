@@ -1,15 +1,8 @@
-﻿using Harmony;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
 using Verse;
-using Verse.Sound;
-using Verse.AI.Group;
-using System.Reflection;
 using RimWorld;
 using RimWorld.Planet;
-using UnityEngine;
 
 namespace Flavor_Expansion
 {
@@ -17,65 +10,76 @@ namespace Flavor_Expansion
     {
         protected override bool CanFireNowSub(IncidentParms parms)
         {
-            return base.CanFireNowSub(parms) && TryFindWar(out War war) && TryFindSuitableBattleLocation(out int tile) && EndGame_Settings.FactionWar;
+            return base.CanFireNowSub(parms) && TryFindWar(out War war) && TryFindSuitableBattleLocation(out int tile, war) && EndGame_Settings.FactionWar;
         }
         protected override bool TryExecuteWorker(IncidentParms parms)
         {
-            if (!TryFindWar(out War war) || !TryFindSuitableBattleLocation(out int tile) || !EndGame_Settings.FactionWar)
+            if (!TryFindWar(out War war) || !TryFindSuitableBattleLocation(out int tile, war) || !EndGame_Settings.FactionWar)
+            {
                 return false;
-            Faction askingFaction;
-            if (!war.AttackerFaction().HostileTo(Faction.OfPlayer) && !war.DefenderFaction().HostileTo(Faction.OfPlayer))
-                askingFaction = Utilities.FactionsWar().GetByFaction(war.AttackerFaction()).resources > Utilities.FactionsWar().GetByFaction(war.DefenderFaction()).resources ? war.DefenderFaction() : war.AttackerFaction();
-            else askingFaction = war.AttackerFaction().HostileTo(Faction.OfPlayer) ? war.DefenderFaction() : war.AttackerFaction();
+            }
+
+            Faction askingFaction = !war.AttackerFaction().HostileTo(Faction.OfPlayer) && !war.DefenderFaction().HostileTo(Faction.OfPlayer)
+                ? Utilities.FactionsWar().GetByFaction(war.AttackerFaction()).resources > Utilities.FactionsWar().GetByFaction(war.DefenderFaction()).resources ? war.DefenderFaction() : war.AttackerFaction()
+                : war.AttackerFaction().HostileTo(Faction.OfPlayer) ? war.DefenderFaction() : war.AttackerFaction();
+
             bool f1Win = false;
             //Rejection option's solution to the battle
             float f1Resources = Utilities.FactionsWar().GetByFaction(war.AttackerFaction()).resources;
             float f2Resources = Utilities.FactionsWar().GetByFaction(war.DefenderFaction()).resources;
-            if (Rand.Chance(0.5f + f1Resources == f2Resources ? f1Resources > f2Resources ? (0.5f - f2Resources / f1Resources / 2) : -(0.5f - f2Resources / f1Resources / 2) : 0))
+            if (Rand.Chance(0.5f + f1Resources == f2Resources ? f1Resources > f2Resources ? (0.5f - (f2Resources / f1Resources / 2)) : -(0.5f - (f2Resources / f1Resources / 2)) : 0))
+            {
                 f1Win = true;
-            else f1Win = false;
+            }
+            else
+            {
+                f1Win = false;
+            }
 
-            string text = TranslatorFormattedStringExtensions.Translate("MercenaryBattleRequest",askingFaction.leader, war.AttackerFaction() == askingFaction ? war.DefenderFaction() : war.AttackerFaction());
-            DiaNode nodeRoot = new DiaNode(text);
+            if (askingFaction.leader == null)
+            {
+                askingFaction.GenerateNewLeader();
+            }
+
+            DiaNode nodeRoot = new DiaNode(TranslatorFormattedStringExtensions.Translate("MercenaryBattleRequest", askingFaction.leader, war.AttackerFaction() == askingFaction ? war.DefenderFaction() : war.AttackerFaction(), askingFaction.def.leaderTitle));
             nodeRoot.options.Add(new DiaOption("MercenaryBattleRequest_Accept".Translate())
             {
 
-                action = (Action)(() =>
+                action = () =>
                 {
-                    Site site = SiteMaker.MakeSite(SiteCoreDefOf.PreciousLump, SitePartDefOf.Outpost, tile, askingFaction, true);
-                    site.GetComponent<WorldObjectComp_MercenaryBattle>().StartComp(war,askingFaction,parms);
+                    Site site = SiteMaker.MakeSite(EndGameDefOf.BattleLocation, SitePartDefOf.Outpost, tile, askingFaction, true);
+                    site.GetComponent<WorldObjectComp_MercenaryBattle>().StartComp(war, askingFaction, parms);
                     site.GetComponent<TimeoutComp>().StartTimeout(Global.DayInTicks * new IntRange(14, 22).RandomInRange);
-                    site.customLabel = "Battle Location";
-                    LookTargetsUtility.TryHighlight(site);
+                    site.customLabel = "battle location";
                     Find.WorldObjects.Add(site);
-                }),
-                link = new DiaNode(TranslatorFormattedStringExtensions.Translate("MercenaryBattleRequestAccept",askingFaction.leader))
+                },
+                link = new DiaNode(TranslatorFormattedStringExtensions.Translate("MercenaryBattleRequestAccept", askingFaction.leader))
                 {
                     options = {
-                         new DiaOption("OK".Translate()) { resolveTree = true }
+
+                         new DiaOption("OK".Translate()) { resolveTree = true },
+                         new DiaOption("JumpToLocation".Translate()) { action= ()=> CameraJumper.TryJumpAndSelect(new GlobalTargetInfo(Find.WorldObjects.WorldObjectAt(tile,WorldObjectDefOf.Site))), resolveTree=true }
                        }
                 }
             });
             nodeRoot.options.Add(new DiaOption("MercenaryBattleRequest_Reject".Translate())
             {
-                
-                action = (Action)(() =>
+                action = () =>
                 {
-                    
-                    if(f1Win)
+                    if (f1Win)
                     {
                         Utilities.FactionsWar().GetByFaction(war.DefenderFaction()).resources -= Math.Max(Utilities.FactionsWar().GetByFaction(war.DefenderFaction()).resources / 2, 1000);
                         f1Win = true;
                     }
                     else
                     {
-                        Utilities.FactionsWar().GetByFaction(war.AttackerFaction()).resources  -= Math.Max(Utilities.FactionsWar().GetByFaction(war.AttackerFaction()).resources / 2, 1000);
+                        Utilities.FactionsWar().GetByFaction(war.AttackerFaction()).resources -= Math.Max(Utilities.FactionsWar().GetByFaction(war.AttackerFaction()).resources / 2, 1000);
                         f1Win = false;
                     }
-                    if((f1Win && war.DefenderFaction() == askingFaction)|| (!f1Win && war.AttackerFaction()==askingFaction))
+                    if ((f1Win && war.DefenderFaction() == askingFaction) || (!f1Win && war.AttackerFaction() == askingFaction))
                         askingFaction.TryAffectGoodwillWith(Faction.OfPlayer, -15);
-                    
-                }),
+
+                },
                 link = new DiaNode("MercenaryBattleRequestReject".Translate(f1Win ? war.AttackerFaction() : war.DefenderFaction(), f1Win ? war.DefenderFaction() : war.AttackerFaction()))
                 {
                     options = {
@@ -84,26 +88,20 @@ namespace Flavor_Expansion
                 }
             });
             string title = "LetterLabelMercenaryBattleRequestTitle".Translate();
-            Find.WindowStack.Add((Window)new Dialog_NodeTreeWithFactionInfo(nodeRoot, askingFaction, true, true, title));
-            Find.Archive.Add((IArchivable)new ArchivedDialog(nodeRoot.text, title, askingFaction));
+            Find.WindowStack.Add(new Dialog_NodeTreeWithFactionInfo(nodeRoot, askingFaction, true, true, title));
+            Find.Archive.Add(new ArchivedDialog(nodeRoot.text, title, askingFaction));
 
             return true;
         }
-        private bool TryFindWar(out War war)
+        private bool TryFindWar(out War war) => Utilities.FactionsWar().GetWars().Where(w => !w.AttackerFaction().HostileTo(Faction.OfPlayer) || !w.DefenderFaction().HostileTo(Faction.OfPlayer)).TryRandomElement(out war) ? true : false;
+
+        private bool TryFindSuitableBattleLocation(out int tile, War war)
         {
-            if(Utilities.FactionsWar().GetWars().Where(w=> !w.AttackerFaction().HostileTo(Faction.OfPlayer) || !w.DefenderFaction().HostileTo(Faction.OfPlayer)).TryRandomElement(out war))
-                return true;
-            return false;
-        }
-        private bool TryFindSuitableBattleLocation(out int tile)
-        {
-            foreach (Settlement set in Find.WorldObjects.Settlements)
+            foreach (Settlement set in Find.WorldObjects.Settlements.Where(s=> s.Faction == war.AttackerFaction() || s.Faction == war.DefenderFaction()))
             {
                 if (Utilities.Reachable(Find.AnyPlayerHomeMap.Tile, set.Tile,75))
                 {
-                    if (!TileFinder.TryFindPassableTileWithTraversalDistance(set.Tile, 1, 8, out tile, x => !Find.WorldObjects.AnyWorldObjectAt(x)))
-                        return false;
-                    return true;
+                    return !TileFinder.TryFindPassableTileWithTraversalDistance(set.Tile, 3, 20, out tile, x => !Find.WorldObjects.AnyWorldObjectAt(x)) ? false : true;
                 }
             }
             tile = -1;

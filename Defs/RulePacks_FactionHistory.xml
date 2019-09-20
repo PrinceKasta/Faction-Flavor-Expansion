@@ -64,7 +64,7 @@
 		<li>ancient_town->[AffectedTown_name]'s leadership were put on trial for the sacrilege of building a two story house, blatantly disregarding the world's decency code.</li>
 		<li>ancient_town->[AffectedTown_name] becomes the most feared city among it's faction's enemies as a full scale raid led by two expert pirate generals is slaughter by a calvary with thrumbos as the mounts._Warlike</li>
 		<li>ancient_town->Protests in the streets of [AffectedTown_name] demanding that the town's wardens will stop feeding the prisoners lavish meals when there aren't enough to feed the law-abiding citizens._Peacelike</li>
-		<li>ancient_town->Citizens of [AffectedTown_name] gained the reputation of prudes following adopting an exotic custom from a trade ships that designates specific closed off spots for hygiene called 'showers' and 'toilets'._Peacelike</li>
+		<li>ancient_town->Citizens from [AffectedTown_name] gained the reputation of prudes following adopting an exotic custom from a trade ships that designates specific closed off spots for hygiene called 'showers' and 'toilets'._Peacelike</li>
 		<li>ancient_town->The cat possession plague in [AffectedTown_name] was solved when a storage worker caught one of the cats in the Yayo warehouse covering in the drug._Peacelike</li>
 		<li>ancient_town->[AffectedTown_name]'s leader discontinued the policy of providing luciferium for addicts prisoners resulting in several political rivals dying in agony in their prison beds.</li>
 		<li>ancient_town->A siege of [AffectedTown_name] went comically bad as the tornado generated from the attacker's generator in hopes of bringing the walls down, turns around and wipes them out while leaving the town unscratched.</li>

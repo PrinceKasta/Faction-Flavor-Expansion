@@ -17,9 +17,6 @@
     <arrivedLetter>There is a captured settlement in this area.\nRemove any opposition and save as many friendlies as possible</arrivedLetter>
     <arrivedLetterDef>NegativeEvent</arrivedLetterDef>
     <wantsThreatPoints>true</wantsThreatPoints>
-    <tags>
-      <li>PrisonerRescueQuestThreat</li>
-    </tags>
   </SitePartDef>
   
   
@@ -65,10 +62,17 @@
     <order>450</order>
     <genStep Class="GenStep_Outpost"/>
   </GenStepDef>
+  
+  <GenStepDef>
+    <defName>OutpostPowerDef</defName>
+    <linkWithSite>Outpost_defense</linkWithSite>
+    <order>451</order>
+    <genStep Class="GenStep_Power"/>
+  </GenStepDef>
 
   <SitePartDef>
     <defName>Outpost_opbase</defName>
-    <label>Forward operating base</label>
+    <label>forward operating base</label>
     <description>A guarded Forward operating base.</description>
 		<descriptionDialogue>there is an enemy operating base at the site guarded by {0} enemies</descriptionDialogue>
     <workerClass>SitePartWorker_Outpost</workerClass>
@@ -89,6 +93,31 @@
     <linkWithSite>Outpost_opbase</linkWithSite>
     <order>450</order>
     <genStep Class="GenStep_Outpost"/>
+  </GenStepDef>
+  
+  <GenStepDef>
+    <defName>OutpostPowerDef</defName>
+    <linkWithSite>Outpost_opbase</linkWithSite>
+    <order>451</order>
+    <genStep Class="GenStep_Power"/>
+  </GenStepDef>
+  
+  <SiteCoreDef>
+    <defName>BattleLocation</defName>
+    <label>battle location</label>
+		<description>The site of a future battle.</description>
+    <siteTexture>World/WorldObjects/Sites/GenericSite</siteTexture>
+    <expandingIconTexture>World/WorldObjects/Expanding/BattleLocation</expandingIconTexture>
+  </SiteCoreDef>
+
+  <GenStepDef>
+    <defName>ItemStashFE</defName>
+    <linkWithSite>BattleLocation</linkWithSite>
+    <order>460</order>
+    <genStep Class="GenStep_ItemStash">
+      <count>1</count>
+      <nearMapCenter>true</nearMapCenter>
+    </genStep>
   </GenStepDef>
   
 </Defs>

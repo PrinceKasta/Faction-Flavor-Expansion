@@ -1,16 +1,6 @@
-﻿using Harmony;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using Verse;
-using Verse.AI;
-using Verse.Sound;
-using Verse.AI.Group;
-using System.Reflection;
 using RimWorld;
-using RimWorld.Planet;
-using UnityEngine;
 
 
 namespace Flavor_Expansion
@@ -18,35 +8,30 @@ namespace Flavor_Expansion
     class FE_MapComp_Skirmish : MapComponent
     {
         private bool active = false;
-        
-        Faction fac1 , fac2;
+        private Faction fac1 , fac2;
 
-        public FE_MapComp_Skirmish(Map map) : base(map)
-        {
-            active = false;
-        }
+        public FE_MapComp_Skirmish(Map map) : base(map) => active = false;
+
         public void StartComp(Faction fac1, Faction fac2)
         {
-            this.active = true;
+            active = true;
             this.fac1 = fac1;
             this.fac2 = fac2;
         }
-        public bool IsActive()
-        {
-            return active;
-        }
+        public bool IsActive() => active;
 
         public override void MapComponentTick()
         {
-            if (!active || fac1 == null)
+            if (!active)
                 return;
             
-            if(map.mapPawns.FreeHumanlikesOfFaction(fac2).Count(p => !p.Dead && !p.Downed) ==0)
+            if(!map.mapPawns.PawnsInFaction(fac2).Any(p => GenHostility.IsActiveThreatTo(p, fac1)))
             {
                 Utilities.FactionsWar().GetByFaction(fac2).resources -= FE_WorldComp_FactionsWar.MEDIUM_EVENT_RESOURCE_VALUE;
                 active = false;
 
-            } else if(map.mapPawns.FreeHumanlikesOfFaction(fac1).Count(p => !p.Dead && !p.Downed) == 0)
+            }
+            if (!map.mapPawns.PawnsInFaction(fac1).Any(p => GenHostility.IsActiveThreatTo(p, fac2)))
             {
                 Utilities.FactionsWar().GetByFaction(fac1).resources -= FE_WorldComp_FactionsWar.MEDIUM_EVENT_RESOURCE_VALUE;
                 active = false;

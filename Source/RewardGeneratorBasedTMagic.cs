@@ -43,7 +43,7 @@ namespace Flavor_Expansion
                         Thing thing = ThingMaker.MakeThing(enumerable.ToList().RandomElement());
                         if (thing.Label.Contains("Glitter"))
                         {
-                            thing.stackCount = (int)Mathf.Clamp(MedicineStackRange.RandomInRange, 1, 2);
+                            thing.stackCount = Mathf.Clamp(MedicineStackRange.RandomInRange, 1, 2);
                             collectiveMarketValue += thing.stackCount * 100;
                         }
                         else thing.stackCount = MedicineStackRange.RandomInRange;
@@ -51,7 +51,6 @@ namespace Flavor_Expansion
                             continue;
                         outThings.Add(thing);
                         collectiveMarketValue += thing.MarketValue * thing.stackCount;
-                        //Log.Warning("Medicine  " + thing.Label + "  " + thing.MarketValue * thing.stackCount + ", coll  " + collectiveMarketValue);
                     }
                 
                 }

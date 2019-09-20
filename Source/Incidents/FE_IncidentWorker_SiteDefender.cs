@@ -1,15 +1,8 @@
-﻿using Harmony;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Verse;
-using Verse.Sound;
-using Verse.AI.Group;
-using System.Reflection;
 using RimWorld;
 using RimWorld.Planet;
-using UnityEngine;
 
 namespace Flavor_Expansion
 {
@@ -31,13 +24,13 @@ namespace Flavor_Expansion
                 totalMarketValueRange = new FloatRange?(SiteTuning.BanditCampQuestRewardMarketValueRange * SiteTuning.QuestRewardMarketValueThreatPointsFactor.Evaluate(StorytellerUtility.DefaultSiteThreatPointsNow() - 500))
             });
 
-            int randomInRange = SiteTuning.QuestSiteTimeoutDaysRange.RandomInRange;
-            site.GetComponent<WorldComp_SiteDefense>().StartComp(randomInRange * Global.DayInTicks, parms, enemyFaction, rewards);
+            int randomInRange = SiteTuning.QuestSiteTimeoutDaysRange.RandomInRange * Global.DayInTicks;
+            site.GetComponent<WorldComp_SiteDefense>().StartComp(randomInRange, parms, enemyFaction, rewards);
             
             Find.WorldObjects.Add(site);
-            string text = this.def.letterText.Formatted((NamedArgument)ally.leader.LabelShort, (NamedArgument)ally.def.leaderTitle, (NamedArgument)ally.Name, (NamedArgument)GenLabel.ThingsLabel(rewards, string.Empty), (NamedArgument)(randomInRange / Global.DayInTicks).ToString(), (NamedArgument)GenThing.GetMarketValue((IList<Thing>)rewards).ToStringMoney((string)null)).CapitalizeFirst();
-            GenThing.TryAppendSingleRewardInfo(ref text, (IList<Thing>)rewards);
-            Find.LetterStack.ReceiveLetter(this.def.letterLabel, text, this.def.letterDef, (LookTargets)((WorldObject)site), ally, (string)null);
+            string text = def.letterText.Formatted(ally.leader.LabelShort, ally.def.leaderTitle, ally.Name, GenLabel.ThingsLabel(rewards, string.Empty), randomInRange.ToStringTicksToPeriod(), GenThing.GetMarketValue(rewards).ToStringMoney(null)).CapitalizeFirst();
+            GenThing.TryAppendSingleRewardInfo(ref text, rewards);
+            Find.LetterStack.ReceiveLetter(def.letterLabel, text, def.letterDef, site, ally, null);
             return true;
 
         }

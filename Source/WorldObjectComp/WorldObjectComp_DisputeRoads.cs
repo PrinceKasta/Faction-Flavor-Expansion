@@ -1,16 +1,8 @@
-﻿using Harmony;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Verse;
-using Verse.AI;
-using Verse.Sound;
-using Verse.AI.Group;
-using System.Reflection;
 using RimWorld;
 using RimWorld.Planet;
-using UnityEngine;
 
 namespace Flavor_Expansion
 {
@@ -19,12 +11,12 @@ namespace Flavor_Expansion
         private readonly IntRange NextTileBuffer = new IntRange(Global.DayInTicks/3, Global.DayInTicks);
         public bool active = false;
         private int timer=0;
-        int set1, set2;
-        List<int> path;
+        private int set1, set2;
+        private List<int> path;
 
         public void StartComp(int set1, int set2, List<int> path)
         {
-            this.active = true;
+            active = true;
             this.set1 = set1;
             this.set2 = set2;
             this.path = path.ToList();
@@ -41,7 +33,7 @@ namespace Flavor_Expansion
                 || !Find.WorldObjects.AnySettlementAt(set2))
             {
                 active = false;
-                Find.WorldObjects.Remove(this.parent);
+                Find.WorldObjects.Remove(parent);
             }
             if ( timer <= 0)
             {
@@ -85,10 +77,8 @@ namespace Flavor_Expansion
             Find.WorldObjects.Add(dispute);
             Find.WorldObjects.Remove(parent);
         }
-        public override string CompInspectStringExtra()
-        {
-            return base.CompInspectStringExtra()+ "RoadsTimerDesc".Translate(timer/ Global.DayInTicks);
-        }
+        public override string CompInspectStringExtra() => base.CompInspectStringExtra() + "RoadsTimerDesc".Translate(timer.ToStringTicksToPeriod());
+
         public override void PostExposeData()
         {
             base.PostExposeData();
@@ -102,9 +92,6 @@ namespace Flavor_Expansion
 
     public class WorldObjectCompProperties_DisputeRoads : WorldObjectCompProperties
     {
-        public WorldObjectCompProperties_DisputeRoads()
-        {
-            this.compClass = typeof(WorldComp_DisputeRoads);
-        }
+        public WorldObjectCompProperties_DisputeRoads() => compClass = typeof(WorldComp_DisputeRoads);
     }
 }

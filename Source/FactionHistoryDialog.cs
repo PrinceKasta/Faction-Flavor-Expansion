@@ -1,7 +1,6 @@
 ﻿using RimWorld;
 using RimWorld.Planet;
 using System;
-using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
@@ -9,14 +8,13 @@ using Verse;
 
 namespace Flavor_Expansion
 {
-    
+
     class FactionHistoryDialog
     {
         public static DiaOption RequestFactionInfoOption(Faction faction, Pawn negotiator)
         {
-            
-            string text = "FactionInfo".Translate();
-            DiaOption diaOption1 = new DiaOption(text);
+
+            DiaOption diaOption1 = new DiaOption("FactionInfo".Translate());
 
             int disposition = Utilities.FactionsWar().GetByFaction(faction).disposition;
             DiaNode diaNode1 = new DiaNode("FactionChose".Translate(disposition == 0 ? "FactionNeutral".Translate() : disposition > 0 ? (disposition> 4 ? "FactionGenocidal".Translate() : "FactionWarlike".Translate()) : disposition<-4 ? "FactionPacifistic".Translate() : "FactionPeacelike".Translate()) + (Prefs.DevMode ? " (Debug): (" + disposition + ")\n" : "\n") + "FactionDispositionInfo".Translate()+ "FactionResourcesInfo".Translate(faction,Math.Floor(Utilities.FactionsWar().GetByFaction(faction).resources/Utilities.FactionsWar().MaxResourcesForFaction(faction) * 100))+(Prefs.DevMode ? (" (DevMode) resources:"+ Utilities.FactionsWar().GetByFaction(faction).resources)+", Total Capacity: "+ Utilities.FactionsWar().MaxResourcesForFaction(faction) : ""));
@@ -39,29 +37,6 @@ namespace Flavor_Expansion
                 });
             }
             #endregion History
-
-            #region War
-            
-            if (EndGame_Settings.FactionWar)
-            {
-                foreach (War war in Find.World.GetComponent<FE_WorldComp_FactionsWar>().GetWars().Where(x=> x.AttackerFaction()==faction || x.DefenderFaction()==faction))
-                {
-                    // Faction Wars
-                    DiaNode diaNode3 = new DiaNode(HistoryDialogDataBase.GetWarInfo(faction,war));
-
-                    diaNode1.options.Add(new DiaOption("FactionWar".Translate(war.AttackerFaction() == faction ? war.DefenderFaction() : war.AttackerFaction()))
-                    {
-                        link = diaNode3
-
-                    });
-                    diaNode3.options.Add(new DiaOption("GoBack".Translate())
-                    {
-                        link = diaNode1
-                    });
-                }
-            }
-            #endregion War
-
             
             #region Vassal
             
@@ -71,7 +46,7 @@ namespace Flavor_Expansion
 
             diaNode1.options.Add(new DiaOption("GoBack".Translate())
             {
-                linkLateBind = (Func<DiaNode>)(() => FactionDialogMaker.FactionDialogFor(negotiator, faction))
+                linkLateBind = () => FactionDialogMaker.FactionDialogFor(negotiator, faction)
 
             });
 
@@ -794,12 +769,12 @@ namespace Flavor_Expansion
         private static readonly IntRange leapInYears = new IntRange(7, 40);
         private static readonly IntRange startingYear = new IntRange(300, 400);
 
-        private class weightedString
+        private class WeightedString
         {
             public string option;
             public int weight;
 
-            public weightedString(string option, int weight)
+            public WeightedString(string option, int weight)
             {
                 this.option = option;
                 this.weight = weight;
@@ -813,7 +788,7 @@ namespace Flavor_Expansion
         public static string GenerateHistory(Faction subject, ref int disposition)
         {
             
-            List<weightedString> HistoryOptions = new List<weightedString>();
+            List<WeightedString> HistoryOptions = new List<WeightedString>();
             List<string> history = new List<string>();
             string text = "";
 
@@ -822,14 +797,14 @@ namespace Flavor_Expansion
             {
                 HistoryOptions.Clear();
                 
-                HistoryOptions.Add(new weightedString(FE_GrammarUtility.History(null, null, null, PawnGenerator.GeneratePawn(subject.RandomPawnKind(), subject)), 12));
-                HistoryOptions.Add(new weightedString(FE_GrammarUtility.History(subject), 4));
-                HistoryOptions.Add(new weightedString(FE_GrammarUtility.History(subject, Find.FactionManager.AllFactionsVisible.Where(fac => !fac.IsPlayer && fac != subject && !fac.def.hidden).RandomElement()), 3));
-                HistoryOptions.Add(new weightedString(FE_GrammarUtility.History(null, null, Find.WorldObjects.Settlements.FindAll(x => x.Faction == subject).RandomElement(), null), 16));
-                HistoryOptions.Add(new weightedString(FE_GrammarUtility.History(null, null, null, null, SettlementNameGenerator.GenerateSettlementName(null, subject.def.settlementNameMaker)), 10));
-                HistoryOptions.Add(new weightedString(FE_GrammarUtility.History(), 9));
+                HistoryOptions.Add(new WeightedString(FE_GrammarUtility.History(null, null, null, PawnGenerator.GeneratePawn(subject.RandomPawnKind(), subject)), 12));
+                HistoryOptions.Add(new WeightedString(FE_GrammarUtility.History(subject), 4));
+                HistoryOptions.Add(new WeightedString(FE_GrammarUtility.History(subject, Find.FactionManager.AllFactionsVisible.Where(fac => !fac.IsPlayer && fac != subject && !fac.def.hidden).RandomElement()), 3));
+                HistoryOptions.Add(new WeightedString(FE_GrammarUtility.History(null, null, Find.WorldObjects.Settlements.FindAll(x => x.Faction == subject).RandomElement(), null), 16));
+                HistoryOptions.Add(new WeightedString(FE_GrammarUtility.History(null, null, null, null, SettlementNameGenerator.GenerateSettlementName(null, subject.def.settlementNameMaker)), 10));
+                HistoryOptions.Add(new WeightedString(FE_GrammarUtility.History(), 9));
                 
-                if (!HistoryOptions.TryRandomElementByWeight(x => x.weight, out weightedString option))
+                if (!HistoryOptions.TryRandomElementByWeight(x => x.weight, out WeightedString option))
                 {
                     return "";
                 }
@@ -890,30 +865,7 @@ namespace Flavor_Expansion
             }
             return option;
         }
-
-        public static string GetWarInfo(Faction subject, War war)
-        {
-            string text = "";
-            List<War> wars = Utilities.FactionsWar().GetWars();
-
-            while (wars.Count() > 20)
-                wars.Remove(wars.First());
-
-            float resourceAtt = Utilities.FactionsWar().GetByFaction(war.AttackerFaction()).resources;
-            float resourceDefe = Utilities.FactionsWar().GetByFaction(war.DefenderFaction()).resources;
-            if (resourceAtt / resourceDefe == 0 && resourceDefe / resourceAtt == 0)
-                text += "FactionWarInfoSettlemate".Translate(subject, (subject == war.DefenderFaction() ? war.AttackerFaction() : war.DefenderFaction()));
-            else text += "FactionWarInfo".Translate(subject, (subject == war.DefenderFaction() ? war.AttackerFaction() : war.DefenderFaction()), war.AttackerFaction(), resourceAtt > resourceDefe ? war.AttackerFaction() : war.DefenderFaction(), resourceAtt > resourceDefe ? Math.Floor((1-(float)resourceDefe / (float)resourceAtt) * 100) : Math.Floor((1-(float)resourceAtt / (float)resourceDefe) * 100)) + "\n\n";
-            if (Prefs.DevMode)
-                text += "Attacker resources: "+resourceAtt + ", defender resources: " + resourceDefe + "\n\n";
-            text += war.warHistory;
-
-            if (text == "")
-            {
-                text = "FactionAtPeace".Translate(subject);
-            }
-            return text;
-        }
+        
     };
 
     

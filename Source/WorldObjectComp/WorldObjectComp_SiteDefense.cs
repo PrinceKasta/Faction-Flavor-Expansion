@@ -29,8 +29,8 @@ namespace Flavor_Expansion
         {
             this.rewards = rewards;
             this.parms = parms.target;
-            this.stopTime = stopTime;
-            this.active = true;
+            this.stopTime = stopTime + Find.TickManager.TicksGame;
+            active = true;
             this.enemy = enemy;
         }
         public bool IsActive()
@@ -42,18 +42,17 @@ namespace Flavor_Expansion
         {
             if (!active)
                 return;
-            MapParent map = (MapParent)this.parent;
             // Player let the countdown finish, ignored quest.
-            if (!map.HasMap && 0 >= stopTime)
+            if (!((MapParent)parent).HasMap)
             {
-
-                CreateOpbase();
-                Find.WorldObjects.Remove(parent);
-                active = false;
-            }
-            else stopTime--;
-            if (!map.HasMap)
+                if (Find.TickManager.TicksGame >= stopTime)
+                {
+                    CreateOpbase();
+                    Find.WorldObjects.Remove(parent);
+                    active = false;
+                }
                 return;
+            }
             HostileDefeated();
             FriendliesDead();
         }
@@ -61,25 +60,21 @@ namespace Flavor_Expansion
         private void CreateOpbase()
         {
             parent.Faction.TryAffectGoodwillWith(Faction.OfPlayer, -10);
-
-            List<Thing> list = new List<Thing>();
-
-            Site site = SiteMaker.MakeSite(SiteCoreDefOf.Nothing, EndGameDefOf.Outpost_opbase, parent.Tile, enemy, true, new float?());
             
+            Site site = SiteMaker.MakeSite(SiteCoreDefOf.Nothing, EndGameDefOf.Outpost_opbase, parent.Tile, enemy, true, new float?());
             int randomInRange = SiteTuning.QuestSiteTimeoutDaysRange.RandomInRange;
             // Balance
             site.GetComponent<TimeoutComp>().StartTimeout(SiteTuning.QuestSiteRefugeeTimeoutDaysRange.RandomInRange * Global.DayInTicks);
             site.GetComponent<WorldComp_opbase>().StartComp();
-            
             Find.WorldObjects.Add(site);
             
         }
 
         private void FriendliesDead()
         {
-            MapParent map = (MapParent)this.parent;
+            MapParent map = (MapParent)parent;
             // All friendlies dead
-            if (map.Map.mapPawns.FreeHumanlikesSpawnedOfFaction(map.Map.ParentFaction).Count(p => !p.Downed || !p.Dead) == 0)
+            if (map.Map.mapPawns.FreeHumanlikesSpawnedOfFaction(map.Map.ParentFaction).Count(p => GenHostility.IsActiveThreatTo(p, enemy)) == 0)
             {
                 survivors = false;
             }
@@ -87,22 +82,19 @@ namespace Flavor_Expansion
 
         private void HostileDefeated()
         {
-            MapParent map = (MapParent)this.parent;
             // Killed all hostiles - Win outcome
-            if (!GenHostility.AnyHostileActiveThreatTo(map.Map, Faction.OfPlayer))
+            if (!GenHostility.AnyHostileActiveThreatTo(((MapParent)parent).Map, Faction.OfPlayer))
             {
                 active = false;
-                Settlement enemySet;
                 Map target = Find.AnyPlayerHomeMap;
-                IntVec3 intVec3 = DropCellFinder.TradeDropSpot(target);
-                DropPodUtility.DropThingsNear(intVec3, target, (IEnumerable<Thing>)rewards, 110, false, true, true);
+                DropPodUtility.DropThingsNear(DropCellFinder.TradeDropSpot(target), target, rewards, 110, false, true, true);
+                parent.Faction.TryAffectGoodwillWith(Faction.OfPlayer, +15, false, true);
 
-                this.parent.Faction.TryAffectGoodwillWith(Faction.OfPlayer, +15, false, true);
                 if (!(from s in Find.WorldObjects.Settlements
                     where s.Faction == enemy && !s.Faction.def.hidden && Find.WorldReachability.CanReach(Find.AnyPlayerHomeMap.Tile,s.Tile)
-                    select s).TryRandomElement(out enemySet))
+                    select s).TryRandomElement(out Settlement enemySet))
                 {
-                    Find.LetterStack.ReceiveLetter(EndGameDefOf.FE_JointRaid.letterLabel, TranslatorFormattedStringExtensions.Translate("Outpostdefensesuccess", this.parent.Faction.leader, this.parent.Faction.def.leaderTitle, GenLabel.ThingsLabel(rewards, string.Empty)), EndGameDefOf.FE_JointRaid.letterDef, null, parent.Faction, (string)null);
+                    Find.LetterStack.ReceiveLetter(EndGameDefOf.FE_JointRaid.letterLabel, TranslatorFormattedStringExtensions.Translate("Outpostdefensesuccess", parent.Faction.leader, parent.Faction.def.leaderTitle, GenLabel.ThingsLabel(rewards, string.Empty)), EndGameDefOf.FE_JointRaid.letterDef, null, parent.Faction, null);
                     active = false;
                     return;
                 }
@@ -115,11 +107,11 @@ namespace Flavor_Expansion
                 Thing silver = ThingMaker.MakeThing(ThingDefOf.Silver);
                 silver.stackCount = (int)FE_IncidentWorker_Jointraid.SilverBonusRewardCurve.Evaluate(parent.Faction.PlayerGoodwill);
 
-                int random = new IntRange(Global.DayInTicks * 5, Global.DayInTicks * 7).RandomInRange;
+                int random = new IntRange(Global.DayInTicks * 15, Global.DayInTicks * 25).RandomInRange;
                 enemySet.GetComponent<WorldComp_JointRaid>().StartComp(random, parent.Faction, rewards, silver);
-                string text = TranslatorFormattedStringExtensions.Translate("OutpostdefensesuccessJointRaid", (NamedArgument)parent.Faction.leader, (NamedArgument)parent.Faction.def.leaderTitle, (NamedArgument)GenLabel.ThingsLabel(rewardsNew, string.Empty), (NamedArgument)(random / Global.DayInTicks).ToString(), (NamedArgument)GenThing.GetMarketValue((IList<Thing>)rewards).ToStringMoney((string)null), silver.stackCount.ToString(),(NamedArgument)GenLabel.ThingsLabel(rewards, string.Empty)).CapitalizeFirst();
-                GenThing.TryAppendSingleRewardInfo(ref text, (IList<Thing>)rewards);
-                Find.LetterStack.ReceiveLetter(EndGameDefOf.FE_JointRaid.letterLabel, text, EndGameDefOf.FE_JointRaid.letterDef, (LookTargets)((WorldObject)enemySet), parent.Faction, (string)null);
+                string text = TranslatorFormattedStringExtensions.Translate("OutpostdefensesuccessJointRaid", parent.Faction.leader, parent.Faction.def.leaderTitle, GenLabel.ThingsLabel(rewardsNew, string.Empty), (random / Global.DayInTicks).ToString(), GenThing.GetMarketValue(rewards).ToStringMoney(null), silver.stackCount.ToString(), GenLabel.ThingsLabel(rewards, string.Empty)).CapitalizeFirst();
+                GenThing.TryAppendSingleRewardInfo(ref text, rewards);
+                Find.LetterStack.ReceiveLetter(EndGameDefOf.FE_JointRaid.letterLabel, text, EndGameDefOf.FE_JointRaid.letterDef, enemySet, parent.Faction, null);
                 
             }
         }
@@ -130,8 +122,8 @@ namespace Flavor_Expansion
             if(active && !survivors)
             {
                 CreateOpbase();
-                Find.LetterStack.ReceiveLetter("LetterLabelOutpostdefenseFriendliesDead".Translate(), TranslatorFormattedStringExtensions.Translate("OutpostdefenseFriendliesDead", this.parent.Faction.leader, this.parent.Faction.def.leaderTitle)
-                    , LetterDefOf.ThreatBig, new LookTargets(parent.Tile), (Faction)null, (string)null);
+                Find.LetterStack.ReceiveLetter("LetterLabelOutpostdefenseFriendliesDead".Translate(), TranslatorFormattedStringExtensions.Translate("OutpostdefenseFriendliesDead", parent.Faction.leader, parent.Faction.def.leaderTitle)
+                    , LetterDefOf.ThreatBig, new LookTargets(parent.Tile), null, null);
             }
         }
 
@@ -140,7 +132,7 @@ namespace Flavor_Expansion
         {
             if (!active)
                 return;
-            MapParent map = (MapParent)this.parent;
+            MapParent map = (MapParent)parent;
 
             Faction faction = (from f in Find.FactionManager.AllFactions
                                where f.HostileTo(map.Map.ParentFaction) && f.HostileTo(Faction.OfPlayer) && f.def.humanlikeFaction && !f.def.hidden
@@ -148,7 +140,7 @@ namespace Flavor_Expansion
 
             Faction ally = map.Map.ParentFaction;
             List<Pawn> pawns = map.Map.mapPawns.FreeHumanlikesSpawnedOfFaction(ally).ToList();
-            float num = this.pointsRange.RandomInRange + StorytellerUtility.DefaultThreatPointsNow(map.Map);
+            float num = pointsRange.RandomInRange + StorytellerUtility.DefaultThreatPointsNow(map.Map);
             int count = pawns.Count();
             for (int i = 0; i < count; i++)
             {
@@ -207,8 +199,8 @@ namespace Flavor_Expansion
         public override string CompInspectStringExtra()
         {
             if(active)
-                return "ExtraCompString_Outpostdefense".Translate((NamedArgument)this.stopTime.ToStringTicksToPeriod());
-            return (string)null;
+                return "ExtraCompString_Outpostdefense".Translate((stopTime - Find.TickManager.TicksGame).ToStringTicksToPeriod());
+            return null;
         }
         public override void PostExposeData()
         {
@@ -217,14 +209,14 @@ namespace Flavor_Expansion
             Scribe_References.Look(ref parms, "outpostdefense_parms");
             Scribe_References.Look(ref enemy, "outpostdefense_enemy");
             Scribe_Values.Look(ref stopTime, "outpostdefense_stopTime", defaultValue: 0);
-            Scribe_Collections.Look(ref rewards, "outpostdefense_rewards", LookMode.Reference);
+            Scribe_Collections.Look(ref rewards, "outpostdefense_rewards", LookMode.Deep);
         }
     }
     public class WorldObjectCompProperties_SiteDefense : WorldObjectCompProperties
     {
         public WorldObjectCompProperties_SiteDefense()
         {
-            this.compClass = typeof(WorldComp_SiteDefense);
+            compClass = typeof(WorldComp_SiteDefense);
         }
     }
 }
