@@ -69,7 +69,6 @@ namespace Flavor_Expansion
                 return;
 
             parms.points *= 1 + (Utilities.FactionsWar().GetByFaction(parms.faction).disposition * 0.1f);
-
         }
 
         //--------------------------------------------------------------------------------
@@ -106,7 +105,6 @@ namespace Flavor_Expansion
             }
             if (priceGain_FactionBase > 0.5f)
                 priceGain_FactionBase = 0.5f;
-
         }
         //----------------------------------------------------------------------------------------
 
@@ -208,7 +206,6 @@ namespace Flavor_Expansion
             Window_Faction window = new Window_Faction();
             foreach (War war in Utilities.FactionsWar().GetWars())
             {
-
                 FloatMenuOption floatMenuOption = new FloatMenuOption("WindowWarOverview".Translate(war.DefenderFaction(), war.AttackerFaction()), () =>
                  {
                      window.war = war;
@@ -233,7 +230,6 @@ namespace Flavor_Expansion
 
             FloatMenu floatMenu = new FloatMenu(options, "FactionWars".Translate(), true);
 
-
             if (GUI.Button(new Rect(0, 6, 90, 30), ""))
             {
                 Find.WindowStack.Add(new FloatMenu(options));
@@ -244,7 +240,5 @@ namespace Flavor_Expansion
             Widgets.Label(new Rect(0, 6, 90, 30), "FactionWars".Translate());
             Text.Anchor = TextAnchor.UpperLeft;
         }
-
     }
-
 }

@@ -10,6 +10,7 @@
 		<li Class="Flavor_Expansion.WorldObjectCompProperties_opbase" />
 		<li Class="Flavor_Expansion.WorldObjectCompProperties_SupplyDepot" />
 		<li Class="Flavor_Expansion.WorldObjectCompProperties_MercenaryBattle" />
+		<li Class="Flavor_Expansion.WorldObjectCompProperties_DisputeFOB" />
 	  </value>
 	</Operation>
 	

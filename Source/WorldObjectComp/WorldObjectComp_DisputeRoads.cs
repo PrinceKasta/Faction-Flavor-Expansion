@@ -9,35 +9,28 @@ namespace Flavor_Expansion
     class WorldComp_DisputeRoads : WorldObjectComp
     {
         private readonly IntRange NextTileBuffer = new IntRange(Global.DayInTicks/3, Global.DayInTicks);
-        public bool active = false;
-        private int timer=0;
+        private int timer = 0;
         private int set1, set2;
         private List<int> path;
 
         public void StartComp(int set1, int set2, List<int> path)
         {
-            active = true;
             this.set1 = set1;
             this.set2 = set2;
-            this.path = path.ToList();
+            this.path = path;
             timer = NextTileBuffer.RandomInRange;
         }
 
         public override void CompTick()
         {
-            if (!active)
-                return;
             if(!Find.TickManager.Paused)
                 timer--;
-            if (path.Count() <= 1 || !Find.WorldObjects.AnySettlementAt(set1)
-                || !Find.WorldObjects.AnySettlementAt(set2))
+            if (path.Count() <= 1 || !Find.WorldObjects.AnySettlementAt(set1) || !Find.WorldObjects.AnySettlementAt(set2))
             {
-                active = false;
                 Find.WorldObjects.Remove(parent);
             }
             if ( timer <= 0)
             {
-
                 NextTile();
                 timer = NextTileBuffer.RandomInRange;
             }
@@ -70,7 +63,6 @@ namespace Flavor_Expansion
 
             WorldObject dispute = WorldObjectMaker.MakeWorldObject(EndGameDefOf.Roads_Camp);
             dispute.GetComponent<WorldComp_DisputeRoads>().StartComp(set1, set2, path);
-
             dispute.SetFaction(parent.Faction);
             dispute.Tile = path.First();
 
@@ -82,7 +74,6 @@ namespace Flavor_Expansion
         public override void PostExposeData()
         {
             base.PostExposeData();
-            Scribe_Values.Look(ref active, "DisputeRoads_Active", false);
             Scribe_Values.Look(ref timer, "timer", 0);
             Scribe_Values.Look(ref set1, "set1");
             Scribe_Values.Look(ref set2, "set2");

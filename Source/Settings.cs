@@ -74,7 +74,6 @@ namespace Flavor_Expansion
             Scribe_Values.Look(value: ref Advancement, label: "Advancement", defaultValue: true);
             Scribe_Values.Look(value: ref Aid, label: "Aid", defaultValue: true);
             Scribe_Values.Look(value: ref Gift, label: "Gift", defaultValue: true);
-
             Scribe_Values.Look(value: ref MassiveBattles, label: "MassiveBattles", defaultValue: 0);
         }
     }

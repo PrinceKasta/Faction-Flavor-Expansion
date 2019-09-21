@@ -11,7 +11,7 @@ namespace Flavor_Expansion
     class WorldComp_SettlementDefender : WorldObjectComp
     {
         private bool active = false, survivors = true;
-        private int timeOut = 0;
+        private int timer = 0;
         private Faction enemy;
         private Faction ally;
         private List<Thing> FactionThings=new List<Thing>();
@@ -21,24 +21,20 @@ namespace Flavor_Expansion
         {
             if (!active)
                 return;
-            if (!enemy.HostileTo(ally) && !ParentHasMap)
-            {
-                active = false;
-            }
-
-            MapParent map = (MapParent)parent;
 
             if (!ParentHasMap)
             {
-                if (timeOut <= 0)
+                if(!enemy.HostileTo(ally))
                 {
                     active = false;
-                    Find.WorldObjects.Remove(parent);
+                    return;
+                }
+                if (timer <= Find.TickManager.TicksGame)
+                {
+                    active = false;
+                    
                     Utilities.FactionsWar().GetByFaction(ally).resources -= FE_WorldComp_FactionsWar.SETTLEMENT_RESOURCE_VALUE;
-
-                    if (!(from f in Find.WorldObjects.Settlements
-                          where f.Faction == parent.Faction
-                          select f).Any())
+                    if (!Find.WorldObjects.Settlements.Where(f=> f.Faction == parent.Faction).Any())
                     {
                         Find.LetterStack.ReceiveLetter("FactionDestroyed".Translate(), "LetterFactionBaseDefeated_FactionDestroyed".Translate(parent.Faction.Name), LetterDefOf.PositiveEvent, null, parent.Faction, null);
                         parent.Faction.defeated = true;
@@ -46,15 +42,14 @@ namespace Flavor_Expansion
                     }
 
                     Site resuce = SiteMaker.MakeSite(SiteCoreDefOf.Nothing, EndGameDefOf.Outpost_SiteResuce, parent.Tile, enemy, true, StorytellerUtility.DefaultSiteThreatPointsNow());
-                    
-                    resuce.GetComponent<WorldComp_SettlementResuce>().StartComp(parent.ID, ally);
-                    resuce.GetComponent<TimeoutComp>().StartTimeout(6000);
+                    resuce.GetComponent<WorldComp_SettlementResuce>().StartComp(ally);
+                    resuce.GetComponent<TimeoutComp>().StartTimeout(new IntRange(9 * Global.DayInTicks, 15 * Global.DayInTicks).RandomInRange);
+                    Find.WorldObjects.Remove(parent);
                     Find.WorldObjects.Add(resuce);
+
                     Find.LetterStack.ReceiveLetter("LetterLabelSettlementDefenderIgnored".Translate(), TranslatorFormattedStringExtensions.Translate("SettlementDefenderIgnored", parent, parent.Faction.leader),
                             LetterDefOf.ThreatBig, new LookTargets(parent.Tile), null, null);
-                    return;
                 }
-                timeOut--;
                 return;
             }
             //Goodwill cost to unforbid items in the ally map
@@ -68,16 +63,12 @@ namespace Flavor_Expansion
                 }
             }
             FriendliesDead();
-
-
             HostileDefeated();
-               
-
         }
-        public void StartComp(Faction enemy, Faction ally, int timeout, List<Thing> rewards)
+        public void StartComp(Faction enemy, Faction ally, int timer, List<Thing> rewards)
         {
             this.rewards = rewards;
-            timeOut = timeout;
+            this.timer = timer + Find.TickManager.TicksGame;
             active = true;
             this.enemy = enemy;
             this.ally = ally;
@@ -92,7 +83,6 @@ namespace Flavor_Expansion
         }
         public override void PostMapGenerate()
         {
-            base.PostMapGenerate();
             if (!active)
                 return;
             MapParent parent = (MapParent)this.parent;
@@ -136,20 +126,17 @@ namespace Flavor_Expansion
                 return false;
             }
             MapParent map = (MapParent)parent;
-            if (map.HasMap && map.Faction == ally && survivors
-                && !GenHostility.AnyHostileActiveThreatTo(map.Map, map.Faction))
+            if (map.HasMap && map.Faction == ally && survivors && !GenHostility.AnyHostileActiveThreatTo(map.Map, map.Faction))
             {
                 parent.Faction.TryAffectGoodwillWith(Faction.OfPlayer, 12);
                 DropPodUtility.DropThingsNear(DropCellFinder.TradeDropSpot(Find.AnyPlayerHomeMap), Find.AnyPlayerHomeMap, rewards, 110, false, true, true);
-                string text = "" + TranslatorFormattedStringExtensions.Translate("SettlementDefenderWon", parent, TimedForcedExit.GetForceExitAndRemoveMapCountdownTimeLeftString(Global.DayInTicks), parent.Faction.leader) + GenLabel.ThingsLabel(rewards, string.Empty);
+                string text = TranslatorFormattedStringExtensions.Translate("SettlementDefenderWon", parent, TimedForcedExit.GetForceExitAndRemoveMapCountdownTimeLeftString(Global.DayInTicks), parent.Faction.leader) + GenLabel.ThingsLabel(rewards, string.Empty);
                 GenThing.TryAppendSingleRewardInfo(ref text, rewards);
                 Find.LetterStack.ReceiveLetter("LetterLabelSettlementDefenderWon".Translate(), text, LetterDefOf.PositiveEvent, parent, null, null);
                 map.Map.Parent.GetComponent<TimedForcedExit>().StartForceExitAndRemoveMapCountdown(Global.DayInTicks);
-
                 return true;
             }
             return false;
-
         }
 
         private bool FriendliesDead()
@@ -172,16 +159,19 @@ namespace Flavor_Expansion
             return false;
         }
         public override string CompInspectStringExtra() => active
-                ? base.CompInspectStringExtra() + "ExtraCompString_SettlementDefense".Translate(timeOut.ToStringTicksToPeriod())
+                ? base.CompInspectStringExtra() + "ExtraCompString_SettlementDefense".Translate((timer - Find.TickManager.TicksGame).ToStringTicksToPeriod())
                 : base.CompInspectStringExtra();
 
         public override void PostExposeData()
         {
+            
             Scribe_Values.Look(ref active, "SettlementDefender_Active", defaultValue: false);
+            if (!active)
+                return;
             Scribe_References.Look(ref ally, "SettlementDefender_Ally");
             Scribe_References.Look(ref enemy, "SettlementDefender_Enemy");
             Scribe_Values.Look(ref survivors, "SettlementDefender_survivors", defaultValue: true);
-            Scribe_Values.Look(ref timeOut, "SettlementDefender_timeOut", defaultValue: 0);
+            Scribe_Values.Look(ref timer, "SettlementDefender_timer", defaultValue: 0);
             Scribe_Collections.Look(ref rewards, "SettlementDefender_rewards",LookMode.Deep);
             Scribe_Collections.Look(ref FactionThings, "SettlementDefender_Factionthings",LookMode.Reference);
         }

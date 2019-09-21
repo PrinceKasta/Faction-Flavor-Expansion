@@ -44,7 +44,6 @@ namespace Flavor_Expansion
             DiaNode nodeRoot = new DiaNode(TranslatorFormattedStringExtensions.Translate("MercenaryBattleRequest", askingFaction.leader, war.AttackerFaction() == askingFaction ? war.DefenderFaction() : war.AttackerFaction(), askingFaction.def.leaderTitle));
             nodeRoot.options.Add(new DiaOption("MercenaryBattleRequest_Accept".Translate())
             {
-
                 action = () =>
                 {
                     Site site = SiteMaker.MakeSite(EndGameDefOf.BattleLocation, SitePartDefOf.Outpost, tile, askingFaction, true);
@@ -78,7 +77,6 @@ namespace Flavor_Expansion
                     }
                     if ((f1Win && war.DefenderFaction() == askingFaction) || (!f1Win && war.AttackerFaction() == askingFaction))
                         askingFaction.TryAffectGoodwillWith(Faction.OfPlayer, -15);
-
                 },
                 link = new DiaNode("MercenaryBattleRequestReject".Translate(f1Win ? war.AttackerFaction() : war.DefenderFaction(), f1Win ? war.DefenderFaction() : war.AttackerFaction()))
                 {

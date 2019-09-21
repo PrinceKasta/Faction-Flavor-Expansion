@@ -8,10 +8,7 @@ namespace Flavor_Expansion
 {
     class FactionDialogUtilities
     {
-        public static string ArmoryTextPerLevel(Faction faction, List<Thing> requirements)
-        {
-            return ("FE_ArmoryLevel" + Utilities.FactionsWar().GetByFaction(faction).investments.Armory).Translate(faction, GenLabel.ThingsLabel(requirements, string.Empty));
-        }
+        public static string ArmoryTextPerLevel(Faction faction, List<Thing> requirements) => ("FE_ArmoryLevel" + Utilities.FactionsWar().GetByFaction(faction).investments.Armory).Translate(faction, GenLabel.ThingsLabel(requirements, string.Empty));
 
         public static bool CanUpgradeArmoryNWeaponry(Faction faction, List<Thing> requirements, int level)
         {
@@ -73,15 +70,9 @@ namespace Flavor_Expansion
             }
         }
 
-        public static string WeaponryTextPerLevel(Faction faction, List<Thing> requirements)
-        {
-            return ("FE_WeaponryLevel" + Utilities.FactionsWar().GetByFaction(faction).investments.Weaponry).Translate(faction, GenLabel.ThingsLabel(requirements, string.Empty));
-        }
+        public static string WeaponryTextPerLevel(Faction faction, List<Thing> requirements) => ("FE_WeaponryLevel" + Utilities.FactionsWar().GetByFaction(faction).investments.Weaponry).Translate(faction, GenLabel.ThingsLabel(requirements, string.Empty));
 
-        public static string RawMaterialsTextPerLevel(Faction faction, List<Thing> requirements)
-        {
-            return ("FE_RawMaterialLevel" + Utilities.FactionsWar().GetByFaction(faction).investments.Mining).Translate(faction, GenLabel.ThingsLabel(requirements, string.Empty));
-        }
+        public static string RawMaterialsTextPerLevel(Faction faction, List<Thing> requirements) => ("FE_RawMaterialLevel" + Utilities.FactionsWar().GetByFaction(faction).investments.Mining).Translate(faction, GenLabel.ThingsLabel(requirements, string.Empty));
 
         public static bool CanUpgradeRawMaterials(Faction faction, List<Thing> requirements, int level)
         {
@@ -127,10 +118,7 @@ namespace Flavor_Expansion
             }
         }
 
-        public static string MedicineTextPerLevel(Faction faction, List<Thing> requirements)
-        {
-            return ("FE_MedicineLevel" + Utilities.FactionsWar().GetByFaction(faction).investments.Medicine).Translate(faction, GenLabel.ThingsLabel(requirements, string.Empty));
-        }
+        public static string MedicineTextPerLevel(Faction faction, List<Thing> requirements) => ("FE_MedicineLevel" + Utilities.FactionsWar().GetByFaction(faction).investments.Medicine).Translate(faction, GenLabel.ThingsLabel(requirements, string.Empty));
 
         public static bool CanUpgradeMedicine(Faction faction, List<Thing> requirements, int level)
         {
@@ -172,10 +160,7 @@ namespace Flavor_Expansion
             }
         }
 
-        public static string DruglabsTextPerLevel(Faction faction, List<Thing> requirements)
-        {
-            return ("FE_DruglabsLevel" + Utilities.FactionsWar().GetByFaction(faction).investments.Druglabs).Translate(faction, GenLabel.ThingsLabel(requirements, string.Empty));
-        }
+        public static string DruglabsTextPerLevel(Faction faction, List<Thing> requirements) => ("FE_DruglabsLevel" + Utilities.FactionsWar().GetByFaction(faction).investments.Druglabs).Translate(faction, GenLabel.ThingsLabel(requirements, string.Empty));
 
         public static bool CanUpgradeDruglabs(Faction faction, List<Thing> requirements, int level)
         {
@@ -231,10 +216,7 @@ namespace Flavor_Expansion
             }
         }
 
-        public static string ProstheticslabsTextPerLevel(Faction faction, List<Thing> requirements)
-        {
-            return ("FE_ProstheticslabsLevel" + Utilities.FactionsWar().GetByFaction(faction).investments.Prosthetics).Translate(faction, GenLabel.ThingsLabel(requirements, string.Empty));
-        }
+        public static string ProstheticslabsTextPerLevel(Faction faction, List<Thing> requirements) => ("FE_ProstheticslabsLevel" + Utilities.FactionsWar().GetByFaction(faction).investments.Prosthetics).Translate(faction, GenLabel.ThingsLabel(requirements, string.Empty));
 
         public static bool CanUpgradeProstheticslabs(Faction faction, List<Thing> requirements, int level)
         {
@@ -299,10 +281,7 @@ namespace Flavor_Expansion
             }
         }
 
-        public static string FoodTextPerLevel(Faction faction, List<Thing> requirements)
-        {
-            return ("FE_FoodLevel" + Utilities.FactionsWar().GetByFaction(faction).investments.Food).Translate(faction, GenLabel.ThingsLabel(requirements, string.Empty));
-        }
+        public static string FoodTextPerLevel(Faction faction, List<Thing> requirements) => ("FE_FoodLevel" + Utilities.FactionsWar().GetByFaction(faction).investments.Food).Translate(faction, GenLabel.ThingsLabel(requirements, string.Empty));
 
         public static bool CanUpgradeFood(Faction faction, List<Thing> requirements, int level)
         {
@@ -343,10 +322,7 @@ namespace Flavor_Expansion
             }
         }
 
-        public static string ComponentsTextPerLevel(Faction faction, List<Thing> requirements)
-        {
-            return ("FE_ComponentsLevel" + Utilities.FactionsWar().GetByFaction(faction).investments.Components).Translate(faction, GenLabel.ThingsLabel(requirements, string.Empty));
-        }
+        public static string ComponentsTextPerLevel(Faction faction, List<Thing> requirements) => ("FE_ComponentsLevel" + Utilities.FactionsWar().GetByFaction(faction).investments.Components).Translate(faction, GenLabel.ThingsLabel(requirements, string.Empty));
 
         public static bool CanUpgradeComponents(Faction faction, List<Thing> requirements, int level)
         {
@@ -391,10 +367,7 @@ namespace Flavor_Expansion
             }
         }
 
-        public static string TradeTextPerLevel(Faction faction, List<Thing> requirements)
-        {
-            return ("FE_TradeLevel" + Utilities.FactionsWar().GetByFaction(faction).investments.Trade).Translate(faction, GenLabel.ThingsLabel(requirements, string.Empty));
-        }
+        public static string TradeTextPerLevel(Faction faction, List<Thing> requirements) => ("FE_TradeLevel" + Utilities.FactionsWar().GetByFaction(faction).investments.Trade).Translate(faction, GenLabel.ThingsLabel(requirements, string.Empty));
 
         public static bool CanUpgradeTrade(Faction faction, List<Thing> requirements, int level)
         {
@@ -432,10 +405,7 @@ namespace Flavor_Expansion
             }
         }
 
-        public static string RelationsTextPerLevel(Faction faction, List<Thing> requirements)
-        {
-            return ("FE_RelationsLevel" + Utilities.FactionsWar().GetByFaction(faction).investments.Relations).Translate(faction, GenLabel.ThingsLabel(requirements, string.Empty));
-        }
+        public static string RelationsTextPerLevel(Faction faction, List<Thing> requirements) => ("FE_RelationsLevel" + Utilities.FactionsWar().GetByFaction(faction).investments.Relations).Translate(faction, GenLabel.ThingsLabel(requirements, string.Empty));
 
         public static bool CanUpgradeRelations(Faction faction, List<Thing> requirements, int level)
         {

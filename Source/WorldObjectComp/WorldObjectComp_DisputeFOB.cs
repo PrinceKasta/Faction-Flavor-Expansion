@@ -9,11 +9,10 @@ namespace Flavor_Expansion
 
     class WorldComp_DisputeFOB : WorldObjectComp
     {
-        // balance
         private static readonly IntRange timerTarget = new IntRange(3, 6);
         private int stopTimer, loop = 0;
         private bool active = false;
-        private Settlement target ,set1,set2;
+        private Settlement target , set1, set2;
 
         public void StartComp(Settlement set1, Settlement set2)
         {
@@ -66,6 +65,23 @@ namespace Flavor_Expansion
             }
         }
 
+        public override void PostMapGenerate()
+        {
+            if (!active)
+                return;
+            if (parent.Faction.PlayerRelationKind >= FactionRelationKind.Neutral)
+            {
+                parent.Faction.TrySetRelationKind(Faction.OfPlayer, FactionRelationKind.Hostile, false);
+                string letterText = "AttackFriendly".Translate();
+                parent.Faction.TryAppendRelationKindChangedInfo(ref letterText, parent.Faction.PlayerRelationKind, parent.Faction.PlayerRelationKind, null);
+                Find.LetterStack.ReceiveLetter("LetterLabelCaravanEnteredEnemyBase".Translate(), letterText, LetterDefOf.NeutralEvent, null, parent.Faction, null);
+                foreach (Pawn p in ((MapParent)parent).Map.mapPawns.SpawnedPawnsInFaction(parent.Faction))
+                {
+                    ((MapParent)parent).Map.attackTargetsCache.UpdateTarget(p);
+                }
+            }
+        }
+
         private bool NextTarget(out Settlement target) => Find.WorldObjects.Settlements.Where(s => Utilities.Reachable(parent.Tile, s.Tile, 300) && s.Faction.HostileTo(parent.Faction) && s.Spawned).TryRandomElement(out target)
                 ? true
                 : false;
@@ -81,8 +97,8 @@ namespace Flavor_Expansion
         }
         public override string CompInspectStringExtra() => active ? base.CompInspectStringExtra() + "DisputeFODdesc".Translate((stopTimer - Find.TickManager.TicksGame).ToStringTicksToPeriod(), target) : null;
     }
-    public class WorldObjectCompProperties_DisputeCity : WorldObjectCompProperties
+    public class WorldObjectCompProperties_DisputeFOB : WorldObjectCompProperties
     {
-        public WorldObjectCompProperties_DisputeCity() => compClass = typeof(WorldComp_DisputeFOB);
+        public WorldObjectCompProperties_DisputeFOB() => compClass = typeof(WorldComp_DisputeFOB);
     }
 }

@@ -43,7 +43,6 @@ namespace Flavor_Expansion
             DiaNode nodeRoot = new DiaNode(TranslatorFormattedStringExtensions.Translate("ResearchGained", faction.leader, silver.stackCount, def.label));
             nodeRoot.options.Add(new DiaOption("ResearchGained_Purchase".Translate(silver.stackCount))
             {
-
                 action = () =>
                 {
                     Find.ResearchManager.FinishProject(def, false, PawnGenerator.GeneratePawn(new PawnGenerationRequest(PawnKindDefOf.Villager, faction, PawnGenerationContext.NonPlayer, -1, false, false, false, false, false)));
@@ -58,7 +57,6 @@ namespace Flavor_Expansion
             });
             nodeRoot.options.Add(new DiaOption("ResearchGained_Decline".Translate())
             {
-
                 resolveTree = true
             });
             string title = "ResearchGainedTitle".Translate();
@@ -66,7 +64,6 @@ namespace Flavor_Expansion
             Find.Archive.Add(new ArchivedDialog(nodeRoot.text, title, faction));
 
             Find.ResearchManager.FinishProject(def, false, PawnGenerator.GeneratePawn(new PawnGenerationRequest(PawnKindDefOf.Villager, faction, PawnGenerationContext.NonPlayer, -1, false, false, false, false, false)));
-            
             return false;
         }
 

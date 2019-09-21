@@ -118,9 +118,7 @@ namespace Flavor_Expansion
             textRect.yMax -= 50;
             Widgets.TextAreaScrollable(textRect, war.warHistory, ref scrollPosition,true);
             Text.Anchor = TextAnchor.UpperLeft;
-
             GUI.color = Color.white;
-            //GUI.EndGroup();
         }
 
         private void DevModeSliders(Rect inRect)
@@ -133,12 +131,6 @@ namespace Flavor_Expansion
             Utilities.FactionsWar().GetByFaction(war.AttackerFaction()).resources = Widgets.HorizontalSlider(rect2, Utilities.FactionsWar().GetByFaction(war.AttackerFaction()).resources, 0, Utilities.FactionsWar().MaxResourcesForFaction(war.AttackerFaction()), true, "(DevMode) " + Utilities.FactionsWar().GetByFaction(war.AttackerFaction()).resources);
         }
 
-        public override Vector2 InitialSize
-        {
-            get
-            {
-                return new Vector2(720f, 600f);
-            }
-        }
+        public override Vector2 InitialSize => new Vector2(720f, 600f);
     }
 }

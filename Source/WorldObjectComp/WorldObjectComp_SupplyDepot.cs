@@ -7,7 +7,7 @@ namespace Flavor_Expansion
 {
     class WorldObjectComp_SupplyDepot : WorldObjectComp
     {
-        public enum Type { Undefined,Weapons, Food};
+        public enum Type {Undefined, Weapons, Food};
 
         private Type type = Type.Undefined;
         private bool active = false;
@@ -50,7 +50,7 @@ namespace Flavor_Expansion
             foreach(Thing t in ((MapParent)this.parent).Map.listerThings.AllThings.Where(t=> t.def.PlayerAcquirable && t.def.CountAsResource && !(t.def.category== ThingCategory.Building)).ToList())
             {
                 if ( type == Type.Weapons && !t.def.IsWeapon && Rand.Chance(0.8f))
-                {;
+                {
                     GenerateWeapons(t.InteractionCell);
                     t.Destroy();
                     thingCount += 2;
@@ -74,15 +74,12 @@ namespace Flavor_Expansion
                     thingCount++;
                 }
             }
-
         }
 
         private void GenerateWeapons(IntVec3 t)
         {
             MapParent parent = (MapParent)this.parent;
-            if(!(from def in DefDatabase<ThingDef>.AllDefs
-                                 where def.IsWeapon && def.BaseMarketValue > 20 && def.techLevel <= parent.Faction.def.techLevel && !def.label.Contains("tornado") && !def.label.Contains("orbital")
-                                 select def).TryRandomElement(out ThingDef thingDef))
+            if(!DefDatabase<ThingDef>.AllDefs.Where(def=> def.IsWeapon && def.BaseMarketValue > 20 && def.techLevel <= parent.Faction.def.techLevel && !def.label.Contains("tornado") && !def.label.Contains("orbital")).TryRandomElement(out ThingDef thingDef))
             {
                 Log.Error("Didn't find a sutiable weapon def for supplydepot which shouldn't happen");
                 return;
@@ -108,9 +105,7 @@ namespace Flavor_Expansion
         private void GenerateFood(IntVec3 t)
         {
             MapParent parent = (MapParent)this.parent;
-            ThingDef thingDef = (from def in DefDatabase<ThingDef>.AllDefs
-                                 where def.IsNutritionGivingIngestible && def.PlayerAcquirable && def.CountAsResource
-                                 select def).RandomElement();
+            DefDatabase<ThingDef>.AllDefs.Where(def=> def.IsNutritionGivingIngestible && def.PlayerAcquirable && def.CountAsResource).TryRandomElement(out ThingDef thingDef);
 
             for (int i = 0; i < 3; i++)
             {

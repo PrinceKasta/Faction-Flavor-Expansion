@@ -57,85 +57,65 @@ namespace Flavor_Expansion
                 //Food
                 if (Rand.Chance(FoodChance) && (totalMarketValue - collectiveMarketValue) > 100)
                 {
-                    IEnumerable<ThingDef> enumerable = from def in DefDatabase<ThingDef>.AllDefs
-                                                       where def.IsNutritionGivingIngestible && def.PlayerAcquirable && def.CountAsResource && def.BaseMarketValue < 15 && !def.label.Contains("Human")
-                                                       select def;
+                    IEnumerable<ThingDef> enumerable = DefDatabase<ThingDef>.AllDefs.Where(def => def.IsNutritionGivingIngestible && def.PlayerAcquirable && def.CountAsResource && def.BaseMarketValue < 15 && !def.label.Contains("Human"));
                     int randomInRange = FoodCountRange.RandomInRange;
-                    ThingDef thingDef = enumerable.RandomElement();
-                    Thing thing = ThingMaker.MakeThing(thingDef, null);
+                    Thing thing = ThingMaker.MakeThing(enumerable.RandomElement(), null);
                     thing.stackCount = 0;
                     for (int i = 0; i < randomInRange; i++)
                     {
-
                         thing.stackCount += FoodStackRange.RandomInRange;
                         if (thing.MarketValue * thing.stackCount > totalMarketValue * 1.5)
                             continue;
                     }
-                        outThings.Add(thing);
-                        collectiveMarketValue += thing.MarketValue * thing.stackCount;
-                        //Log.Warning("Food  " + thing.Label + "  " + thing.MarketValue * thing.stackCount + ", coll  " + collectiveMarketValue);
-                    
-
+                    outThings.Add(thing);
+                    collectiveMarketValue += thing.MarketValue * thing.stackCount;
                 }
                 //Armor
                 if (Rand.Chance(ArmorChance) && (totalMarketValue - collectiveMarketValue) > 100)
                 {
-                    IEnumerable<ThingDef> enumerable = from def in DefDatabase<ThingDef>.AllDefs
-                                                       where def.IsApparel && def.BaseMarketValue> 100
-                                                       select def;
+                    IEnumerable<ThingDef> enumerable = DefDatabase<ThingDef>.AllDefs.Where(def => def.IsApparel && def.BaseMarketValue > 100);
                     int randomInRange = ArmorCountRange.RandomInRange;
                     for (int i = 0; i < randomInRange; i++)
                     {
-                        ThingDef thingDef = enumerable.ToList().RandomElement();
+                        ThingDef thingDef = enumerable.RandomElement();
                         Thing thing = ThingMaker.MakeThing(thingDef,GenStuff.RandomStuffByCommonalityFor(thingDef,Find.FactionManager.OfPlayer.def.techLevel));
                         if (thing.MarketValue > totalMarketValue)
                             continue;
                         outThings.Add(thing);
                         collectiveMarketValue += thing.MarketValue;
-                       // Log.Warning("Armor  " + thing.Label + "  " + thing.MarketValue + ", coll  " + collectiveMarketValue);
                     }
                 }
                 //Weapons
                 if (Rand.Chance(WeaponsChance) && (totalMarketValue - collectiveMarketValue) > 100)
                 {
-                    IEnumerable<ThingDef> enumerable = from def in DefDatabase<ThingDef>.AllDefs
-                                                       where def.IsWeapon && def.BaseMarketValue > 20 && !def.label.Contains("tornado") && !def.label.Contains("orbital")
-                                                       select def;
+                    IEnumerable<ThingDef> enumerable = DefDatabase<ThingDef>.AllDefs.Where(def => def.IsWeapon && def.BaseMarketValue > 20 && !def.label.Contains("tornado") && !def.label.Contains("orbital"));
                     int randomInRange = WeaponsCountRange.RandomInRange;
                     for (int i = 0; i < randomInRange; i++)
                     {
-                        ThingDef thingDef = enumerable.ToList().RandomElement();
+                        ThingDef thingDef = enumerable.RandomElement();
                         Thing thing = ThingMaker.MakeThing(thingDef, GenStuff.RandomStuffByCommonalityFor(thingDef, Find.FactionManager.OfPlayer.def.techLevel));
                         if (thing.MarketValue > totalMarketValue)
                             continue;
                         outThings.Add(thing);
                         collectiveMarketValue += thing.MarketValue;
-                        //Log.Warning("Weapons  " + thing.Label + "  " + thing.MarketValue + ", coll  " + collectiveMarketValue);
                     }
                 }
                 //Misc
                 if (Rand.Chance(MiscChance) && (totalMarketValue - collectiveMarketValue) > 100)
                 {
-                    IEnumerable<ThingDef> enumerable = from def in DefDatabase<ThingDef>.AllDefs
-                                                       where def.PlayerAcquirable && def.CountAsResource && !def.IsNutritionGivingIngestible
-                                                       && !def.IsWeapon && !def.IsApparel && !def.IsMedicine && def.stackLimit == 1
-                                                       select def;
-                    
+                    IEnumerable<ThingDef> enumerable = DefDatabase<ThingDef>.AllDefs.Where(def => def.PlayerAcquirable && def.CountAsResource && !def.IsNutritionGivingIngestible && !def.IsWeapon && !def.IsApparel && !def.IsMedicine && def.stackLimit == 1);
                     int randomInRange = MiscCountRange.RandomInRange;
                     for (int i = 0; i < randomInRange; i++)
                     {
-                        Thing thing = ThingMaker.MakeThing(enumerable.ToList().RandomElement());
-                        
+                        Thing thing = ThingMaker.MakeThing(enumerable.RandomElement());
                         thing.stackCount = randomInRange;
                         if (thing.MarketValue * thing.stackCount > totalMarketValue)
                             continue;
                         outThings.Add(thing);
                         collectiveMarketValue += thing.MarketValue * thing.stackCount;
-                       // Log.Warning("Misc  " + thing.Label+"  "+ thing.MarketValue * thing.stackCount+", coll  "+ collectiveMarketValue);
                     }
                 }
             }
-            //Log.Message("TotalMarketValue:  " + collectiveMarketValue);
             return outThings;
         }
     }
@@ -154,38 +134,30 @@ namespace Flavor_Expansion
                 //Medicine
                 if ((totalMarketValue - collectiveMarketValue) > 0 && InjuredCount > 0)
                 {
-                    IEnumerable<ThingDef> enumerableMedicine = from def in DefDatabase<ThingDef>.AllDefs
-                                                               where def.IsMedicine && def.techLevel == faction.def.techLevel
-                                                               select def;
-                    Thing thing = ThingMaker.MakeThing(enumerableMedicine.ToList().RandomElement());
+                    IEnumerable<ThingDef> enumerableMedicine = DefDatabase<ThingDef>.AllDefs.Where(def => def.IsMedicine && def.techLevel == faction.def.techLevel);
+                    Thing thing = ThingMaker.MakeThing(enumerableMedicine.RandomElement());
                     thing.stackCount = MedicineStackRange.RandomInRange;
                     if (thing.MarketValue * thing.stackCount > totalMarketValue)
                         continue;
                     outThings.Add(thing);
                     collectiveMarketValue += thing.MarketValue * thing.stackCount;
-                    Log.Warning("Medicine  " + thing.Label + "  " + thing.MarketValue * thing.stackCount + ", coll  " + collectiveMarketValue);
                 }
                 if ((totalMarketValue - collectiveMarketValue) > 0 && StarvingCount > 0)
                 {
-                    IEnumerable<ThingDef> enumerableFood = from def in DefDatabase<ThingDef>.AllDefs
-                                                           where def.IsNutritionGivingIngestible && def.PlayerAcquirable && def.CountAsResource && !def.IsDrug && !def.label.Contains("Human")
-                                                           select def;
-                    ThingDef thingDef = enumerableFood.ToList().RandomElement();
+                    IEnumerable<ThingDef> enumerableFood = DefDatabase<ThingDef>.AllDefs.Where(def => def.IsNutritionGivingIngestible && def.PlayerAcquirable && def.CountAsResource && !def.IsDrug && !def.label.Contains("Human"));
+                    ThingDef thingDef = enumerableFood.RandomElement();
                     Thing thing = ThingMaker.MakeThing(thingDef, null);
                     thing.stackCount += FoodStackRange.RandomInRange;
                     if (thing.MarketValue * thing.stackCount > totalMarketValue * 1.5)
                         continue;
                     outThings.Add(thing);
                     collectiveMarketValue += thing.MarketValue * thing.stackCount;
-                    Log.Warning("Food  " + thing.Label + "  " + thing.MarketValue * thing.stackCount + ", coll  " + collectiveMarketValue);
                 }
             }
-            bool found = false;
             List<Thing> mergeThings =new List<Thing>();
             foreach(Thing thing in outThings)
             {
-                
-                found = false;
+                bool found = false;
                 foreach(Thing merge in mergeThings)
                 {
                     if (merge.def == thing.def)
@@ -198,7 +170,6 @@ namespace Flavor_Expansion
                 if (!found)
                 {
                     mergeThings.Add(thing);
-                    Log.Warning("Adding - "+thing.Label);
                 }
             }
             return mergeThings;

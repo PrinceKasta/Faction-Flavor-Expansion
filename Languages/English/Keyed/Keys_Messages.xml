@@ -36,5 +36,5 @@
 	<LetterLabelFactionWarSubject>Subject under attack</LetterLabelFactionWarSubject>
     <FactionWarSubject>{1} has declared war on our subject faction, {0}, if they are defeated we risk losing their payments and any of our investments.\n\nWe might want to support them in the war by weakening their enemies and gifting them resources..</FactionWarSubject>
   
-	
+	<AttackFriendly>You attacked a friendly outpost, they aren't happy about that.</AttackFriendly>
 </LanguageData>

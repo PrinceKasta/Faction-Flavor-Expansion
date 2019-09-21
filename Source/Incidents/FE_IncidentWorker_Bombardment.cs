@@ -46,7 +46,6 @@ namespace Flavor_Expansion
                 return false;
             float silver = silverCurve.Evaluate(1 - (1 / Find.AnyPlayerHomeMap.wealthWatcher.WealthTotal));
             List<Thing> demand= new List<Thing>();
-
             GenerateDemands(demand, silver);
 
             silver = GenThing.GetMarketValue(demand);

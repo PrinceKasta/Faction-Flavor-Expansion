@@ -51,7 +51,7 @@ namespace Flavor_Expansion
             
             foreach(Settlement s in list.InRandomOrder())
             {
-                set1=list.Find(x => x != s && Utilities.Reachable(x, s, 100) && !RoadAlreadyExists(x, s));
+                set1= list.Find(x => x != s && Utilities.Reachable(x, s, 100) && !RoadAlreadyExists(x, s));
                 if (set1 != null)
                 {
                     set2 = s;

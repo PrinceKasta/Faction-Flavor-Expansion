@@ -114,7 +114,6 @@ namespace Flavor_Expansion
             Scribe_References.Look(ref ally, "jointraid_ally");
             Scribe_Deep.Look(ref Bonus, "jointraid_Bonus");
             Scribe_Collections.Look(ref rewards, "jointraid_rewards", LookMode.Deep);
-
         }
     }
 

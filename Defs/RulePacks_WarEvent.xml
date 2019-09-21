@@ -5,7 +5,7 @@
 	  <defName>FE_WarEvent_Raid</defName>
 		<rulePack>
 		<rulesStrings>
-			<li>FE_RaidSuccess->[FACTION1_name] has [raid_objective] [AffectedTown_name] of [FACTION2_name]</li>
+			<li>FE_RaidSuccess->[FACTION1_name] has [raidSuccess_objective] [AffectedTown_name] of [FACTION2_name]</li>
 			
 			<li>raidSuccess_objective->raided and destroyed</li>
 			<li>raidSuccess_objective->looted and razed</li>

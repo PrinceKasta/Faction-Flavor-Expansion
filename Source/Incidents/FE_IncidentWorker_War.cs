@@ -24,12 +24,9 @@ namespace Flavor_Expansion
 
         private static bool PotentialWars()
         {
-            List<LE_FactionInfo> info = Utilities.FactionsWar().factionInfo;
-            List<War> wars = Utilities.FactionsWar().GetWars();
-
-            foreach(LE_FactionInfo factionInfo in info)
+            foreach (LE_FactionInfo factionInfo in Utilities.FactionsWar().factionInfo)
             {
-                if (info.Any(x=> x.faction!= factionInfo.faction && x.faction.HostileTo(factionInfo.faction) && !wars.Any(war => war.Equal(factionInfo.faction, x.faction))))
+                if (Utilities.FactionsWar().factionInfo.Any(x=> x.faction!= factionInfo.faction && x.faction.HostileTo(factionInfo.faction) && !Utilities.FactionsWar().GetWars().Any(war => war.Equal(factionInfo.faction, x.faction))))
                 {
                     return true;
                 }

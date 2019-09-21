@@ -99,7 +99,7 @@
 			</points>
 		</chanceFactorByPopulationCurve>
 		<letterLabel>Settlement defense quest</letterLabel>
-		<letterText>{0}, {1} of {2}, has sent us a message.\n\nA settlement of theirs is coming under attack. They've asked us to help them defend it, which means eliminating all enemies attacking the settlement.\n\nIf we succeed, their relations will improve, and they'll send us this reward worth {5}:\n\n{3}\n\nIf we don't arrive to reinforce the settlement in {4} days, the settlement will be captured and {2} will weaken.</letterText>
+		<letterText>{0}, {1} of {2}, has sent us a message.\n\nA settlement of theirs is coming under attack. They've asked us to help them defend it, which means eliminating all enemies attacking the settlement.\n\nIf we succeed our relations will improve, and they'll send us this reward worth {5}:\n\n{3}\n\nIf we don't arrive to reinforce the settlement in {4} days, the settlement will be captured and {2} will weaken.</letterText>
 		<letterDef>PositiveEvent</letterDef>
 		
 	</IncidentDef>

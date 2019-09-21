@@ -22,12 +22,10 @@ namespace Flavor_Expansion
                 return;
             }
             List<Thing> payment = new List<Thing>();
-            Thing silver = ThingMaker.MakeThing(ThingDefOf.Silver);
-            
             string factionList = "";
             bool vassalPay = false, TributePay = false;
 
-            foreach (LE_FactionInfo f in Utilities.FactionsWar().factionInfo.Where(i=>i.vassalage!=0))
+            foreach (LE_FactionInfo f in Utilities.FactionsWar().factionInfo.Where(i=> i.vassalage != 0))
             {
                 if (f.vassalage == 2)
                 {
@@ -40,14 +38,6 @@ namespace Flavor_Expansion
                     else if (Find.TickManager.TicksGame % (Global.DayInTicks * 7) == 0)
                     {
                         f.faction.TryAffectGoodwillWith(Faction.OfPlayer, RelationsInvestment(f, payment), false, true, "FactionVassalageGoodWillDecay".Translate());
-                    }
-                    // Vassal Tribute
-                    if (GenLocalDate.Year(Find.AnyPlayerHomeMap) == year && GenLocalDate.DayOfYear(Find.AnyPlayerHomeMap) == 0)
-                    {
-                        silver.stackCount = new IntRange(800 + (f.faction.PlayerGoodwill * 5), 1700 + (f.faction.PlayerGoodwill * 5)).RandomInRange;
-                        factionList += f.faction + ",";
-                        vassalPay = true;
-                        payment.Add(silver);
                     }
                     // Investment returns
                     if (GenLocalDate.DayOfYear(Find.AnyPlayerHomeMap) == dayOfMonth)
@@ -68,8 +58,7 @@ namespace Flavor_Expansion
                         }
                     }
                 }
-
-                #region Tribute
+                
                 if (f.vassalage == 1)
                 {
                     if (f.faction.PlayerRelationKind == FactionRelationKind.Hostile)
@@ -85,12 +74,12 @@ namespace Flavor_Expansion
                     // Tribute
                     if (GenLocalDate.DayOfYear(Find.AnyPlayerHomeMap) == dayOfMonth)
                     {
+                        Thing silver = ThingMaker.MakeThing(ThingDefOf.Silver);
                         silver.stackCount = new IntRange(850 + (f.faction.PlayerGoodwill * 8), 1300 + (f.faction.PlayerGoodwill * 8)).RandomInRange;
                         factionList += f.faction + ",";
                         TributePay = true;
                     }
                 }
-                #endregion Tribute
             }
             Payment(payment,vassalPay, TributePay ,factionList);
         }
@@ -531,7 +520,6 @@ namespace Flavor_Expansion
             if (GenLocalDate.DayOfYear(Find.AnyPlayerHomeMap) >= dayOfMonth)
             {
                 dayOfMonth = ClosestNumberOf15(GenLocalDate.DayOfYear(Find.AnyPlayerHomeMap) + 1);
-
             }
             if (!payment.NullOrEmpty())
             {
@@ -550,19 +538,15 @@ namespace Flavor_Expansion
                 }
 
                 factionList.Remove(factionList.Count() - 1);
-                IntVec3 intVec3 = DropCellFinder.TradeDropSpot(Find.AnyPlayerHomeMap);
-                DropPodUtility.DropThingsNear(intVec3, Find.AnyPlayerHomeMap, payment, 110, false, true, true);
+                DropPodUtility.DropThingsNear(DropCellFinder.TradeDropSpot(Find.AnyPlayerHomeMap), Find.AnyPlayerHomeMap, payment, 110, false, true, true);
                 Find.LetterStack.ReceiveLetter("LetterFactionVassalSilverRecived".Translate(), text + factionList, LetterDefOf.PositiveEvent, null);
             }
         }
-    
-
+ 
         private static int ClosestNumberOf15(int num)
         {
-            
             int q = num / 15;
             int n2 = 15 * (q + 1);
-
             return n2;
         }
 

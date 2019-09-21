@@ -36,21 +36,6 @@
   </WorldObjectDef>
   
   <WorldObjectDef>
-    <defName>Dispute_FOB</defName>
-    <label>Forward Operating Base</label>
-    <description>A forward operating base designated for initiating raids.</description>
-    <worldObjectClass>Flavor_Expansion.WorldObject_RoadsCamp</worldObjectClass>
-    <texture>World/WorldObjects/Sites/Outpost</texture>
-    <expandingIcon>true</expandingIcon>
-    <expandingIconTexture>World/WorldObjects/Expanding/forward_operating_base</expandingIconTexture>
-    <expandingIconPriority>70</expandingIconPriority>
-    <comps>
-      <li Class="WorldObjectCompProperties_Timeout" />
-	  <li Class="Flavor_Expansion.WorldObjectCompProperties_DisputeCity" />
-    </comps>
-  </WorldObjectDef>
-  
-  <WorldObjectDef>
     <defName>Roads_Camp</defName>
     <label>Roads Camp</label>
     <description>Build Roads.</description>
@@ -61,7 +46,6 @@
     <expandingIconPriority>70</expandingIconPriority>
     <comps>
 	  <li Class="Flavor_Expansion.WorldObjectCompProperties_DisputeRoads" />
-      <li Class="WorldObjectCompProperties_Timeout" />
     </comps>
   </WorldObjectDef>
 

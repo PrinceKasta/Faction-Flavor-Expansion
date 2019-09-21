@@ -19,7 +19,6 @@ namespace Flavor_Expansion
             int disposition = Utilities.FactionsWar().GetByFaction(faction).disposition;
             DiaNode diaNode1 = new DiaNode("FactionChose".Translate(disposition == 0 ? "FactionNeutral".Translate() : disposition > 0 ? (disposition> 4 ? "FactionGenocidal".Translate() : "FactionWarlike".Translate()) : disposition<-4 ? "FactionPacifistic".Translate() : "FactionPeacelike".Translate()) + (Prefs.DevMode ? " (Debug): (" + disposition + ")\n" : "\n") + "FactionDispositionInfo".Translate()+ "FactionResourcesInfo".Translate(faction,Math.Floor(Utilities.FactionsWar().GetByFaction(faction).resources/Utilities.FactionsWar().MaxResourcesForFaction(faction) * 100))+(Prefs.DevMode ? (" (DevMode) resources:"+ Utilities.FactionsWar().GetByFaction(faction).resources)+", Total Capacity: "+ Utilities.FactionsWar().MaxResourcesForFaction(faction) : ""));
             
-            #region History
             // Faction History
             if (EndGame_Settings.FactionHistory)
             {
@@ -36,13 +35,8 @@ namespace Flavor_Expansion
                     link = diaNode1
                 });
             }
-            #endregion History
-            
-            #region Vassal
             
             RequestVassalOptions(faction, diaNode1);
-            
-            #endregion Vassal
 
             diaNode1.options.Add(new DiaOption("GoBack".Translate())
             {
@@ -139,8 +133,7 @@ namespace Flavor_Expansion
 
                             Thing thing = ThingMaker.MakeThing(def);
                             thing.stackCount = new IntRange(75, 100).RandomInRange;
-                            IntVec3 intVec3 = DropCellFinder.TradeDropSpot(Find.AnyPlayerHomeMap);
-                            DropPodUtility.DropThingsNear(intVec3, Find.AnyPlayerHomeMap, new List<Thing>() { thing }, 110, false, false, false);
+                            DropPodUtility.DropThingsNear(DropCellFinder.TradeDropSpot(Find.AnyPlayerHomeMap), Find.AnyPlayerHomeMap, new List<Thing>() { thing }, 110, false, false, false);
                             Utilities.FactionsWar().GetByFaction(faction).vassalageResourseCooldown = Find.TickManager.TicksGame + Global.DayInTicks * 3;
                         })
                     };
@@ -157,7 +150,6 @@ namespace Flavor_Expansion
                 RequestInvestmentsNode(faction, diaNode1);
             }
         }
-
         public static void RequestInvestmentsNode(Faction faction, DiaNode diaNode1)
         {
             int cooldown = Global.DayInTicks * 3;
@@ -758,11 +750,8 @@ namespace Flavor_Expansion
             {
                 link=mainNode
             });
-
-
         }
     };
-
     
     class HistoryDialogDataBase
     {
@@ -796,7 +785,6 @@ namespace Flavor_Expansion
             while (year < Find.TickManager.StartingYear)
             {
                 HistoryOptions.Clear();
-                
                 HistoryOptions.Add(new WeightedString(FE_GrammarUtility.History(null, null, null, PawnGenerator.GeneratePawn(subject.RandomPawnKind(), subject)), 12));
                 HistoryOptions.Add(new WeightedString(FE_GrammarUtility.History(subject), 4));
                 HistoryOptions.Add(new WeightedString(FE_GrammarUtility.History(subject, Find.FactionManager.AllFactionsVisible.Where(fac => !fac.IsPlayer && fac != subject && !fac.def.hidden).RandomElement()), 3));
@@ -814,14 +802,12 @@ namespace Flavor_Expansion
                     history.Add(option.option + "\n\n");
                     year += leapInYears.RandomInRange;
                 }
-
             }
             for (int i = 0; i < history.Count - 1; i+=2)
             {
                 text+=TrimKeys(history[i]+history[i+1], subject, ref disposition);
         
             }
-            
             return text;
         }
 
@@ -829,7 +815,7 @@ namespace Flavor_Expansion
         {
             foreach(string t in history)
             {
-                if(FactionDialogUtilities.LevenshteinDistance.Calculate(text,t)<40)
+                if(FactionDialogUtilities.LevenshteinDistance.Calculate(text,t) < 40)
                 {
                     return true;
                 }
@@ -865,8 +851,5 @@ namespace Flavor_Expansion
             }
             return option;
         }
-        
     };
-
-    
 }

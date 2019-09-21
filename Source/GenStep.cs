@@ -58,7 +58,6 @@ namespace Flavor_Expansion
                 Pawn pawn = map.Parent.GetComponent<PrisonerWillingToJoinComp>() == null || !map.Parent.GetComponent<PrisonerWillingToJoinComp>().pawn.Any ? PrisonerWillingToJoinQuestUtility.GeneratePrisoner(map.Tile, map.ParentFaction) : map.Parent.GetComponent<PrisonerWillingToJoinComp>().pawn.Take(map.Parent.GetComponent<PrisonerWillingToJoinComp>().pawn[0]);
                 if (pawn.equipment != null && pawn.equipment.AllEquipmentListForReading.Count > 0)
                     pawn.equipment.DestroyAllEquipment();
-                pawn.SetFaction(map.ParentFaction);
                 BaseGen.globalSettings.map = map;
                 BaseGen.symbolStack.Push("prisonCell", new ResolveParams
                 {
@@ -66,13 +65,11 @@ namespace Flavor_Expansion
                     faction = map.ParentFaction
                 });
                 BaseGen.Generate();
-                CellRect rect = new CellRect(var.CenterCell.x, var.CenterCell.z, 1, 1);
-                rect.ClipInsideMap(map);
                 pawn.guest.SetGuestStatus(map.ParentFaction, true);
                 BaseGen.globalSettings.map = map;
                 BaseGen.symbolStack.Push("pawn", new ResolveParams
                 {
-                    rect = rect,
+                    rect = new CellRect(var.CenterCell.x, var.CenterCell.z, 1, 1).ClipInsideMap(map),
                     faction = map.ParentFaction,
                     singlePawnToSpawn = pawn,
                     postThingSpawn = x =>

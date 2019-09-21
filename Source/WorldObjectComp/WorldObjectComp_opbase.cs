@@ -43,7 +43,6 @@ namespace Flavor_Expansion
         {
             Scribe_Values.Look(ref active, "opbase_active");
         }
-
     }
     public class WorldObjectCompProperties_opbase : WorldObjectCompProperties
     {

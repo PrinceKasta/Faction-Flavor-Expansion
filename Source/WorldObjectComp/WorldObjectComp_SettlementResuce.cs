@@ -11,14 +11,12 @@ namespace Flavor_Expansion
     {
         private static readonly IntRange CorpseAmountRange = new IntRange(6, 14);
         private const float UnWillingChance = 0.75f;
-        private int ID;
-        private bool active = false, resurrectSet = false, threat = true, wasEntered=false;
+        private bool active = false, resurrectSet = false;
         private int pawnStaying = 0;
         private Faction ally;
 
-        public void StartComp(int ID , Faction ally)
+        public void StartComp(Faction ally)
         {
-            this.ID = ID;
             active = true;
             this.ally = ally;
         }
@@ -26,31 +24,34 @@ namespace Flavor_Expansion
         {
             if (!active)
                 return;
-            
-            if (threat && HostileDefeated())
-                parent.GetComponent<TimedForcedExit>().StartForceExitAndRemoveMapCountdown(Global.DayInTicks);
-
-        }
-        public override void PostMyMapRemoved() => Ressurect();
-
-        public override void PostPostRemove()
-        {
-            if (active && parent.GetComponent<TimeoutComp>().Passed && !((MapParent)parent).HasMap && !wasEntered)
+            if (parent.GetComponent<TimeoutComp>().Passed && !((MapParent)parent).HasMap)
             {
                 ally.TryAffectGoodwillWith(Faction.OfPlayer, -30);
-                Find.LetterStack.ReceiveLetter("LetterLabelSettlementRescueIgnored".Translate(), TranslatorFormattedStringExtensions.Translate("SettlementRescueIgnored", parent, ally.leader, ally.def.leaderTitle), LetterDefOf.NegativeEvent, null, ally);
-
-            } else if(active && wasEntered && threat)
+                Find.LetterStack.ReceiveLetter("LetterLabelSettlementRescueIgnored".Translate(), TranslatorFormattedStringExtensions.Translate("SettlementRescueIgnored", ally.leader, ally.def.leaderTitle), LetterDefOf.NegativeEvent, null, ally);
+                active = false;
+            }
+            if (HostileDefeated())
             {
-                ally.TryAffectGoodwillWith(Faction.OfPlayer, -20, false, true, TranslatorFormattedStringExtensions.Translate("SettlementRescueAbandoned", parent, ally.leader, ally.def.leaderTitle));
-                Find.LetterStack.ReceiveLetter("LetterLabelSettlementRescueIgnored".Translate(), TranslatorFormattedStringExtensions.Translate("SettlementRescueAbandoned", parent, ally.leader, ally.def.leaderTitle, (-20).ToString()), LetterDefOf.NegativeEvent, null, ally);
-
+                parent.GetComponent<TimedForcedExit>().StartForceExitAndRemoveMapCountdown(Global.DayInTicks);
             }
         }
+        public override void PostMyMapRemoved()
+        {
+            if (active)
+            {
+                ally.TryAffectGoodwillWith(Faction.OfPlayer, -20, false, true, TranslatorFormattedStringExtensions.Translate("SettlementRescueAbandoned", ally.leader, ally.def.leaderTitle, (-20).ToString()));
+                Find.LetterStack.ReceiveLetter("LetterLabelSettlementRescueIgnored".Translate(), TranslatorFormattedStringExtensions.Translate("SettlementRescueAbandoned", ally.leader, ally.def.leaderTitle, (-20).ToString()), LetterDefOf.NegativeEvent, null, ally);
+                active = false;
+            }
+            else
+            {
+                Ressurect();
+            }
+        }
+
         private void Ressurect()
         {
-
-            if ((parent.GetComponent<TimeoutComp>().Passed || resurrectSet) && !ally.defeated && !((MapParent)parent).HasMap)
+            if (resurrectSet && !ally.defeated)
             {
                 Settlement resurrect = (Settlement)WorldObjectMaker.MakeWorldObject(WorldObjectDefOf.Settlement);
                 Faction faction = ally;
@@ -61,7 +62,6 @@ namespace Flavor_Expansion
                 Find.WorldObjects.AllWorldObjects.Add(resurrect);
                 Utilities.FactionsWar().GetByFaction(resurrect.Faction).resources += FE_WorldComp_FactionsWar.SETTLEMENT_RESOURCE_VALUE;
             }
-
         }
         public override void PostMapGenerate()
         {
@@ -71,24 +71,19 @@ namespace Flavor_Expansion
 
             foreach (var thing in map.Map.listerThings.AllThings)
             {
-                if ((!(thing is Pawn) && thing.def.Claimable))
+                if (!(thing is Pawn) && thing.def.Claimable)
                 {
                     if (thing.def.CanHaveFaction)
                         thing.SetFactionDirect(map.Map.ParentFaction);
                 }
             }
-
             SpawnAdditonalPrisoners(map.Map);
             SpawnCorpses(map.Map);
-            wasEntered = true;
-
         }
         private void SpawnAdditonalPrisoners(Map map)
         {
             PrisonerWillingToJoinComp component = parent.GetComponent<PrisonerWillingToJoinComp>();
-            List<Pawn> prisoner = (from p in map.mapPawns.AllPawnsSpawned
-                                   where p.kindDef == PawnKindDefOf.Slave || p.IsPrisoner
-                                   select p).ToList();
+            List<Pawn> prisoner = map.mapPawns.AllPawnsSpawned.Where(p=> p.kindDef == PawnKindDefOf.Slave || p.IsPrisoner).ToList();
             DamageInfo info = new DamageInfo(DamageDefOf.Blunt, 20, 0);
             info.SetAllowDamagePropagation(true);
 
@@ -101,9 +96,7 @@ namespace Flavor_Expansion
                 pawn.mindState.WillJoinColonyIfRescued = true;
 
                 pawn.SetFaction(ally);
-                
-                IntVec3 result;
-                result = CellFinder.RandomSpawnCellForPawnNear(prisoner[i % prisoner.ToList().Count].CellsAdjacent8WayAndInside().Where(x=>x.Standable(map) && x.Walkable(map)).RandomElement(), map);
+                IntVec3 result = CellFinder.RandomSpawnCellForPawnNear(prisoner[i % prisoner.ToList().Count].CellsAdjacent8WayAndInside().Where(x=>x.Standable(map) && x.Walkable(map)).RandomElement(), map);
                 if (result == null)
                     Log.Warning("spawn pawn cell null");
                 pawn.guest.SetGuestStatus(map.ParentFaction, true);
@@ -118,7 +111,6 @@ namespace Flavor_Expansion
         {
             bool baseValidator(IntVec3 x)
             {
-
                 x.Walkable(map);
                 return map.reachability.CanReachMapEdge(x, TraverseParms.For(TraverseMode.PassAllDestroyableThings, Danger.Deadly, false));
             }
@@ -128,9 +120,9 @@ namespace Flavor_Expansion
                 Pawn corpse = PawnGenerator.GeneratePawn(PawnKindDefOf.Villager, ally);
                 if (corpse.inventory.innerContainer.Count > 0)
                     corpse.inventory.DestroyAll();
-                IntVec3 v = CellFinder.RandomClosewalkCellNear(map.Center, map, 25, baseValidator);
-
-                GenSpawn.Spawn(corpse, v, map);
+                if (!CellFinder.TryFindRandomCellNear(map.Center, map, 20, baseValidator, out IntVec3 result))
+                    return;
+                GenSpawn.Spawn(corpse, result, map);
                 corpse.Kill(parent.Faction.def.techLevel.IsNeolithicOrWorse() ? new DamageInfo(DamageDefOf.Cut, 25) : new DamageInfo(DamageDefOf.Bullet, 40));
             }
         }
@@ -139,40 +131,35 @@ namespace Flavor_Expansion
             MapParent map = (MapParent)parent;
             if (map.HasMap && !GenHostility.AnyHostileActiveThreatTo(map.Map, Faction.OfPlayer))
             {
-                threat = false;
+                active = false;
                 List<Pawn> prisoner= map.Map.mapPawns.AllPawns.Where(x => !x.Dead && !x.Downed && (x.IsPrisoner || x.kindDef == PawnKindDefOf.Slave)).ToList();
-                if(prisoner.Where(x => !x.Dead || x.Downed).Count() == 0)
+                int pawnSaved = prisoner.Count(x => !x.Dead);
+                if (pawnSaved == 0)
                 {
-                    Find.LetterStack.ReceiveLetter("LetterLabelSettlementRescueFail".Translate(), TranslatorFormattedStringExtensions.Translate("SettlementRescueFail",parent, TimedForcedExit.GetForceExitAndRemoveMapCountdownTimeLeftString(Global.DayInTicks),
-                    parent.Faction.leader), LetterDefOf.NegativeEvent, parent, null, null);
+                    Find.LetterStack.ReceiveLetter("LetterLabelSettlementRescueFail".Translate(), TranslatorFormattedStringExtensions.Translate("SettlementRescueFail", parent.Faction, TimedForcedExit.GetForceExitAndRemoveMapCountdownTimeLeftString(Global.DayInTicks),
+                    ally.leader, ally.def.pawnsPlural), LetterDefOf.NegativeEvent, parent, null, null);
                     return true;
                 }
-                int pawnSaved = 0;
+                else
+                {
+                    prisoner[0].Faction.TryAffectGoodwillWith(Faction.OfPlayer, 10 * pawnSaved);
+
+                }
+               
                 foreach (Pawn p in prisoner)
                 {
-                    pawnSaved++;
                     if (Rand.Chance(UnWillingChance))
                     {
                         pawnStaying++;
                         p.mindState.WillJoinColonyIfRescued = false;
                     }
-
                 }
                 if (pawnStaying >= 3)
                 {
                     resurrectSet = true;
                 }
-                if(pawnSaved>0)
-                    prisoner[0].Faction.TryAffectGoodwillWith(Faction.OfPlayer, 10*pawnSaved);
-                // Balance
-                Gift_RewardGeneratorBasedTMagic gift = new Gift_RewardGeneratorBasedTMagic();
-                List<Thing> list = new List<Thing>();
-                list = gift.Generate(500, list);
-                Map target = Find.AnyPlayerHomeMap;
-                IntVec3 intVec3 = DropCellFinder.TradeDropSpot(target);
-                DropPodUtility.DropThingsNear(intVec3, target, list, 110, false, true, true);
-                string text = TranslatorFormattedStringExtensions.Translate("SettlementRescueWin", parent, TimedForcedExit.GetForceExitAndRemoveMapCountdownTimeLeftString(Global.DayInTicks), parent.Faction.leader ,parent.Faction.def.leaderTitle) + GenLabel.ThingsLabel(list);
-                
+                DropPodUtility.DropThingsNear(DropCellFinder.TradeDropSpot(Find.AnyPlayerHomeMap), Find.AnyPlayerHomeMap, new Gift_RewardGeneratorBasedTMagic().Generate(500, new List<Thing>()), 110, false, true, true);
+                string text = TranslatorFormattedStringExtensions.Translate("SettlementRescueWin", parent.Faction, TimedForcedExit.GetForceExitAndRemoveMapCountdownTimeLeftString(Global.DayInTicks), ally.leader , ally.def.leaderTitle) + GenLabel.ThingsLabel(new Gift_RewardGeneratorBasedTMagic().Generate(500, new List<Thing>()), string.Empty);
                 Find.LetterStack.ReceiveLetter("LetterLabelSettlementRescue".Translate(), text , LetterDefOf.PositiveEvent, parent, null, null);
                 return true;
             }
@@ -182,10 +169,7 @@ namespace Flavor_Expansion
         public override void PostExposeData()
         {
             Scribe_Values.Look(ref active, "SettlementResuce_active", defaultValue : false);
-            Scribe_Values.Look(ref threat, "SettlementResuce_threat", defaultValue: true);
             Scribe_Values.Look(ref resurrectSet, "SettlementResuce_resurrectSet", defaultValue: false);
-            Scribe_Values.Look(ref wasEntered, "SettlementResuce_wasEntered", defaultValue: false);
-            Scribe_Values.Look(ref ID, "SettlementResuce_ID");
             Scribe_References.Look(ref ally, "SettlementResuce_ally");
         }
     }

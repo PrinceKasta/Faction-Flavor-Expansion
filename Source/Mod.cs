@@ -9,7 +9,6 @@ namespace Flavor_Expansion
         public FlavorExpansion(ModContentPack content) : base(content)
         {
             GetSettings<EndGame_Settings>();
-            Log.Message("[End Game] loaded...");
         }
 
         public override void DoSettingsWindowContents(Rect inRect)

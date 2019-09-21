@@ -25,7 +25,8 @@ namespace Flavor_Expansion
             });
 
             int randomInRange = SiteTuning.QuestSiteTimeoutDaysRange.RandomInRange * Global.DayInTicks;
-            site.GetComponent<WorldComp_SiteDefense>().StartComp(randomInRange, parms, enemyFaction, rewards);
+            site.GetComponent<WorldComp_SiteDefense>().StartComp(enemyFaction, rewards);
+            site.GetComponent<TimeoutComp>().StartTimeout(randomInRange);
             
             Find.WorldObjects.Add(site);
             string text = def.letterText.Formatted(ally.leader.LabelShort, ally.def.leaderTitle, ally.Name, GenLabel.ThingsLabel(rewards, string.Empty), randomInRange.ToStringTicksToPeriod(), GenThing.GetMarketValue(rewards).ToStringMoney(null)).CapitalizeFirst();

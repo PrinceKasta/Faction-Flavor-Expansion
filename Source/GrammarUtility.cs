@@ -39,7 +39,6 @@ namespace Flavor_Expansion
             request.Rules.AddRange(GrammarUtility.RulesForFaction("FACTION2", victim));
             request.Rules.AddRange(RulesForTown("AffectedTown", town));
             return GrammarResolver.Resolve("FE_RaidSuccess", request, null, false, null);
-
         }
 
         public static string History(Faction subject = null, Faction victim = null, Settlement town = null, Pawn pawn = null, string towndestroyed = null)

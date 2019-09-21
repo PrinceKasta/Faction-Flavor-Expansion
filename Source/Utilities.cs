@@ -17,7 +17,6 @@ namespace Flavor_Expansion
 
         public static List<Pawn> GenerateFighter(float points, Lord lord, List<PawnKindDef> kindDefs, Map map, Faction faction ,IntVec3 vec3 ,bool toList=false)
         {
-            
             Pawn fighter = new Pawn();
             List<Pawn> pawns = new List<Pawn>();
             PawnKindDef def = new PawnKindDef();
@@ -33,7 +32,6 @@ namespace Flavor_Expansion
                     fighter.equipment.AddEquipment((ThingWithComps)ThingMaker.MakeThing(DefDatabase<ThingDef>.GetNamed("Gun_Revolver")));
                 }
                 points -= fighter.kindDef.combatPower;
-                
 
                 if (!toList)
                 {

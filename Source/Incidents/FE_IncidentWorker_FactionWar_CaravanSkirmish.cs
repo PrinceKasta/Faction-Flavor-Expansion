@@ -16,7 +16,6 @@ namespace Flavor_Expansion
 
     class FE_IncidentWorker_FactionWar_CaravanSkirmish : IncidentWorker_Ambush
     {
-
         protected override bool CanFireNowSub(IncidentParms parms)
         {
             return base.CanFireNowSub(parms) && TryFindCaravanProximity(out Caravan caravan, out Settlement set) && EndGame_Settings.FactionWar ;

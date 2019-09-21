@@ -26,7 +26,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\..\Users\Amrani\Documents\RIMWORLDPROJECT\Releases\Release build\</OutputPath>
+    <OutputPath>..\..\..\..\Users\Amrani\Documents\RIMWORLDPROJECT\Releases\</OutputPath>
     <DefineConstants>
     </DefineConstants>
     <ErrorReport>prompt</ErrorReport>

@@ -15,7 +15,6 @@ namespace Flavor_Expansion
         public static RulePackDef FE_WarEvent_Raid;
         public static WorldObjectDef Site_opbase;
         public static WorldObjectDef Dispute_Camp;
-        public static WorldObjectDef Dispute_FOB;
         public static WorldObjectDef Roads_Camp;
         public static IncidentDef FE_JointRaid;
         public static SitePartDef Outpost_defense;
@@ -24,7 +23,5 @@ namespace Flavor_Expansion
         public static SiteCoreDef BattleLocation;
         public static RoadDef StoneRoad;
         public static ThingDef Bullet_Shell_HighExplosive;
-
-
     }
 }

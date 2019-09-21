@@ -43,10 +43,9 @@ namespace Flavor_Expansion
 
             Thing silver = ThingMaker.MakeThing(ThingDefOf.Silver);
             silver.stackCount = (int)SilverBonusRewardCurve.Evaluate(ally.PlayerGoodwill);
-            
             int random = new IntRange(Global.DayInTicks * 15, Global.DayInTicks * 25).RandomInRange;
             Set.GetComponent<WorldComp_JointRaid>().StartComp(random, ally ,rewards ,silver);
-            string text = def.letterText.Formatted(ally.leader.LabelShort, ally.def.leaderTitle, ally.Name, GenLabel.ThingsLabel(rewards, string.Empty), (random / Global.DayInTicks + Find.TickManager.TicksGame).ToString(), GenThing.GetMarketValue(rewards).ToStringMoney(null), silver.stackCount.ToString()).CapitalizeFirst();
+            string text = def.letterText.Formatted(ally.leader.LabelShort, ally.def.leaderTitle, ally.Name, GenLabel.ThingsLabel(rewards, string.Empty), random.ToStringTicksToPeriod(), GenThing.GetMarketValue(rewards).ToStringMoney(null), silver.stackCount.ToString()).CapitalizeFirst();
             GenThing.TryAppendSingleRewardInfo(ref text, rewards);
             Find.LetterStack.ReceiveLetter(def.letterLabel, text, def.letterDef, Set, ally, null);
             return true;
@@ -55,10 +54,7 @@ namespace Flavor_Expansion
         {
             foreach (Settlement b in Find.WorldObjects.Settlements.Where(f=> !f.Faction.IsPlayer && !f.Faction.defeated && f.Faction.PlayerRelationKind == FactionRelationKind.Ally && Utilities.Reachable(f.Tile, Find.AnyPlayerHomeMap.Tile, 120)).InRandomOrder())
             {
-                if ((from s in Find.WorldObjects.Settlements
-                     where !s.Faction.IsPlayer && !s.Faction.defeated && s.Faction.HostileTo(Faction.OfPlayer) && !s.Faction.def.hidden
-                     && Utilities.Reachable(b, s, 100) && !s.GetComponent<WorldComp_JointRaid>().IsActive
-                     select s).TryRandomElement(out Set))
+                if (Find.WorldObjects.Settlements.Where(s=> !s.Faction.IsPlayer && !s.Faction.defeated && s.Faction.HostileTo(Faction.OfPlayer) && Utilities.Reachable(b, s, 100) && !s.GetComponent<WorldComp_JointRaid>().IsActive).TryRandomElement(out Set))
                 {
                     ally = b.Faction;
                     return true;

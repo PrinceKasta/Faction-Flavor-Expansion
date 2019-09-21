@@ -41,18 +41,15 @@ namespace Flavor_Expansion
             }
             if (!active)
                 return;
-            Log.Warning("0");
             if (length == -1)
                 Find.LetterStack.ReceiveLetter("LetterLabelBombardmentThreatStopped".Translate(), "BombardmentThreatStopped".Translate(bomber.Name), LetterDefOf.PositiveEvent, new LookTargets(direction, map), bomber.Faction);
-            Log.Warning("length: "+length);
+            
             if ( length != 0 && (int)length % 200 == 0)
             {
-                Log.Warning("h");
                 Projectile_Explosive shell = (Projectile_Explosive)ThingMaker.MakeThing(EndGameDefOf.Bullet_Shell_HighExplosive);
                 GenSpawn.Spawn(shell, direction, map);
                 IntVec3 intVec3 = CellFinder.RandomNotEdgeCell(20, map);
                 shell.Launch(null, intVec3, intVec3, ProjectileHitFlags.IntendedTarget, shell);
-
             }
             length--;
         }

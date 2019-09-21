@@ -213,10 +213,8 @@ namespace Flavor_Expansion
         private void Outcome_Triumph(Caravan caravan)
         {
             Set1.Faction.TryAffectGoodwillWith(Faction.OfPlayer, 45);
-            WorldObject site = WorldObjectMaker.MakeWorldObject(EndGameDefOf.Dispute_FOB);
-            site.SetFaction(Set1.Faction);
+            Site site = SiteMaker.MakeSite(SiteCoreDefOf.Nothing, EndGameDefOf.Outpost_opbase, Tile, Set1.Faction, true);
             Utilities.FactionsWar().GetByFaction(site.Faction).resources += FE_WorldComp_FactionsWar.LARGE_EVENT_Cache_RESOURCE_VALUE;
-            site.Tile= Tile;
             site.GetComponent<WorldComp_DisputeFOB>().StartComp(Set1, Set2);
             Find.WorldObjects.Add(site);
             Find.WorldObjects.Remove(this);

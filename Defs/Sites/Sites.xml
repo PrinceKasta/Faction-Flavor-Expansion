@@ -64,7 +64,7 @@
   </GenStepDef>
   
   <GenStepDef>
-    <defName>OutpostPowerDef</defName>
+    <defName>Outpost_defensePower</defName>
     <linkWithSite>Outpost_defense</linkWithSite>
     <order>451</order>
     <genStep Class="GenStep_Power"/>
@@ -77,7 +77,7 @@
 		<descriptionDialogue>there is an enemy operating base at the site guarded by {0} enemies</descriptionDialogue>
     <workerClass>SitePartWorker_Outpost</workerClass>
 		<siteTexture>World/WorldObjects/Sites/Outpost</siteTexture>
-    <expandingIconTexture>World/WorldObjects/Expanding/Sites/Outpost</expandingIconTexture>
+    <expandingIconTexture>World/WorldObjects/Expanding/forward_operating_base</expandingIconTexture>
     <applyFactionColorToSiteTexture>true</applyFactionColorToSiteTexture>
     <showFactionInInspectString>true</showFactionInInspectString>
     <requiresFaction>true</requiresFaction>

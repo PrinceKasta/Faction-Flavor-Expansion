@@ -29,12 +29,12 @@
   <RoadsCampRequestArrive>Arrive</RoadsCampRequestArrive>
   <RoadsCampRequestBribe_Disabled>Already extorted</RoadsCampRequestBribe_Disabled>
   
-  <!-- Outpost defense-->
+  <!-- Site defense-->
   <LetterLabelOutpostdefensesuccess>Enemies defeated</LetterLabelOutpostdefensesuccess>
-  <Outpostdefensesuccess>{0_nameFull}, {1} of {0_factionName}, has sent us a message.\n\nAll hostiles are dead, {0_nameFull} has thanked you and has sent your reward of: {6}\n\n</Outpostdefensesuccess>
-  <OutpostdefensesuccessJointRaid>{0_nameFull}, {1} of {0_factionName}, has sent us a message.\n\nAll hostiles are dead, {0_nameFull} has thanked you and has sent your reward of: {6}\n\nApparently they also found a weakness in a nearby enemy settlement's defenses as they exhausted their resources attacking the outpost. They've asked us to help them in their planned retaliation raid, which means eliminating all enemies and turrets together with their raid party.\n\nIf we succeed, their relations will improve, and they'll send us this reward worth {4}:\n\n{2}\n\nIf at least one fighters from the raid party survives they will add a bonus reward of ${5} in silver\n\nIf we don't destroy the settlement in {3} days, the target settlement's weakness will be reinforce and the opportunity will pass.</OutpostdefensesuccessJointRaid>
+  <Outpostdefensesuccess>{0_nameFull}, {1} of {0_factionName}, has sent us a message.\n\nAll hostiles are dead, {0_nameFull} has thanked you and has sent your reward of:\n\n{6}</Outpostdefensesuccess>
+  <OutpostdefensesuccessJointRaid>{0_nameFull}, {1} of {0_factionName}, has sent us a message.\n\nAll hostiles are dead, {0_nameFull} has thanked you and has sent your reward of:\n\n{6}\n\nApparently they also found a weakness in a nearby enemy settlement's defenses as they exhausted their resources attacking the outpost. They've asked us to help them in their planned retaliation raid, which means eliminating all enemies and turrets together with their raid party.\n\nIf we succeed, their relations will improve, and they'll send us this reward worth {4}:\n\n{2}\n\nIf at least one fighters from the raid party survives they will add a bonus reward of ${5} in silver\n\nIf we don't destroy the settlement in {3} days, the target settlement's weakness will be reinforce and the opportunity will pass.</OutpostdefensesuccessJointRaid>
   <LetterLabelOutpostdefenseFriendliesDead>Outpost captured</LetterLabelOutpostdefenseFriendliesDead>
-  <OutpostdefenseFriendliesDead>{0_nameFull}, {1} of {0_factionName}, has sent us a message.\n\nAll {0_possessive} faction members are dead and the enemy raid has overrun the outpost, {0_pronoun} bitterly advises you to be prepared for a raid launched from the captured outpost soon and then {0_pronoun} cut communications.</OutpostdefenseFriendliesDead>	
+  <OutpostdefenseFriendliesDead>{0_nameFull}, {1} of {0_factionName}, has sent us a message.\n\nAll {2} from {0_possessive} faction are dead and the enemy raid has overrun the outpost, {0_pronoun} bitterly advises you to be prepared for a raid launched from the captured outpost's conquerers soon and then {0_pronoun} cut communications.</OutpostdefenseFriendliesDead>	
   <ExtraCompString_Outpostdefense>Outpost captured in {0}.</ExtraCompString_Outpostdefense>
   
   <!-- Enemy Forward Operation Base-->
@@ -56,17 +56,17 @@
   <LetterLabelSettlementDefenderLost>Settlement destroyed</LetterLabelSettlementDefenderLost>
   <SettlementDefenderLost>{0} has been destroyed.\n\nIn {1}, the caravan will automatically be reformed. You can reform the caravan now in the World screen by selecting the destroyed base and choosing the "Reform caravan" option.\n\n{2_factionName}'s leader {2_nameFull} has sent us a message, {2_pronoun} sounds mournful for the lose of life but doesn't blame us.</SettlementDefenderLost>
   <LetterLabelSettlementDefenderIgnored>Settlement sacked</LetterLabelSettlementDefenderIgnored>
-  <SettlementDefenderIgnored>The raid on {0} has successfully destroyed the settlement.\n\n{1_factionName}'s leader {1_nameFull} implored you to still travel there to try and save anyone who still might be alive.</SettlementDefenderIgnored>
-  <ExtraCompString_SettlementDefense>The target of a settlement defense quest. Time left until the settlement is destroyed: less than {0} days.</ExtraCompString_SettlementDefense>
+  <SettlementDefenderIgnored>The raid on {0} has successfully destroyed the settlement.\n\n{1_factionName}'s leader {1_nameFull} implored you to still travel there to try and save anyone who might still be alive.</SettlementDefenderIgnored>
+  <ExtraCompString_SettlementDefense>The target of a settlement defense quest.\nThe settlement will be destroyed in {0}.</ExtraCompString_SettlementDefense>
   
   <!-- Settlement Rescue-->
   <LetterLabelSettlementRescue>Capturers Routed</LetterLabelSettlementRescue>
-  <SettlementRescueWin>{0}'s capturers were routed\n\nIn {1}, the caravan will automatically be reformed. You can reform the caravan now in the World screen by selecting the destroyed base and choosing the "Reform caravan" option.\n\n{2_nameFull}, {3} of {2_factionName} has  sent us a message where he expressed {2_objective} gratitude.\n\n{2_objective} rewarded you with:\n\n</SettlementRescueWin>
+  <SettlementRescueWin>The raiders from {0} were routed\n\nIn {1}, the caravan will automatically be reformed. You can reform the caravan now in the World screen by selecting the destroyed base and choosing the "Reform caravan" option.\n\n{2_nameFull}, {3} of {2_factionName} has  sent us a message where he expressed {2_objective} gratitude.\n\n{2_pronoun} rewarded you with:\n\n</SettlementRescueWin>
   <LetterLabelSettlementRescueFail>Failed Rescue</LetterLabelSettlementRescueFail>
-  <SettlementRescueFail>{0}'s capturers were successfully routed but all prisoner are dead\nWe have {1} until you have to go.\n\n{2_factionName}'s leader {2_nameFull} sounds mournful for the lose of life.</SettlementRescueFail>
+  <SettlementRescueFail>The capturers from {0} were successfully eliminated but all the prisoners are dead\n\nWe have {1} until you have to go.\n\n{2_factionName}'s leader {2_nameFull} sounds mournful for the lose of {2_possessive} {3}.</SettlementRescueFail>
   <LetterLabelSettlementRescueIgnored>Ally settlement looted</LetterLabelSettlementRescueIgnored>
-  <SettlementRescueIgnored>The raiders in {0} have departed from the destroyed settlement with their prisoners.\n\n{1_nameFull}, {2} of {1_factionName} is livid that you repeatedly ignored {1_possessive} requested for help.</SettlementRescueIgnored>
-  <SettlementRescueAbandoned>The raiders in {0} have left in a hurry after stopping our caravan, preferring to not risk a fight while having prisoner.\n\n{1_nameFull}, {2} of {1_factionName} has sent us a message cursing us for retreating while in arm's reach of the prisoners.\n\nRelations with {1_factionName} have worsened by {3}.</SettlementRescueAbandoned>
+  <SettlementRescueIgnored>The raiders have departed from the destroyed settlement with their prisoners.\n\n{0_nameFull}, {1} of {0_factionName} is livid that you repeatedly ignored {0_possessive} requests for help.</SettlementRescueIgnored>
+  <SettlementRescueAbandoned>The raiders have left in a hurry after our caravan backed off, preferring to not risk another fight while having prisoners.\n\n{0_nameFull}, the {1} of {0_factionName} has sent us a message cursing us for retreating while in arm's reach of the prisoners.\n\nRelations with {0_factionName} have worsened by {2}.</SettlementRescueAbandoned>
   
   <!-- Dispute-->
   <LetterLabelDispute>Dispute Talks</LetterLabelDispute>
